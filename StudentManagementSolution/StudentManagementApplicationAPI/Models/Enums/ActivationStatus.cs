@@ -1,6 +1,8 @@
 ﻿namespace StudentManagementApplicationAPI.Models.Enums
 {
-    public class ActivationStatus
+    public enum ActivationStatus
     {
+        Active,
+        Inactive
     }
 }

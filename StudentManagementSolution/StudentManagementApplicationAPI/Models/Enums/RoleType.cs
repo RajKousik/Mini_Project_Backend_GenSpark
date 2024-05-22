@@ -1,6 +1,11 @@
 ﻿namespace StudentManagementApplicationAPI.Models.Enums
 {
-    public class RoleType
+    public enum RoleType
     {
+        Admin,
+        Assistant_Proffesors,
+        Associate_Proffesors,
+        Proffesors,
+        Head_Of_Department
     }
 }
