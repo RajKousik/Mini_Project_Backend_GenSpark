@@ -6,6 +6,7 @@
         Assistant_Proffesors,
         Associate_Proffesors,
         Proffesors,
-        Head_Of_Department
+        Head_Of_Department,
+        Student
     }
 }
