@@ -47,6 +47,7 @@ namespace StudentManagementApplicationAPI.Models.Db_Models
         [Required]
         public RoleType Role { get; set; }
 
+        [AllowNull]
         public int? DepartmentId { get; set; }
 
         [ForeignKey("DepartmentId")]

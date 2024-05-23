@@ -120,7 +120,13 @@ namespace StudentManagementApplicationAPI.Repositories
                                                     .Include(d => d.Students)
                                                     .Include(d => d.Faculties)
                                                     .FirstOrDefaultAsync(d => d.DeptId == key);
-            return department ?? throw new NoSuchDepartmentExistException($"Department with given ID {key} doesn't exist!");
+
+            if(department == null)
+            {
+                throw new NoSuchDepartmentExistException($"Department with given ID {key} doesn't exist!");
+            }
+
+            return department;
         }
 
         #endregion

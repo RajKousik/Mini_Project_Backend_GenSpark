@@ -10,7 +10,6 @@ namespace StudentManagementApplicationAPI.Exceptions.StudentExceptions
         {
             msg = "No students Found in the database";
         }
-
         public NoStudentsExistsException(string message) : base(message)
         {
             msg = message;

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
+using StudentManagementApplicationAPI.Models.Enums;
 
 namespace StudentManagementApplicationAPI.Models.Db_Models
 {
@@ -40,7 +41,7 @@ namespace StudentManagementApplicationAPI.Models.Db_Models
         public byte[] HashedPassword { get; set; }
 
         [Required]
-        public string Status { get; set; }
+        public ActivationStatus Status { get; set; }
 
         [Required]
         public int DepartmentId { get; set; }

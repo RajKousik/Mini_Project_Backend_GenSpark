@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace StudentManagementApplicationAPI.Models.DTOs.StudentDTOs
+namespace StudentManagementApplicationAPI.Models.DTOs.FacultyDTOs
 {
-    public class StudentLoginDTO
+    public class FacultyLoginDTO
     {
         [Required]
         [EmailAddress]

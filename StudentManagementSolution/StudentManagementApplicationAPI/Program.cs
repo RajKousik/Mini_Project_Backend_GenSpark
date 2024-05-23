@@ -1,8 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using StudentManagementApplicationAPI.Contexts;
 using StudentManagementApplicationAPI.Interfaces;
+using StudentManagementApplicationAPI.Mappers;
 using StudentManagementApplicationAPI.Models.Db_Models;
+using StudentManagementApplicationAPI.Models.DTOs.FacultyDTOs;
+using StudentManagementApplicationAPI.Models.DTOs.StudentDTOs;
 using StudentManagementApplicationAPI.Repositories;
+using StudentManagementApplicationAPI.Services;
 
 namespace StudentManagementApplicationAPI
 {
@@ -43,6 +47,24 @@ namespace StudentManagementApplicationAPI
             builder.Services.AddScoped<IRepository<int, CourseRegistration>, CourseRegistrationRepository>();
             #endregion
 
+            #region AutoMapper
+            builder.Services.AddAutoMapper(typeof(MappingProfile));
+            #endregion
+
+            #region Services
+
+            builder.Services.AddScoped<ITokenService, TokenService>();
+
+            builder.Services.AddScoped<IAuthRegisterService<StudentRegisterReturnDTO, StudentRegisterDTO>, StudentAuthService>();
+            builder.Services.AddScoped<IAuthLoginService<StudentLoginReturnDTO, StudentLoginDTO>, StudentAuthService>();
+            
+            builder.Services.AddScoped<IAuthRegisterService<FacultyRegisterReturnDTO, FacultyRegisterDTO>, FacultyAuthService>();
+            builder.Services.AddScoped<IAuthLoginService<FacultyLoginReturnDTO, FacultyLoginDTO>, FacultyAuthService>();
+
+
+
+            #endregion
+
             var app = builder.Build();
 
             #region Swagger Configurations
@@ -54,7 +76,7 @@ namespace StudentManagementApplicationAPI
             }
             #endregion
 
-            #region App Configurations
+            #region Pipeline Configurations
             app.UseAuthorization();
             app.MapControllers();
             #endregion

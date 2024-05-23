@@ -40,7 +40,7 @@ namespace StudentManagementApplicationAPI.Contexts
                     Status = ActivationStatus.Active,
                     PasswordHashKey = hmac.Key,
                     HashedPassword = hmac.ComputeHash(Encoding.UTF8.GetBytes("Admin123")),
-                    DepartmentId = null,
+                    DepartmentId = 1,
                 },
                 new Faculty()
                 {
@@ -55,7 +55,7 @@ namespace StudentManagementApplicationAPI.Contexts
                     Status = ActivationStatus.Inactive,
                     PasswordHashKey = hmac.Key,
                     HashedPassword = hmac.ComputeHash(Encoding.UTF8.GetBytes("Dany123")),
-                    DepartmentId = null
+                    DepartmentId = 1
                 }
             );
 
