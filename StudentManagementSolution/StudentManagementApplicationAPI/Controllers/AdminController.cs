@@ -13,13 +13,28 @@ namespace StudentManagementApplicationAPI.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminController : ControllerBase
     {
+        #region Private Fields
+
         private readonly IAdminService _adminService;
+
+        #endregion
+
+        #region Constructor
 
         public AdminController(IAdminService adminService)
         {
             _adminService = adminService;
         }
 
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Activates a faculty member by email.
+        /// </summary>
+        /// <param name="email">The email of the faculty member to activate.</param>
+        /// <returns>An IActionResult containing the result of the activation operation.</returns>
         [HttpPut("activate/faculty")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
@@ -47,6 +62,11 @@ namespace StudentManagementApplicationAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Activates a student by email.
+        /// </summary>
+        /// <param name="email">The email of the student to activate.</param>
+        /// <returns>An IActionResult containing the result of the activation operation.</returns>
         [HttpPut("activate/student")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
@@ -73,6 +93,8 @@ namespace StudentManagementApplicationAPI.Controllers
                 return StatusCode(500, new ErrorModel(500, $"Internal server error: {ex.Message}"));
             }
         }
+
+        #endregion
     }
 
 }

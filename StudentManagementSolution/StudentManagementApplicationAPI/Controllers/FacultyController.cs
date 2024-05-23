@@ -14,8 +14,14 @@ namespace StudentManagementApplicationAPI.Controllers
     [ApiController]
     public class FacultyController : ControllerBase
     {
+        #region Private Fields
+
         private readonly IAuthRegisterService<FacultyRegisterReturnDTO, FacultyRegisterDTO> _authRegisterService;
         private readonly IAuthLoginService<FacultyLoginReturnDTO, FacultyLoginDTO> _authLoginService;
+
+        #endregion
+
+        #region Constructor
 
         public FacultyController(IAuthRegisterService<FacultyRegisterReturnDTO, FacultyRegisterDTO> authRegisterService,
                                  IAuthLoginService<FacultyLoginReturnDTO, FacultyLoginDTO> authLoginService)
@@ -24,6 +30,15 @@ namespace StudentManagementApplicationAPI.Controllers
             _authRegisterService = authRegisterService;
         }
 
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Authenticates a faculty member.
+        /// </summary>
+        /// <param name="facultyLoginDTO">The login data transfer object containing faculty credentials.</param>
+        /// <returns>An ActionResult containing the authentication result.</returns>
         [HttpPost("login")]
         [ProducesResponseType(typeof(FacultyLoginReturnDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status401Unauthorized)]
@@ -53,6 +68,11 @@ namespace StudentManagementApplicationAPI.Controllers
             return BadRequest("Validation Error! Provide Valid details...");
         }
 
+        /// <summary>
+        /// Registers an assistant professor.
+        /// </summary>
+        /// <param name="facultyRegisterDTO">The registration data transfer object containing faculty details.</param>
+        /// <returns>An ActionResult containing the registration result.</returns>
         [HttpPost("assistant-prof/register")]
         [ProducesResponseType(typeof(FacultyRegisterReturnDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
@@ -78,7 +98,7 @@ namespace StudentManagementApplicationAPI.Controllers
             {
                 return BadRequest(new ErrorModel(400, ex.Message));
             }
-            catch (UnableToAddFacultyException ex) // Replace with specific Faculty registration exception
+            catch (UnableToAddFacultyException ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
@@ -88,7 +108,11 @@ namespace StudentManagementApplicationAPI.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Registers an associate professor.
+        /// </summary>
+        /// <param name="facultyRegisterDTO">The registration data transfer object containing faculty details.</param>
+        /// <returns>An ActionResult containing the registration result.</returns>
         [HttpPost("associate-prof/register")]
         [ProducesResponseType(typeof(FacultyRegisterReturnDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
@@ -114,7 +138,7 @@ namespace StudentManagementApplicationAPI.Controllers
             {
                 return BadRequest(new ErrorModel(400, ex.Message));
             }
-            catch (UnableToAddFacultyException ex) // Replace with specific Faculty registration exception
+            catch (UnableToAddFacultyException ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
@@ -124,7 +148,11 @@ namespace StudentManagementApplicationAPI.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Registers a department head.
+        /// </summary>
+        /// <param name="facultyRegisterDTO">The registration data transfer object containing faculty details.</param>
+        /// <returns>An ActionResult containing the registration result.</returns>
         [HttpPost("head-of-dept/register")]
         [ProducesResponseType(typeof(FacultyRegisterReturnDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
@@ -150,7 +178,7 @@ namespace StudentManagementApplicationAPI.Controllers
             {
                 return BadRequest(new ErrorModel(400, ex.Message));
             }
-            catch (UnableToAddFacultyException ex) // Replace with specific Faculty registration exception
+            catch (UnableToAddFacultyException ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
@@ -160,6 +188,11 @@ namespace StudentManagementApplicationAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Registers an administrator.
+        /// </summary>
+        /// <param name="facultyRegisterDTO">The registration data transfer object containing faculty details.</param>
+        /// <returns>An ActionResult containing the registration result.</returns>
         [HttpPost("admin/register")]
         [ProducesResponseType(typeof(FacultyRegisterReturnDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
@@ -194,6 +227,8 @@ namespace StudentManagementApplicationAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, $"An unexpected error occurred : {ex.Message}"));
             }
         }
+
+        #endregion
 
     }
 }

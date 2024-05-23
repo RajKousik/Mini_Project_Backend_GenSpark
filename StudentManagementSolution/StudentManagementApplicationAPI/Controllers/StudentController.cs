@@ -13,8 +13,14 @@ namespace StudentManagementApplicationAPI.Controllers
     [ApiController]
     public class StudentController : ControllerBase
     {
+        #region Private Fields
+
         private readonly IAuthRegisterService<StudentRegisterReturnDTO, StudentRegisterDTO> _authRegisterService;
         private readonly IAuthLoginService<StudentLoginReturnDTO, StudentLoginDTO> _authLoginService;
+
+        #endregion
+
+        #region Constructor
 
         public StudentController(IAuthRegisterService<StudentRegisterReturnDTO, StudentRegisterDTO> authRegisterService,
             IAuthLoginService<StudentLoginReturnDTO, StudentLoginDTO> authLoginService)
@@ -23,6 +29,15 @@ namespace StudentManagementApplicationAPI.Controllers
             _authRegisterService = authRegisterService;
         }
 
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Authenticates a student.
+        /// </summary>
+        /// <param name="studentLoginDTO">The login data transfer object containing student credentials.</param>
+        /// <returns>An ActionResult containing the authentication result.</returns>
         [HttpPost("login")]
         [ProducesResponseType(typeof(StudentLoginReturnDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status401Unauthorized)]
@@ -52,6 +67,11 @@ namespace StudentManagementApplicationAPI.Controllers
             return BadRequest("Validation Error! Provide Valid details...");
         }
 
+        /// <summary>
+        /// Registers a student.
+        /// </summary>
+        /// <param name="studentRegisterDTO">The registration data transfer object containing student details.</param>
+        /// <returns>An ActionResult containing the registration result.</returns>
         [HttpPost("register")]
         [ProducesResponseType(typeof(StudentRegisterReturnDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
@@ -90,5 +110,8 @@ namespace StudentManagementApplicationAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, $"An unexpected error occurred : {ex.Message}"));
             }
         }
+
+        #endregion
     }
+
 }

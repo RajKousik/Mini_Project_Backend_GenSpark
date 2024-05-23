@@ -8,10 +8,14 @@ namespace StudentManagementApplicationAPI.Contexts
 {
     public class StudentManagementContext : DbContext
     {
+        #region Constructor
         public StudentManagementContext(DbContextOptions options) : base(options)
         {
 
         }
+        #endregion
+
+        #region DbSet Properties
         public DbSet<Student> Students { get; set; }
         public DbSet<Faculty> Faculties { get; set; }
         public DbSet<Course> Courses { get; set; }
@@ -20,6 +24,9 @@ namespace StudentManagementApplicationAPI.Contexts
         public DbSet<StudentAttendance> StudentAttendances { get; set; }
         public DbSet<Exam> Exams { get; set; }
         public DbSet<CourseRegistration> CourseRegistrations { get; set; }
+        #endregion
+
+        #region OnModelCreating
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             var hmac = new HMACSHA512();
@@ -130,5 +137,6 @@ namespace StudentManagementApplicationAPI.Contexts
                 .OnDelete(DeleteBehavior.Restrict);
 
         }
+        #endregion
     }
 }
