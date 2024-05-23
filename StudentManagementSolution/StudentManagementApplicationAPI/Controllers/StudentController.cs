@@ -65,6 +65,10 @@ namespace StudentManagementApplicationAPI.Controllers
                 var result = await _authRegisterService.Register(studentRegisterDTO);
                 return Ok(result);
             }
+            catch (CannotAddStudentToAdminDepartmentException ex)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new ErrorModel(400, ex.Message));
+            }
             catch (NoSuchDepartmentExistException ex)
             {
                 return NotFound(new ErrorModel(404, ex.Message));

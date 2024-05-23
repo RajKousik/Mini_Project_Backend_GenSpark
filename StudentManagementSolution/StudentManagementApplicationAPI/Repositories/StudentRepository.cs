@@ -88,11 +88,11 @@ namespace StudentManagementApplicationAPI.Repositories
         {
             var students = await _context.Students.Include(s => s.Department).ToListAsync();
 
-            return (students.Count == 0)
-                    ?
-                    throw new NoStudentsExistsException("No Students found in the database!")
-                    :
-                    students;
+            //return (students.Count == 0)
+            //        ?
+            //        throw new NoStudentsExistsException("No Students found in the database!")
+            //        :
+            return students;
         }
         #endregion
 

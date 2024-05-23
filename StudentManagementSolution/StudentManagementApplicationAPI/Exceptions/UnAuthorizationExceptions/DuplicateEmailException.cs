@@ -3,22 +3,19 @@
 namespace StudentManagementApplicationAPI.Exceptions.UnAuthorizationExceptions
 {
     [Serializable]
-    internal class DuplicateEmailException : Exception
+    public class DuplicateEmailException : Exception
     {
+        private string msg;
         public DuplicateEmailException()
         {
+            msg = "Already a user with same email address exist!";
         }
 
-        public DuplicateEmailException(string? message) : base(message)
+        public DuplicateEmailException(string message) : base(message)
         {
+            msg = message;
         }
 
-        public DuplicateEmailException(string? message, Exception? innerException) : base(message, innerException)
-        {
-        }
-
-        protected DuplicateEmailException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
+        public override string Message => msg;
     }
 }

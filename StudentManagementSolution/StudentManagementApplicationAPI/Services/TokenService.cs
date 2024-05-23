@@ -10,15 +10,35 @@ namespace StudentManagementApplicationAPI.Services
 {
     public class TokenService : ITokenService
     {
+        #region Private Fields
+
         private readonly string _secretKey;
         private readonly SymmetricSecurityKey _key;
 
+        #endregion
+
+        #region Constructor
+        #region Summary
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TokenService"/> class.
+        /// </summary>
+        /// <param name="configuration">The configuration containing the JWT secret key.</param>
+        #endregion
         public TokenService(IConfiguration configuration)
         {
             _secretKey = configuration.GetSection("TokenKey").GetSection("JWT").Value;
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
         }
+        #endregion
 
+        #region Private Methods
+        #region Summary
+        /// <summary>
+        /// Creates a JWT token based on the provided claims.
+        /// </summary>
+        /// <param name="claims">The claims to include in the token.</param>
+        /// <returns>A JWT token as a string.</returns>
+        #endregion
         private string CreateToken(IEnumerable<Claim> claims)
         {
             var credentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256);
@@ -31,7 +51,16 @@ namespace StudentManagementApplicationAPI.Services
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+        #endregion
 
+        #region Public Methods
+        #region Summary
+        /// <summary>
+        /// Generates a JWT token for a faculty member.
+        /// </summary>
+        /// <param name="faculty">The faculty member for whom to generate the token.</param>
+        /// <returns>A JWT token as a string.</returns>
+        #endregion
         public string GenerateFacultyToken(Faculty faculty)
         {
             var claims = new List<Claim>
@@ -45,6 +74,13 @@ namespace StudentManagementApplicationAPI.Services
             return CreateToken(claims);
         }
 
+        #region Summary
+        /// <summary>
+        /// Generates a JWT token for a student.
+        /// </summary>
+        /// <param name="student">The student for whom to generate the token.</param>
+        /// <returns>A JWT token as a string.</returns>
+        #endregion
         public string GenerateStudentToken(Student student)
         {
             var claims = new List<Claim>
@@ -57,6 +93,7 @@ namespace StudentManagementApplicationAPI.Services
 
             return CreateToken(claims);
         }
+        #endregion
     }
 
 }

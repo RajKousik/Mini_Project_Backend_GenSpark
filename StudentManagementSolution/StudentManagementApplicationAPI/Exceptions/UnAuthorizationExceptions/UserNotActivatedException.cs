@@ -3,22 +3,19 @@
 namespace StudentManagementApplicationAPI.Exceptions.UnAuthorizationExceptions
 {
     [Serializable]
-    internal class UserNotActivatedException : Exception
+    public class UserNotActivatedException : Exception
     {
+        private string msg;
         public UserNotActivatedException()
         {
+            msg = "Something Went Wrong! User Not Activated!";
         }
 
-        public UserNotActivatedException(string? message) : base(message)
+        public UserNotActivatedException(string message) : base(message)
         {
+            msg = message;
         }
 
-        public UserNotActivatedException(string? message, Exception? innerException) : base(message, innerException)
-        {
-        }
-
-        protected UserNotActivatedException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
+        public override string Message => msg;
     }
 }

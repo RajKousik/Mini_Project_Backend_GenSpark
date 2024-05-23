@@ -3,22 +3,19 @@
 namespace StudentManagementApplicationAPI.Exceptions.UnAuthorizationExceptions
 {
     [Serializable]
-    internal class UnableToRegisterException : Exception
+    public class UnableToRegisterException : Exception
     {
+        private string msg;
         public UnableToRegisterException()
         {
+            msg = "Something Went Wrong! Unable to resgiter at this moment!";
         }
 
-        public UnableToRegisterException(string? message) : base(message)
+        public UnableToRegisterException(string message) : base(message)
         {
+            msg = message;
         }
 
-        public UnableToRegisterException(string? message, Exception? innerException) : base(message, innerException)
-        {
-        }
-
-        protected UnableToRegisterException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
+        public override string Message => msg;
     }
 }

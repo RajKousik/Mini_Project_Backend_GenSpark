@@ -1,4 +1,7 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using StudentManagementApplicationAPI.Contexts;
 using StudentManagementApplicationAPI.Interfaces;
 using StudentManagementApplicationAPI.Mappers;
@@ -7,6 +10,7 @@ using StudentManagementApplicationAPI.Models.DTOs.FacultyDTOs;
 using StudentManagementApplicationAPI.Models.DTOs.StudentDTOs;
 using StudentManagementApplicationAPI.Repositories;
 using StudentManagementApplicationAPI.Services;
+using System.Text;
 
 namespace StudentManagementApplicationAPI
 {
@@ -25,7 +29,34 @@ namespace StudentManagementApplicationAPI
             #endregion
 
             #region Swagger
-            builder.Services.AddSwaggerGen();
+
+            builder.Services.AddSwaggerGen(option =>
+            {
+                option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 1safsfsdfdfd\"",
+                });
+                option.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                     {
+                           new OpenApiSecurityScheme
+                           {
+                                 Reference = new OpenApiReference
+                                 {
+                                     Type = ReferenceType.SecurityScheme,
+                                     Id = "Bearer"
+                                 }
+                           },
+                           new string[] {}
+                     }
+                });
+            });
+
             #endregion
 
             #region DbContexts
@@ -60,8 +91,27 @@ namespace StudentManagementApplicationAPI
             
             builder.Services.AddScoped<IAuthRegisterService<FacultyRegisterReturnDTO, FacultyRegisterDTO>, FacultyAuthService>();
             builder.Services.AddScoped<IAuthLoginService<FacultyLoginReturnDTO, FacultyLoginDTO>, FacultyAuthService>();
+            
+            builder.Services.AddScoped<IAdminService, AdminService>();
 
 
+
+            #endregion
+
+            #region Authentication
+
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+                    {
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["TokenKey:JWT"]))
+                    };
+
+                });
 
             #endregion
 
@@ -77,8 +127,11 @@ namespace StudentManagementApplicationAPI
             #endregion
 
             #region Pipeline Configurations
+
+            app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
+
             #endregion
 
             app.Run();
