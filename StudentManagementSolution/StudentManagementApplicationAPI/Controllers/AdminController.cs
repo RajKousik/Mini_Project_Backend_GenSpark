@@ -28,7 +28,7 @@ namespace StudentManagementApplicationAPI.Controllers
 
         #endregion
 
-        #region Public Methods
+        #region End Points
 
         /// <summary>
         /// Activates a faculty member by email.

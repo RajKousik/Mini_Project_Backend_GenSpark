@@ -86,9 +86,7 @@ namespace StudentManagementApplicationAPI.Repositories
                                                 .Include(c => c.CourseRegistrations)
                                                 .Include(c => c.Exams)
                                                 .ToListAsync();
-            return (courses.Count == 0)
-                    ? throw new NoCoursesExistsException("No Courses found in the database!")
-                    : courses;
+            return  courses;
         }
         #endregion
 

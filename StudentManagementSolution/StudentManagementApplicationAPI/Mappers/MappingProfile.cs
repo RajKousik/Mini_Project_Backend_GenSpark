@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using StudentManagementApplicationAPI.Models.Db_Models;
+using StudentManagementApplicationAPI.Models.DTOs.CourseDTOs;
 using StudentManagementApplicationAPI.Models.DTOs.DepartmentDTOs;
 using StudentManagementApplicationAPI.Models.DTOs.FacultyDTOs;
 using StudentManagementApplicationAPI.Models.DTOs.StudentDTOs;
@@ -28,9 +29,20 @@ namespace StudentManagementApplicationAPI.Mappers
             CreateMap<Faculty, FacultyDTO>().ReverseMap();
             #endregion
 
+            #region Department
             CreateMap<Department, DepartmentDTO>().ReverseMap();
             CreateMap<Department, DepartmentReturnDTO>().ReverseMap();
             CreateMap<DepartmentReturnDTO, DepartmentDTO>().ReverseMap();
+            #endregion
+
+            #region Course
+            CreateMap<Course, CourseDTO>().ReverseMap();
+            CreateMap<Course, CourseReturnDTO>().ReverseMap();
+            CreateMap<Course, CourseUpdateDTO>().ReverseMap();
+            CreateMap<CourseReturnDTO, CourseDTO>().ReverseMap();
+            CreateMap<CourseUpdateDTO, CourseDTO>().ReverseMap();
+            CreateMap<CourseUpdateDTO, CourseReturnDTO>().ReverseMap();
+            #endregion
         }
     }
 }

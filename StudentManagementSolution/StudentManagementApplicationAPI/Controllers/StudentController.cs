@@ -35,7 +35,7 @@ namespace StudentManagementApplicationAPI.Controllers
 
         #endregion
 
-        #region Public Methods
+        #region End Points
 
         /// <summary>
         /// Authenticates a student.
