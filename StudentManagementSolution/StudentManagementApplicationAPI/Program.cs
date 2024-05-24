@@ -94,6 +94,9 @@ namespace StudentManagementApplicationAPI
             
             builder.Services.AddScoped<IAdminService, AdminService>();
             builder.Services.AddScoped<IStudentService , StudentService>();
+            builder.Services.AddScoped<IFacultyService , FacultyService>();
+
+            builder.Services.AddScoped<IDepartmentService , DepartmentService>();
 
 
 

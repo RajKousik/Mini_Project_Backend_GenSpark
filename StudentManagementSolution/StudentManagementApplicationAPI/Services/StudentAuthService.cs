@@ -6,6 +6,7 @@ using StudentManagementApplicationAPI.Interfaces;
 using StudentManagementApplicationAPI.Models.Db_Models;
 using StudentManagementApplicationAPI.Models.DTOs.StudentDTOs;
 using StudentManagementApplicationAPI.Models.Enums;
+using StudentManagementApplicationAPI.Repositories;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -123,6 +124,12 @@ namespace StudentManagementApplicationAPI.Services
                 student.HashedPassword = hMACSHA.ComputeHash(Encoding.UTF8.GetBytes(dto.Password));
                 student.Status = ActivationStatus.Inactive;
 
+                var registeredDept = await _departmentRepo.GetById(dto.DepartmentId);
+                if(registeredDept.Name == "Admin")
+                {
+                    throw CannotAddStudentToAdminDepartmentException();
+                }
+
                 var addedStudent = await _studentRepo.Add(student);
 
                 StudentRegisterReturnDTO studentRegisterReturnDTO = _mapper.Map<StudentRegisterReturnDTO>(addedStudent);
@@ -150,6 +157,11 @@ namespace StudentManagementApplicationAPI.Services
                 var message = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
                 throw new UnableToRegisterException(message);
             }
+        }
+
+        private Exception CannotAddStudentToAdminDepartmentException()
+        {
+            throw new NotImplementedException();
         }
 
         #endregion
@@ -184,15 +196,16 @@ namespace StudentManagementApplicationAPI.Services
         #endregion
         private async Task ValidateDepartment(int departmentId)
         {
-            if (departmentId == 2)
-            {
-                throw new CannotAddStudentToAdminDepartmentException("Cannot add student to admin department");
-            }
 
             var departmentExists = await _departmentRepo.GetById(departmentId);
             if (departmentExists == null)
             {
                 throw new NoSuchDepartmentExistException($"Department does not exist with id {departmentId}");
+            }
+
+            if (departmentExists.Name.ToLower().Contains("Admin".ToLower()))
+            {
+                throw new CannotAddStudentToAdminDepartmentException();
             }
         }
 

@@ -8,6 +8,8 @@ namespace StudentManagementApplicationAPI.Interfaces
         public Task<StudentDTO> DeleteStudent(string email);
         public Task<StudentDTO> GetStudentById(int studentRollNo);
         public Task<StudentDTO> GetStudentByEmail(string email);
+
+        public Task<IEnumerable<StudentDTO>> GetStudentByName(string name);
         public Task<IEnumerable<StudentDTO>> GetAllStudents();
         public Task<IEnumerable<StudentDTO>> GetStudentsByDepartment(int departmentId);
     }

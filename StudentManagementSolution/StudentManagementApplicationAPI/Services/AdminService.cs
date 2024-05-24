@@ -48,12 +48,12 @@ namespace StudentManagementApplicationAPI.Services
             var faculty = await GetFacultyByEmail(facultyEmail);
             if (faculty == null)
             {
-                throw new NoSuchFacultyExistException($"Faculty with {facultyEmail} doesn't exist in the database");
+                throw new NoSuchFacultyExistException($"Faculty with email {facultyEmail} doesn't exist in the database");
             }
 
             if (faculty.Status == ActivationStatus.Active)
             {
-                throw new FacultyAlreadyActivatedException($"Faculty with {facultyEmail} is already activated");
+                throw new FacultyAlreadyActivatedException($"Faculty with eamil {facultyEmail} is already activated");
             }
 
             faculty.Status = ActivationStatus.Active;
@@ -75,12 +75,12 @@ namespace StudentManagementApplicationAPI.Services
             var student = await GetStudentByEmail(studentEmail);
             if (student == null)
             {
-                throw new NoSuchStudentExistException($"Student with {studentEmail} doesn't exist in the database");
+                throw new NoSuchStudentExistException($"Student with email {studentEmail} doesn't exist in the database");
             }
 
             if (student.Status == ActivationStatus.Active)
             {
-                throw new StudentAlreadyActivatedException($"Student with {studentEmail} is already activated");
+                throw new StudentAlreadyActivatedException($"Student with email {studentEmail} is already activated");
             }
 
             student.Status = ActivationStatus.Active;

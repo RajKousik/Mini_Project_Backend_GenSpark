@@ -274,6 +274,35 @@ namespace StudentManagementApplicationAPI.Controllers
             }
         }
 
+
+        #region Summary
+        /// <summary>
+        /// Retrieves the students by their names.
+        /// </summary>
+        /// <param name="name">The name of the student to be retrieved.</param>
+        /// <returns>An ActionResult containing the student details.</returns>
+        #endregion
+        [HttpGet("name")]
+        [ProducesResponseType(typeof(StudentDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<StudentDTO>> GetStudentsByName(string name)
+        {
+            try
+            {
+                var result = await _studentService.GetStudentByName(name);
+                return Ok(result);
+            }
+            catch (NoSuchStudentExistException ex)
+            {
+                return NotFound(new ErrorModel(404, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, $"An unexpected error occurred : {ex.Message}"));
+            }
+        }
+
         #region Summary
         /// <summary>
         /// Retrieves students by their department.
@@ -294,6 +323,10 @@ namespace StudentManagementApplicationAPI.Controllers
                 return Ok(result);
             }
             catch (NoSuchDepartmentExistException ex)
+            {
+                return NotFound(new ErrorModel(404, ex.Message));
+            }
+            catch (NoStudentsExistsException ex)
             {
                 return NotFound(new ErrorModel(404, ex.Message));
             }

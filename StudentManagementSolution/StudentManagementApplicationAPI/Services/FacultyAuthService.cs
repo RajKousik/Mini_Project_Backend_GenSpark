@@ -74,6 +74,7 @@ namespace StudentManagementApplicationAPI.Services
                             Email = dto.Email,
                             FacultyId = facultyInDB.FacultyId,
                             Token = _tokenService.GenerateFacultyToken(facultyInDB),
+                            Role = facultyInDB.Role.ToString()
                         };
                         return loginReturnDTO;
                     }
@@ -113,7 +114,7 @@ namespace StudentManagementApplicationAPI.Services
                 if (emailExists != null)
                     throw new DuplicateEmailException("Email id is already registered");
 
-                if (dto.DepartmentId != null || type != RoleType.Admin)
+                if (dto.DepartmentId != null)
                 {
                     var departmentExists = await _departmentRepo.GetById((int)dto.DepartmentId);
 
@@ -122,10 +123,13 @@ namespace StudentManagementApplicationAPI.Services
                         throw new NoSuchDepartmentExistException($"Department does not exist with id {dto.DepartmentId}");
                     }
                 }
-
+                if(type != RoleType.Admin && dto.DepartmentId == 5)
+                {
+                    throw new UnableToAddFacultyException("Admin Department Not Allowed");
+                }
                 if (type == RoleType.Admin)
                 {
-                    dto.DepartmentId = 2;
+                    dto.DepartmentId = 5;
                 }
 
                 faculty = _mapper.Map<Faculty>(dto);
