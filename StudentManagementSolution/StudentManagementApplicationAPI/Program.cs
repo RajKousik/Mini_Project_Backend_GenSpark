@@ -93,6 +93,7 @@ namespace StudentManagementApplicationAPI
             builder.Services.AddScoped<IAuthLoginService<FacultyLoginReturnDTO, FacultyLoginDTO>, FacultyAuthService>();
             
             builder.Services.AddScoped<IAdminService, AdminService>();
+            builder.Services.AddScoped<IStudentService , StudentService>();
 
 
 

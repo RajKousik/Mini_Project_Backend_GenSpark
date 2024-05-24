@@ -15,6 +15,7 @@ namespace StudentManagementApplicationAPI.Mappers
             CreateMap<Student, StudentLoginReturnDTO>().ReverseMap();
             CreateMap<Student, StudentRegisterReturnDTO>().ReverseMap();
             CreateMap<StudentRegisterDTO, StudentLoginDTO>().ReverseMap();
+            CreateMap<Student, StudentDTO>().ReverseMap();
             #endregion
 
             #region Faculty

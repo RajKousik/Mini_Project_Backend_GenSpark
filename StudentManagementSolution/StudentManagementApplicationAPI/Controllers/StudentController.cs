@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StudentManagementApplicationAPI.Exceptions.DepartmentExceptions;
 using StudentManagementApplicationAPI.Exceptions.StudentExceptions;
@@ -6,6 +7,7 @@ using StudentManagementApplicationAPI.Exceptions.UnAuthorizationExceptions;
 using StudentManagementApplicationAPI.Interfaces;
 using StudentManagementApplicationAPI.Models.DTOs.StudentDTOs;
 using StudentManagementApplicationAPI.Models.ErrorModels;
+using StudentManagementApplicationAPI.Services;
 
 namespace StudentManagementApplicationAPI.Controllers
 {
@@ -17,16 +19,18 @@ namespace StudentManagementApplicationAPI.Controllers
 
         private readonly IAuthRegisterService<StudentRegisterReturnDTO, StudentRegisterDTO> _authRegisterService;
         private readonly IAuthLoginService<StudentLoginReturnDTO, StudentLoginDTO> _authLoginService;
-
+        private readonly IStudentService _studentService;
         #endregion
 
         #region Constructor
 
         public StudentController(IAuthRegisterService<StudentRegisterReturnDTO, StudentRegisterDTO> authRegisterService,
-            IAuthLoginService<StudentLoginReturnDTO, StudentLoginDTO> authLoginService)
+            IAuthLoginService<StudentLoginReturnDTO, StudentLoginDTO> authLoginService,
+            IStudentService studentService)
         {
             _authLoginService = authLoginService;
             _authRegisterService = authRegisterService;
+            _studentService = studentService;
         }
 
         #endregion
@@ -104,6 +108,194 @@ namespace StudentManagementApplicationAPI.Controllers
             catch (UnableToAddStudentException ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, $"An unexpected error occurred : {ex.Message}"));
+            }
+        }
+
+
+        #region Summary
+        /// <summary>
+        /// Updates a student's details.
+        /// </summary>
+        /// <param name="studentDTO">The student data transfer object containing updated student details.</param>
+        /// <returns>An ActionResult containing the updated student details.</returns>
+        #endregion
+        [HttpPut("update")]
+        [ProducesResponseType(typeof(StudentDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<StudentDTO>> UpdateStudent(StudentDTO studentDTO, string email)
+        {
+            try
+            {
+                var result = await _studentService.UpdateStudent(studentDTO, email);
+                return Ok(result);
+            }
+            catch (NoSuchStudentExistException ex)
+            {
+                return NotFound(new ErrorModel(404, ex.Message));
+            }
+            catch (CannotAddStudentToAdminDepartmentException ex)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new ErrorModel(400, ex.Message));
+            }
+            catch (NoSuchDepartmentExistException ex)
+            {
+                return StatusCode(StatusCodes.Status404NotFound, new ErrorModel(404, ex.Message));
+            }
+            catch (UnableToUpdateStudentException ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, $"An unexpected error occurred : {ex.Message}"));
+            }
+        }
+
+        #region Summary
+        /// <summary>
+        /// Deletes a student by email.
+        /// </summary>
+        /// <param name="email">The email of the student to be deleted.</param>
+        /// <returns>An ActionResult containing the deleted student details.</returns>
+        #endregion
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("delete")]
+        [ProducesResponseType(typeof(StudentDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<StudentDTO>> DeleteStudent(string email)
+        {
+            try
+            {
+                var result = await _studentService.DeleteStudent(email);
+                return Ok(result);
+            }
+            catch (NoSuchStudentExistException ex)
+            {
+                return NotFound(new ErrorModel(404, ex.Message));
+            }
+            catch (UnableToDeleteStudentException ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, $"An unexpected error occurred : {ex.Message}"));
+            }
+        }
+
+        #region Summary
+        /// <summary>
+        /// Retrieves all students.
+        /// </summary>
+        /// <returns>An ActionResult containing a list of all students.</returns>
+        #endregion
+        [Authorize(Roles = "Admin,Assistant_Proffesors,Associate_Proffesors,Proffesors,Head_Of_Department")]
+        [HttpGet("all")]
+        [ProducesResponseType(typeof(IEnumerable<StudentDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<StudentDTO>>> GetAllStudents()
+        {
+            try
+            {
+                var result = await _studentService.GetAllStudents();
+                return Ok(result);
+            }
+            catch(NoStudentsExistsException ex)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new ErrorModel(404, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, $"An unexpected error occurred : {ex.Message}"));
+            }
+        }
+
+        #region Summary
+        /// <summary>
+        /// Retrieves a student by email.
+        /// </summary>
+        /// <param name="email">The email of the student to be retrieved.</param>
+        /// <returns>An ActionResult containing the student details.</returns>
+        #endregion
+        [HttpGet("email/{email}")]
+        [ProducesResponseType(typeof(StudentDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<StudentDTO>> GetStudentByEmail(string email)
+        {
+            try
+            {
+                var result = await _studentService.GetStudentByEmail(email);
+                return Ok(result);
+            }
+            catch (NoSuchStudentExistException ex)
+            {
+                return NotFound(new ErrorModel(404, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, $"An unexpected error occurred : {ex.Message}"));
+            }
+        }
+
+        #region Summary
+        /// <summary>
+        /// Retrieves a student by their roll number.
+        /// </summary>
+        /// <param name="studentRollNo">The roll number of the student to be retrieved.</param>
+        /// <returns>An ActionResult containing the student details.</returns>
+        #endregion
+        [HttpGet("id/{studentRollNo}")]
+        [ProducesResponseType(typeof(StudentDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<StudentDTO>> GetStudentById(int studentRollNo)
+        {
+            try
+            {
+                var result = await _studentService.GetStudentById(studentRollNo);
+                return Ok(result);
+            }
+            catch (NoSuchStudentExistException ex)
+            {
+                return NotFound(new ErrorModel(404, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, $"An unexpected error occurred : {ex.Message}"));
+            }
+        }
+
+        #region Summary
+        /// <summary>
+        /// Retrieves students by their department.
+        /// </summary>
+        /// <param name="departmentId">The ID of the department to retrieve students from.</param>
+        /// <returns>An ActionResult containing a list of students in the specified department.</returns>
+        #endregion
+        [Authorize(Roles = "Admin,Assistant_Proffesors,Associate_Proffesors,Proffesors,Head_Of_Department")]
+        [HttpGet("department/{departmentId}")]
+        [ProducesResponseType(typeof(IEnumerable<StudentDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<StudentDTO>>> GetStudentsByDepartment(int departmentId)
+        {
+            try
+            {
+                var result = await _studentService.GetStudentsByDepartment(departmentId);
+                return Ok(result);
+            }
+            catch (NoSuchDepartmentExistException ex)
+            {
+                return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
