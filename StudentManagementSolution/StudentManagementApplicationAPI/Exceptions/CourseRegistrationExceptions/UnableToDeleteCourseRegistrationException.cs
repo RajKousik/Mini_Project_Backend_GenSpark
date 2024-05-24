@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace StudentManagementApplicationAPI.Exceptions.CourseRegistrationRepository
+namespace StudentManagementApplicationAPI.Exceptions.CourseRegistrationExceptions
 {
     [Serializable]
     public class UnableToDeleteCourseRegistrationException : Exception

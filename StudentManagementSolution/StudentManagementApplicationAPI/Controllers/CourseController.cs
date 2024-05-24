@@ -179,6 +179,7 @@ namespace StudentManagementApplicationAPI.Controllers
         /// <param name="courseId">The ID of the course to be updated.</param>
         /// <param name="courseDTO">The data transfer object containing updated course details.</param>
         /// <returns>An ActionResult containing the updated course details.</returns>
+        [Authorize(Roles = "Admin")]
         [HttpPut("{courseId}")]
         [ProducesResponseType(typeof(CourseReturnDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]

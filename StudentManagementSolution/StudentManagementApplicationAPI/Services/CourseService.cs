@@ -186,7 +186,7 @@ namespace StudentManagementApplicationAPI.Services
         /// Updates a course by its ID.
         /// </summary>
         /// <param name="courseId">The ID of the course.</param>
-        /// <param name="courseUpdateDTO">The data transfer object containing updated course details.</param>
+        /// <param name="courseDTO">The data transfer object containing updated course details.</param>
         /// <returns>The updated course data transfer object.</returns>
         public async Task<CourseReturnDTO> UpdateCourse(int courseId, CourseDTO courseDTO)
         {

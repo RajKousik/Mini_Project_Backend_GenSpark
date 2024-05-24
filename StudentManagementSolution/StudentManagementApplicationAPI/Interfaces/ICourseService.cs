@@ -9,6 +9,6 @@ namespace StudentManagementApplicationAPI.Interfaces
         public Task<CourseReturnDTO> GetCourseById(int courseId);
         public Task<IEnumerable<CourseReturnDTO>> GetCourseByName(string name);
         public Task<IEnumerable<CourseReturnDTO>> GetCourseByFaculty(int facultyId);
-        public Task<CourseReturnDTO> UpdateCourse(int courseId, CourseDTO courseUpdateDTO);
+        public Task<CourseReturnDTO> UpdateCourse(int courseId, CourseDTO courseDTO);
     }
 }

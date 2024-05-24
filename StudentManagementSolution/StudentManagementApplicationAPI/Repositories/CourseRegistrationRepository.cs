@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StudentManagementApplicationAPI.Contexts;
-using StudentManagementApplicationAPI.Exceptions.CourseRegistrationRepository;
+using StudentManagementApplicationAPI.Exceptions.CourseRegistrationExceptions;
 using StudentManagementApplicationAPI.Interfaces;
 using StudentManagementApplicationAPI.Models.Db_Models;
 
@@ -99,9 +99,7 @@ namespace StudentManagementApplicationAPI.Repositories
                                                     .Include(cr => cr.Student)
                                                     .ToListAsync();
 
-            return courseRegistrations.Count == 0
-                ? throw new NoCourseRegistrationsExistsException("No course registrations found in the database!")
-                : courseRegistrations;
+            return  courseRegistrations;
         }
 
         #endregion

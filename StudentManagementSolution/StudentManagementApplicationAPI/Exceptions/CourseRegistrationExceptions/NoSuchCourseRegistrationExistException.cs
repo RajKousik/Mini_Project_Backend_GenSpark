@@ -1,7 +1,7 @@
 ﻿using StudentManagementApplicationAPI.Models.Db_Models;
 using System.Runtime.Serialization;
 
-namespace StudentManagementApplicationAPI.Exceptions.CourseRegistrationRepository
+namespace StudentManagementApplicationAPI.Exceptions.CourseRegistrationExceptions
 {
     [Serializable]
     public class NoSuchCourseRegistrationExistException : Exception
