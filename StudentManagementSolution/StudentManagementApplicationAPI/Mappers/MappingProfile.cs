@@ -6,6 +6,7 @@ using StudentManagementApplicationAPI.Models.DTOs.DepartmentDTOs;
 using StudentManagementApplicationAPI.Models.DTOs.ExamDTOs;
 using StudentManagementApplicationAPI.Models.DTOs.FacultyDTOs;
 using StudentManagementApplicationAPI.Models.DTOs.GradeDTOs;
+using StudentManagementApplicationAPI.Models.DTOs.StudentAttendanceDTOs;
 using StudentManagementApplicationAPI.Models.DTOs.StudentDTOs;
 
 namespace StudentManagementApplicationAPI.Mappers
@@ -71,6 +72,12 @@ namespace StudentManagementApplicationAPI.Mappers
             CreateMap<GradeDTO, GradeUpdateDTO>().ReverseMap();
             CreateMap<GradeDTO, GradeReturnDTO>().ReverseMap();
 
+            #endregion
+
+            #region Student Attendance
+            CreateMap<StudentAttendance, AttendanceDTO>().ReverseMap();
+            CreateMap<StudentAttendance, AttendanceReturnDTO>().ReverseMap();
+            CreateMap<AttendanceReturnDTO, AttendanceDTO>().ReverseMap();
             #endregion
         }
     }

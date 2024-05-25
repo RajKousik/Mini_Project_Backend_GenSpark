@@ -9,7 +9,6 @@ using StudentManagementApplicationAPI.Exceptions.StudentExceptions;
 using StudentManagementApplicationAPI.Interfaces;
 using StudentManagementApplicationAPI.Models.DTOs.GradeDTOs;
 using StudentManagementApplicationAPI.Models.ErrorModels;
-using StudentManagementApplicationAPI.Services;
 
 namespace StudentManagementApplicationAPI.Controllers
 {
@@ -31,7 +30,6 @@ namespace StudentManagementApplicationAPI.Controllers
             _gradeService = gradeService;
         }
         #endregion
-
 
         #region Endpoints
 

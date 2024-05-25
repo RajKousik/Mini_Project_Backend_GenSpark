@@ -108,7 +108,7 @@ namespace StudentManagementApplicationAPI.Services
                 StartTime = startTime,
                 EndTime = endTime
             };
-            if (Enum.TryParse<ExamType>(examDTO.ExamType, out var examTypeEnum))
+            if (Enum.TryParse<ExamType>(examDTO.ExamType.ToLower(), true, out var examTypeEnum))
             {
                 exam.ExamType = examTypeEnum;
             }
@@ -273,7 +273,7 @@ namespace StudentManagementApplicationAPI.Services
                 exam.EndTime = endTime;
                 #endregion
 
-                if (Enum.TryParse<ExamType>(examDTO.ExamType, out var examTypeEnum))
+                if (Enum.TryParse<ExamType>(examDTO.ExamType.ToLower(), true, out var examTypeEnum))
                 {
                     exam.ExamType = examTypeEnum;
                 }

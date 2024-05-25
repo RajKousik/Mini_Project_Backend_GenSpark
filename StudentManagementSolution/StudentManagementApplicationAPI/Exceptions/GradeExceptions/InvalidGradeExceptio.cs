@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Runtime.Serialization;
 
-namespace StudentManagementApplicationAPI.Services
+namespace StudentManagementApplicationAPI.Exceptions.GradeExceptions
 {
     [Serializable]
     public class InvalidGradeException : Exception

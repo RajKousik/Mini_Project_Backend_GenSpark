@@ -102,9 +102,7 @@ namespace StudentManagementApplicationAPI.Repositories
                                                             .Include(a=>a.Course)
                                                             .ToListAsync();
 
-            return attendances.Count == 0
-                ? throw new NoStudentAttendancesExistsException("No student attendance records found in the database!")
-                : attendances;
+            return attendances;
         }
 
         #endregion

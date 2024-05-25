@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using StudentManagementApplicationAPI.Models.Enums;
 
 namespace StudentManagementApplicationAPI.Models.Db_Models
 {
@@ -7,14 +8,11 @@ namespace StudentManagementApplicationAPI.Models.Db_Models
     {
         [Key]
         public int ID { get; set; }
-
-        
         public int StudentRollNo { get; set; }
 
         [ForeignKey("StudentRollNo")]
         public Student Student { get; set; }
 
-        
         public int CourseId { get; set; }
 
         [ForeignKey("CourseId")]
@@ -24,6 +22,6 @@ namespace StudentManagementApplicationAPI.Models.Db_Models
         public DateTime Date { get; set; }
 
         [Required]
-        public string AttendanceStatus { get; set; }
+        public AttendanceStatus AttendanceStatus { get; set; }
     }
 }

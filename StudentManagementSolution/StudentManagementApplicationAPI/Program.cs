@@ -101,6 +101,7 @@ namespace StudentManagementApplicationAPI
             builder.Services.AddScoped<ICourseRegistrationService , CourseRegistrationService>();
             builder.Services.AddScoped<IExamService , ExamService>();
             builder.Services.AddScoped<IGradeService , GradeService>();
+            builder.Services.AddScoped<IStudentAttendanceService , StudentAttendanceService>();
 
 
 
