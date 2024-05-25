@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StudentManagementApplicationAPI.Exceptions.CourseExceptions;
 using StudentManagementApplicationAPI.Exceptions.CourseRegistrationExceptions;
+using StudentManagementApplicationAPI.Exceptions.ExamExceptions;
 using StudentManagementApplicationAPI.Exceptions.StudentExceptions;
 using StudentManagementApplicationAPI.Interfaces;
 using StudentManagementApplicationAPI.Models.DTOs.CourseRegistrationDTOs;
 using StudentManagementApplicationAPI.Models.ErrorModels;
-using StudentManagementApplicationAPI.Services;
 
 namespace StudentManagementApplicationAPI.Controllers
 {

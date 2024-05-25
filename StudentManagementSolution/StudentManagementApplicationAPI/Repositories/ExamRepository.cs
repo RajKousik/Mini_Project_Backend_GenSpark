@@ -98,9 +98,7 @@ namespace StudentManagementApplicationAPI.Repositories
                                        .Include(e => e.Grades)
                                        .ToListAsync();
 
-            return exams.Count == 0
-                ? throw new NoExamsExistsException("No exams found in the database!")
-                : exams;
+            return exams;
         }
 
         #endregion

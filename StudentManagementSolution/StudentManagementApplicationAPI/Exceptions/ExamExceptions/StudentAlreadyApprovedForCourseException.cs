@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace StudentManagementApplicationAPI.Services
+namespace StudentManagementApplicationAPI.Exceptions.ExamExceptions
 {
     [Serializable]
     public class StudentAlreadyApprovedForCourseException : Exception

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using StudentManagementApplicationAPI.Models.Enums;
 
 namespace StudentManagementApplicationAPI.Models.Db_Models
 {
@@ -15,14 +16,14 @@ namespace StudentManagementApplicationAPI.Models.Db_Models
         [ForeignKey("CourseId")]
         public Course Course { get; set; }
 
-        [Range(0, 100)]
+        [Range(1, 100)]
         public int TotalMark { get; set; }
 
         [Required]
         public DateTime ExamDate { get; set; }
 
         [Required]
-        public string ExamType { get; set; }
+        public ExamType ExamType { get; set; }
 
         [Required]
         public DateTime StartTime { get; set; }
