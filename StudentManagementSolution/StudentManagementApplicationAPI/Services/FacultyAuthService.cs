@@ -6,6 +6,7 @@ using StudentManagementApplicationAPI.Interfaces;
 using StudentManagementApplicationAPI.Models.Db_Models;
 using StudentManagementApplicationAPI.Models.DTOs.FacultyDTOs;
 using StudentManagementApplicationAPI.Models.Enums;
+using StudentManagementApplicationAPI.Repositories;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -123,13 +124,14 @@ namespace StudentManagementApplicationAPI.Services
                         throw new NoSuchDepartmentExistException($"Department does not exist with id {dto.DepartmentId}");
                     }
                 }
-                if(type != RoleType.Admin && dto.DepartmentId == 5)
+                if(type != RoleType.Admin && await IsAdminDepartment((int)dto.DepartmentId))
                 {
                     throw new UnableToAddFacultyException("Admin Department Not Allowed");
                 }
                 if (type == RoleType.Admin)
                 {
-                    dto.DepartmentId = 5;
+                    var adminDepartment = await GetAdminDepartment();
+                    dto.DepartmentId = adminDepartment.DeptId;
                 }
 
                 faculty = _mapper.Map<Faculty>(dto);
@@ -165,9 +167,18 @@ namespace StudentManagementApplicationAPI.Services
             }
         }
 
+
         #endregion
 
         #region Private Methods
+        /// <summary>
+        /// Get the admin department
+        /// </summary>
+        /// <returns>returns the admin department</returns>
+        private async Task<Department> GetAdminDepartment()
+        {
+            return (await _departmentRepo.GetAll()).FirstOrDefault(d => d.Name.Equals("Admin", StringComparison.OrdinalIgnoreCase));
+        }
 
         #region Summary
         /// <summary>
@@ -203,6 +214,17 @@ namespace StudentManagementApplicationAPI.Services
                 }
             }
             return true;
+        }
+
+        /// <summary>
+        /// Checks whether the department id is admin department or not
+        /// </summary>
+        /// <param name="departmentId">The department id to be checked</param>
+        /// <returns>True, if it is admin department, else false</returns>
+        private async Task<bool> IsAdminDepartment(int departmentId)    
+        {
+            var department = await _departmentRepo.GetById(departmentId);
+            return department != null && department.Name.Equals("Admin", StringComparison.OrdinalIgnoreCase);
         }
 
         #endregion

@@ -1,17 +1,17 @@
 ﻿using AutoMapper;
 using StudentManagementApplicationAPI.Exceptions.DepartmentExceptions;
-using StudentManagementApplicationAPI.Exceptions.FacultyExceptions;
 using StudentManagementApplicationAPI.Exceptions.StudentExceptions;
 using StudentManagementApplicationAPI.Interfaces;
 using StudentManagementApplicationAPI.Models.Db_Models;
-using StudentManagementApplicationAPI.Models.DTOs.FacultyDTOs;
 using StudentManagementApplicationAPI.Models.DTOs.StudentDTOs;
-using StudentManagementApplicationAPI.Repositories;
+
+
 
 namespace StudentManagementApplicationAPI.Services
 {
     public class StudentService : IStudentService
     {
+        
         private readonly IRepository<int, Student> _studentRepo;
         private readonly IRepository<int, Department> _departmentRepo;
         private readonly IMapper _mapper;
@@ -50,7 +50,6 @@ namespace StudentManagementApplicationAPI.Services
             }
         }
 
-
         public async Task<IEnumerable<StudentDTO>> GetStudentByName(string name)
         {
             try
@@ -83,9 +82,9 @@ namespace StudentManagementApplicationAPI.Services
                 }
                 return _mapper.Map<IEnumerable<StudentDTO>>(students);
             }
-            catch (NoSuchStudentExistException ex)
+            catch (NoStudentsExistsException ex)
             {
-                throw new NoSuchStudentExistException(ex.Message);
+                throw new NoStudentsExistsException(ex.Message);
             }
             catch (Exception ex)
             {

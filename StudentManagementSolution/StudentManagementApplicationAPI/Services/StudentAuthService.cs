@@ -124,10 +124,9 @@ namespace StudentManagementApplicationAPI.Services
                 student.HashedPassword = hMACSHA.ComputeHash(Encoding.UTF8.GetBytes(dto.Password));
                 student.Status = ActivationStatus.Inactive;
 
-                var registeredDept = await _departmentRepo.GetById(dto.DepartmentId);
-                if(registeredDept.Name == "Admin")
+                if(await IsAdminDepartment(dto.DepartmentId))
                 {
-                    throw CannotAddStudentToAdminDepartmentException();
+                    throw new CannotAddStudentToAdminDepartmentException();
                 }
 
                 var addedStudent = await _studentRepo.Add(student);
@@ -159,11 +158,6 @@ namespace StudentManagementApplicationAPI.Services
             }
         }
 
-        private Exception CannotAddStudentToAdminDepartmentException()
-        {
-            throw new NotImplementedException();
-        }
-
         #endregion
 
         #region Private Methods
@@ -176,6 +170,24 @@ namespace StudentManagementApplicationAPI.Services
         /// <returns>A task representing the asynchronous operation.</returns>
         /// <exception cref="DuplicateEmailException">Thrown when the email is already registered.</exception>
         #endregion
+
+        /// <summary>
+        /// Checks whether the department id is admin department or not
+        /// </summary>
+        /// <param name="departmentId">The department id to be checked</param>
+        /// <returns>True, if it is admin department, else false</returns>
+        private async Task<bool> IsAdminDepartment(int departmentId)
+        {
+            var department = await _departmentRepo.GetById(departmentId);
+            return department != null && department.Name.Equals("Admin", StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// Checks whether the email is valid or not
+        /// </summary>
+        /// <param name="email">The email to be validated</param>
+        /// <returns></returns>
+        /// <exception cref="DuplicateEmailException">DuplicateEmailException</exception>
         private async Task ValidateEmail(string email)
         {
             var emailExists = await FindIfEmailAlreadyExists(email);
