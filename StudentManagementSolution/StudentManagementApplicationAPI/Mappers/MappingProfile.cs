@@ -5,6 +5,7 @@ using StudentManagementApplicationAPI.Models.DTOs.CourseRegistrationDTOs;
 using StudentManagementApplicationAPI.Models.DTOs.DepartmentDTOs;
 using StudentManagementApplicationAPI.Models.DTOs.ExamDTOs;
 using StudentManagementApplicationAPI.Models.DTOs.FacultyDTOs;
+using StudentManagementApplicationAPI.Models.DTOs.GradeDTOs;
 using StudentManagementApplicationAPI.Models.DTOs.StudentDTOs;
 
 namespace StudentManagementApplicationAPI.Mappers
@@ -46,7 +47,7 @@ namespace StudentManagementApplicationAPI.Mappers
             CreateMap<CourseUpdateDTO, CourseReturnDTO>().ReverseMap();
             #endregion
 
-            #region Course Registrations
+            #region Course Registration
             CreateMap<CourseRegistration, CourseRegistrationDTO>().ReverseMap();
             CreateMap<CourseRegistration, CourseRegistrationReturnDTO>().ReverseMap();
             CreateMap<CourseRegistration, CourseRegistrationAddDTO>().ReverseMap();
@@ -62,7 +63,15 @@ namespace StudentManagementApplicationAPI.Mappers
             CreateMap<ExamDTO, ExamReturnDTO>().ReverseMap();
             #endregion
 
+            #region Grade
+            CreateMap<Grade, GradeDTO>().ReverseMap();
+            CreateMap<Grade, GradeReturnDTO>().ReverseMap();
+            CreateMap<Grade, GradeUpdateDTO>().ReverseMap();
+            CreateMap<GradeReturnDTO, GradeUpdateDTO>().ReverseMap();
+            CreateMap<GradeDTO, GradeUpdateDTO>().ReverseMap();
+            CreateMap<GradeDTO, GradeReturnDTO>().ReverseMap();
 
+            #endregion
         }
     }
 }
