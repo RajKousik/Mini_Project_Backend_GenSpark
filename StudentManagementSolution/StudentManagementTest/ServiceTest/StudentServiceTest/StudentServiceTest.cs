@@ -43,7 +43,7 @@ namespace StudentManagementTest.ServiceTest.StudentServiceTest
         private async Task SeedDatabaseAsync()
         {
             var hmac = new HMACSHA512();
-            var faculty1 = new Faculty()
+            var faculty1 = new Faculty
             {
                 Name = "faculty1",
                 Email = "faculty1@gmail.com",

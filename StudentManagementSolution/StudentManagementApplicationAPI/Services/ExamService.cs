@@ -342,13 +342,13 @@ namespace StudentManagementApplicationAPI.Services
                 var exams = (await _examRepository.GetAll()).Where(e => e.ExamDate.Date == date.Date).ToList();
                 if (exams.Count == 0)
                 {
-                    throw new NoSuchCourseExistException($"No exams exist on date {date.ToShortDateString()}.");
+                    throw new NoExamsExistsException($"No exams exist on date {date.ToShortDateString()}.");
                 }
                 return _mapper.Map<IEnumerable<ExamReturnDTO>>(exams);
             }
-            catch (NoSuchCourseExistException ex)
+            catch (NoExamsExistsException ex)
             {
-                throw new NoSuchCourseExistException(ex.Message);
+                throw new NoExamsExistsException(ex.Message);
             }
             catch (Exception ex)
             {
