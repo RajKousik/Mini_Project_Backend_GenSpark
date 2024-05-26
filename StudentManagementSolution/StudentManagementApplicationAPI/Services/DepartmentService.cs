@@ -113,7 +113,7 @@ namespace StudentManagementApplicationAPI.Services
                 var department = await _departmentRepository.GetById(departmentId);
                 if (department == null)
                 {
-                    throw new NoDepartmentsExistsException();
+                    throw new NoSuchDepartmentExistException();
                 }
 
                 var deletedDepartment = await _departmentRepository.Delete(departmentId);
@@ -127,9 +127,9 @@ namespace StudentManagementApplicationAPI.Services
             {
                 throw new UnableToDeleteDepartmentException(ex.Message);
             }
-            catch (NoDepartmentsExistsException ex)
+            catch (NoSuchDepartmentExistException ex)
             {
-                throw new NoDepartmentsExistsException(ex.Message);
+                throw new NoSuchDepartmentExistException(ex.Message);
             }
             catch (Exception ex)
             {

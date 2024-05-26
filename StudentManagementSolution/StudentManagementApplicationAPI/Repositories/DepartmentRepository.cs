@@ -99,9 +99,7 @@ namespace StudentManagementApplicationAPI.Repositories
                                                     .Include(d => d.Faculties)
                                                     .ToListAsync();
 
-            return departments.Count == 0
-                ? throw new NoDepartmentsExistsException("No Departments found in the database!")
-                : departments;
+            return  departments;
         }
 
         #endregion
