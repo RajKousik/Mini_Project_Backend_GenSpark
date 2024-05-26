@@ -15,11 +15,9 @@ namespace StudentManagementApplicationAPI.Services
     public class StudentService : IStudentService
     {
         #region Fields
-
         private readonly IRepository<int, Student> _studentRepo;
         private readonly IRepository<int, Department> _departmentRepo;
         private readonly IMapper _mapper;
-
         #endregion
 
         #region Constructor
@@ -36,7 +34,6 @@ namespace StudentManagementApplicationAPI.Services
             _mapper = mapper;
             _departmentRepo = departmentRepo;
         }
-
         #endregion
 
         #region Public Methods
@@ -61,6 +58,14 @@ namespace StudentManagementApplicationAPI.Services
                 await _studentRepo.Delete(student.StudentRollNo);
                 return _mapper.Map<StudentDTO>(student);
             }
+            catch (UnableToDeleteStudentException ex)
+            {
+                throw new UnableToDeleteStudentException(ex.Message);
+            }
+            catch (NoSuchStudentExistException ex)
+            {
+                throw new NoSuchStudentExistException(ex.Message);
+            }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
@@ -73,6 +78,7 @@ namespace StudentManagementApplicationAPI.Services
         /// <param name="name">The name of the students.</param>
         /// <returns>A list of students.</returns>
         /// <exception cref="NoStudentsExistsException">Thrown when no students exist.</exception>
+
         public async Task<IEnumerable<StudentDTO>> GetStudentByName(string name)
         {
             try
@@ -83,6 +89,10 @@ namespace StudentManagementApplicationAPI.Services
                     throw new NoStudentsExistsException();
                 }
                 return _mapper.Map<IEnumerable<StudentDTO>>(students);
+            }
+            catch (NoStudentsExistsException ex)
+            {
+                throw new NoStudentsExistsException(ex.Message);
             }
             catch (Exception ex)
             {
@@ -106,12 +116,16 @@ namespace StudentManagementApplicationAPI.Services
                 }
                 return _mapper.Map<IEnumerable<StudentDTO>>(students);
             }
+            catch (NoStudentsExistsException ex)
+            {
+                throw new NoStudentsExistsException(ex.Message);
+            }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
-
+        
         /// <summary>
         /// Gets a student by email.
         /// </summary>
@@ -129,6 +143,10 @@ namespace StudentManagementApplicationAPI.Services
                 }
 
                 return _mapper.Map<StudentDTO>(student);
+            }
+            catch (NoSuchStudentExistException ex)
+            {
+                throw new NoSuchStudentExistException(ex.Message);
             }
             catch (Exception ex)
             {
@@ -153,6 +171,10 @@ namespace StudentManagementApplicationAPI.Services
                 }
 
                 return _mapper.Map<StudentDTO>(student);
+            }
+            catch (NoSuchStudentExistException ex)
+            {
+                throw new NoSuchStudentExistException(ex.Message);
             }
             catch (Exception ex)
             {
@@ -183,6 +205,14 @@ namespace StudentManagementApplicationAPI.Services
                     throw new NoStudentsExistsException($"No students in the department {departmentId}");
                 }
                 return _mapper.Map<IEnumerable<StudentDTO>>(students);
+            }
+            catch (NoSuchStudentExistException ex)
+            {
+                throw new NoSuchStudentExistException(ex.Message);
+            }
+            catch (NoSuchDepartmentExistException ex)
+            {
+                throw new NoSuchDepartmentExistException(ex.Message);
             }
             catch (Exception ex)
             {
@@ -247,6 +277,22 @@ namespace StudentManagementApplicationAPI.Services
                 studentInDB.DepartmentId = dto.DepartmentId;
                 await _studentRepo.Update(studentInDB);
                 return _mapper.Map<StudentDTO>(studentInDB);
+            }
+            catch (NoSuchStudentExistException ex)
+            {
+                throw new NoSuchStudentExistException(ex.Message);
+            }
+            catch (NoSuchDepartmentExistException ex)
+            {
+                throw new NoSuchDepartmentExistException(ex.Message);
+            }
+            catch (CannotAddStudentToAdminDepartmentException ex)
+            {
+                throw new CannotAddStudentToAdminDepartmentException(ex.Message);
+            }
+            catch (UnableToUpdateStudentException ex)
+            {
+                throw new UnableToUpdateStudentException(ex.Message);
             }
             catch (Exception ex)
             {

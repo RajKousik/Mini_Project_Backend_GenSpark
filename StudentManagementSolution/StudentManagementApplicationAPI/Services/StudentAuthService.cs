@@ -28,6 +28,7 @@ namespace StudentManagementApplicationAPI.Services
         private readonly IRepository<int, Student> _studentRepo;
         private readonly IRepository<int, Department> _departmentRepo;
         private readonly IMapper _mapper;
+        private readonly ILogger<StudentAuthService> _logger;
         private readonly PasswordValidatorService _passwordValidatorService;
 
         private readonly bool AllowPasswordValidation;
@@ -45,9 +46,15 @@ namespace StudentManagementApplicationAPI.Services
         /// <param name="departmentRepo">The repository for department data.</param>
         /// <param name="passwordValidatorService">The passwoord validator service.</param>
         #endregion
-        public StudentAuthService(ITokenService tokenService, IRepository<int, Student> studentRepo, 
-            IMapper mapper, IRepository<int, Department> departmentRepo,
-            PasswordValidatorService passwordValidatorService, IConfiguration configuration)
+        public StudentAuthService(
+            ITokenService tokenService, 
+            IRepository<int, Student> studentRepo, 
+            IMapper mapper,
+            IRepository<int, Department> departmentRepo,
+            PasswordValidatorService passwordValidatorService, 
+            IConfiguration configuration,
+            ILogger<StudentAuthService> logger
+            )
         {
             _tokenService = tokenService;
             _studentRepo = studentRepo;
@@ -56,6 +63,7 @@ namespace StudentManagementApplicationAPI.Services
             _passwordValidatorService = passwordValidatorService;
             bool.TryParse(configuration.GetSection("AllowPasswordValidation").Value, out bool allowPasswordValidation);
             AllowPasswordValidation = allowPasswordValidation;
+            _logger = logger;
         }
 
         #endregion
@@ -100,6 +108,11 @@ namespace StudentManagementApplicationAPI.Services
             catch (UserNotActivatedException ex)
             {
                 throw new UserNotActivatedException(ex.Message);
+            }
+            catch (UnauthorizedUserException ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new UnauthorizedUserException("Invalid username or password");
             }
             catch (Exception ex)
             {

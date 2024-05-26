@@ -109,6 +109,10 @@ namespace StudentManagementApplicationAPI
 
             #endregion
 
+            #region Logging
+            builder.Services.AddLogging(l => l.AddLog4Net());
+            #endregion
+
             #region Password Validator
             builder.Services.AddTransient(service => new PasswordValidatorService(new PasswordRequirements()));
             #endregion
