@@ -1,4 +1,6 @@
 using AutoMapper;
+using Easy_Password_Validator;
+using Easy_Password_Validator.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Moq;
@@ -24,6 +26,8 @@ namespace StudentManagementTest.ServiceTest.StudentAuthServiceTest
         IRepository<int, Department> _departmentRepo;
         IMapper _mapper;
         MapperConfiguration _config;
+        PasswordValidatorService passwordValidatorService;
+        Mock<IConfiguration> mockPasswordConfig;
         #endregion
 
         [SetUp]
@@ -45,7 +49,15 @@ namespace StudentManagementTest.ServiceTest.StudentAuthServiceTest
             congigTokenSection.Setup(x => x.GetSection("JWT")).Returns(configurationJWTSection.Object);
             Mock<IConfiguration> mockConfig = new Mock<IConfiguration>();
             mockConfig.Setup(x => x.GetSection("TokenKey")).Returns(congigTokenSection.Object);
+
+            Mock<IConfigurationSection> passwordValueConfig = new Mock<IConfigurationSection>();
+            passwordValueConfig.Setup(x => x.Value).Returns("true");
+            mockPasswordConfig = new Mock<IConfiguration>();
+            mockPasswordConfig.Setup(x => x.GetSection("AllowPasswordValidation")).Returns(passwordValueConfig.Object);
+
             _tokenService = new TokenService(mockConfig.Object);
+
+            passwordValidatorService = new PasswordValidatorService(new PasswordRequirements());
         }
 
         private async Task SeedDatabaseAsync()
@@ -97,7 +109,7 @@ namespace StudentManagementTest.ServiceTest.StudentAuthServiceTest
 
             await SeedDatabaseAsync();
 
-            IAuthLoginService<StudentLoginReturnDTO, StudentLoginDTO> studentLoginService = new StudentAuthService(_tokenService, _studentRepo, _mapper, _departmentRepo); ;
+            IAuthLoginService<StudentLoginReturnDTO, StudentLoginDTO> studentLoginService = new StudentAuthService(_tokenService, _studentRepo, _mapper, _departmentRepo, passwordValidatorService, mockPasswordConfig.Object);
 
             StudentLoginDTO studentLoginDTO = new StudentLoginDTO
             {
@@ -116,7 +128,8 @@ namespace StudentManagementTest.ServiceTest.StudentAuthServiceTest
         public void LoginFailureTest()
         {
 
-            IAuthLoginService<StudentLoginReturnDTO, StudentLoginDTO> studentLoginService = new StudentAuthService(_tokenService, _studentRepo, _mapper, _departmentRepo); ;
+            //IAuthLoginService<StudentLoginReturnDTO, StudentLoginDTO> studentLoginService = new StudentAuthService(_tokenService, _studentRepo, _mapper, _departmentRepo); ;
+            IAuthLoginService<StudentLoginReturnDTO, StudentLoginDTO> studentLoginService = new StudentAuthService(_tokenService, _studentRepo, _mapper, _departmentRepo, passwordValidatorService, mockPasswordConfig.Object);
 
             StudentLoginDTO studentLoginDTO = new StudentLoginDTO
             {
@@ -124,7 +137,7 @@ namespace StudentManagementTest.ServiceTest.StudentAuthServiceTest
                 Password = "student123"
             };
 
-            Assert.ThrowsAsync<UnauthorizedUserException>(async() => await studentLoginService.Login(studentLoginDTO));
+            Assert.ThrowsAsync<UnauthorizedUserException>(async () => await studentLoginService.Login(studentLoginDTO));
 
         }
 
@@ -132,7 +145,7 @@ namespace StudentManagementTest.ServiceTest.StudentAuthServiceTest
         public async Task RegisterSuccessTest()
         {
 
-            IAuthRegisterService<StudentRegisterReturnDTO, StudentRegisterDTO> studentResgiterService = new StudentAuthService(_tokenService, _studentRepo, _mapper, _departmentRepo); ;
+            IAuthRegisterService<StudentRegisterReturnDTO, StudentRegisterDTO> studentResgiterService = new StudentAuthService(_tokenService, _studentRepo, _mapper, _departmentRepo, passwordValidatorService, mockPasswordConfig.Object); ;
 
             StudentRegisterDTO studentRegisterDTO = new StudentRegisterDTO
             {
@@ -157,7 +170,8 @@ namespace StudentManagementTest.ServiceTest.StudentAuthServiceTest
         public void RegisterFailureTest()
         {
 
-            IAuthRegisterService<StudentRegisterReturnDTO, StudentRegisterDTO> studentResgiterService = new StudentAuthService(_tokenService, _studentRepo, _mapper, _departmentRepo); ;
+            //IAuthRegisterService<StudentRegisterReturnDTO, StudentRegisterDTO> studentResgiterService = new StudentAuthService(_tokenService, _studentRepo, _mapper, _departmentRepo); ;
+            IAuthRegisterService<StudentRegisterReturnDTO, StudentRegisterDTO> studentResgiterService = new StudentAuthService(_tokenService, _studentRepo, _mapper, _departmentRepo, passwordValidatorService, mockPasswordConfig.Object); ;
 
             StudentRegisterDTO studentRegisterDTO = new StudentRegisterDTO
             {

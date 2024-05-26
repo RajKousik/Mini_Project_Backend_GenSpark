@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Easy_Password_Validator;
+using StudentManagementApplicationAPI.Exceptions.CommonExceptions;
 using StudentManagementApplicationAPI.Exceptions.DepartmentExceptions;
 using StudentManagementApplicationAPI.Exceptions.StudentExceptions;
 using StudentManagementApplicationAPI.Exceptions.UnAuthorizationExceptions;
@@ -7,6 +9,7 @@ using StudentManagementApplicationAPI.Models.Db_Models;
 using StudentManagementApplicationAPI.Models.DTOs.StudentDTOs;
 using StudentManagementApplicationAPI.Models.Enums;
 using StudentManagementApplicationAPI.Repositories;
+using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -25,6 +28,9 @@ namespace StudentManagementApplicationAPI.Services
         private readonly IRepository<int, Student> _studentRepo;
         private readonly IRepository<int, Department> _departmentRepo;
         private readonly IMapper _mapper;
+        private readonly PasswordValidatorService _passwordValidatorService;
+
+        private readonly bool AllowPasswordValidation;
 
         #endregion
 
@@ -37,13 +43,19 @@ namespace StudentManagementApplicationAPI.Services
         /// <param name="studentRepo">The repository for student data.</param>
         /// <param name="mapper">The mapper for transforming DTOs and models.</param>
         /// <param name="departmentRepo">The repository for department data.</param>
+        /// <param name="passwordValidatorService">The passwoord validator service.</param>
         #endregion
-        public StudentAuthService(ITokenService tokenService, IRepository<int, Student> studentRepo, IMapper mapper, IRepository<int, Department> departmentRepo)
+        public StudentAuthService(ITokenService tokenService, IRepository<int, Student> studentRepo, 
+            IMapper mapper, IRepository<int, Department> departmentRepo,
+            PasswordValidatorService passwordValidatorService, IConfiguration configuration)
         {
             _tokenService = tokenService;
             _studentRepo = studentRepo;
             _mapper = mapper;
             _departmentRepo = departmentRepo;
+            _passwordValidatorService = passwordValidatorService;
+            bool.TryParse(configuration.GetSection("AllowPasswordValidation").Value, out bool allowPasswordValidation);
+            AllowPasswordValidation = allowPasswordValidation;
         }
 
         #endregion
@@ -117,17 +129,31 @@ namespace StudentManagementApplicationAPI.Services
                 await ValidateEmail(dto.Email);
                 await ValidateDepartment(dto.DepartmentId);
 
+                if (await IsAdminDepartment(dto.DepartmentId))
+                {
+                    throw new CannotAddStudentToAdminDepartmentException();
+                }
+
+                #region Password Validation
+                if (AllowPasswordValidation)
+                {
+                    var isPasswordValid = _passwordValidatorService.TestAndScore(dto.Password);
+                    Debug.WriteLine($"Password score {_passwordValidatorService.Score}, {_passwordValidatorService.FailureMessages} ");
+                    var failureMessages = string.Join(", ", _passwordValidatorService.FailureMessages);
+                    if (!isPasswordValid)
+                    {
+                        Debug.WriteLine("Invalid password");
+                        throw new InvalidPasswordException(failureMessages);
+                    }
+                }
+                #endregion
+
                 student = _mapper.Map<Student>(dto);
 
                 HMACSHA512 hMACSHA = new HMACSHA512();
                 student.PasswordHashKey = hMACSHA.Key;
                 student.HashedPassword = hMACSHA.ComputeHash(Encoding.UTF8.GetBytes(dto.Password));
                 student.Status = ActivationStatus.Inactive;
-
-                if(await IsAdminDepartment(dto.DepartmentId))
-                {
-                    throw new CannotAddStudentToAdminDepartmentException();
-                }
 
                 var addedStudent = await _studentRepo.Add(student);
 
@@ -150,6 +176,10 @@ namespace StudentManagementApplicationAPI.Services
             catch (DuplicateEmailException ex)
             {
                 throw new DuplicateEmailException(ex.Message);
+            }
+            catch (InvalidPasswordException ex)
+            {
+                throw new InvalidPasswordException(ex.Message);
             }
             catch (Exception ex)
             {

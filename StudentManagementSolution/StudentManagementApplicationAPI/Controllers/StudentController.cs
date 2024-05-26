@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using StudentManagementApplicationAPI.Exceptions.CommonExceptions;
 using StudentManagementApplicationAPI.Exceptions.DepartmentExceptions;
 using StudentManagementApplicationAPI.Exceptions.StudentExceptions;
 using StudentManagementApplicationAPI.Exceptions.UnAuthorizationExceptions;
 using StudentManagementApplicationAPI.Interfaces;
 using StudentManagementApplicationAPI.Models.DTOs.StudentDTOs;
 using StudentManagementApplicationAPI.Models.ErrorModels;
-using StudentManagementApplicationAPI.Services;
 
 namespace StudentManagementApplicationAPI.Controllers
 {
@@ -96,6 +96,10 @@ namespace StudentManagementApplicationAPI.Controllers
             catch (NoSuchDepartmentExistException ex)
             {
                 return NotFound(new ErrorModel(404, ex.Message));
+            }
+            catch (InvalidPasswordException ex)
+            {
+                return BadRequest(new ErrorModel(400, ex.Message));
             }
             catch (DuplicateEmailException ex)
             {

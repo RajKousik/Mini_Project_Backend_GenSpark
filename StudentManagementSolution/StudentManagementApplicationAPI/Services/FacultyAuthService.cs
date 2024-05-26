@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Easy_Password_Validator;
+using StudentManagementApplicationAPI.Exceptions.CommonExceptions;
 using StudentManagementApplicationAPI.Exceptions.DepartmentExceptions;
 using StudentManagementApplicationAPI.Exceptions.FacultyExceptions;
 using StudentManagementApplicationAPI.Exceptions.UnAuthorizationExceptions;
@@ -7,6 +9,7 @@ using StudentManagementApplicationAPI.Models.Db_Models;
 using StudentManagementApplicationAPI.Models.DTOs.FacultyDTOs;
 using StudentManagementApplicationAPI.Models.Enums;
 using StudentManagementApplicationAPI.Repositories;
+using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -20,6 +23,8 @@ namespace StudentManagementApplicationAPI.Services
         private readonly IRepository<int, Faculty> _facultyRepo;
         private readonly IRepository<int, Department> _departmentRepo;
         private readonly IMapper _mapper;
+        private readonly PasswordValidatorService _passwordValidatorService;
+        private readonly bool AllowPasswordValidation;
 
         #endregion
 
@@ -34,12 +39,17 @@ namespace StudentManagementApplicationAPI.Services
         /// <param name="mapper">The mapper for transforming DTOs and models.</param>
         /// <param name="departmentRepo">The repository for department data.</param>
         #endregion
-        public FacultyAuthService(ITokenService tokenService, IRepository<int, Faculty> facultyRepo, IMapper mapper, IRepository<int, Department> departmentRepo)
+        public FacultyAuthService(ITokenService tokenService, IRepository<int, Faculty> facultyRepo,
+            IMapper mapper, IRepository<int, Department> departmentRepo,
+            PasswordValidatorService passwordValidatorService, IConfiguration configuration)
         {
             _tokenService = tokenService;
             _facultyRepo = facultyRepo;
             _mapper = mapper;
             _departmentRepo = departmentRepo;
+            _passwordValidatorService = passwordValidatorService;
+            bool.TryParse(configuration.GetSection("AllowPasswordValidation").Value, out bool allowPasswordValidation);
+            AllowPasswordValidation = allowPasswordValidation;
         }
 
         #endregion
@@ -128,6 +138,21 @@ namespace StudentManagementApplicationAPI.Services
                 {
                     throw new UnableToAddFacultyException("Admin Department Not Allowed");
                 }
+
+                #region Password Validation
+                if (AllowPasswordValidation)
+                {
+                    var isPasswordValid = _passwordValidatorService.TestAndScore(dto.Password);
+                    Debug.WriteLine($"Password score {_passwordValidatorService.Score}, {_passwordValidatorService.FailureMessages} ");
+                    var failureMessages = string.Join(", ", _passwordValidatorService.FailureMessages);
+                    if (!isPasswordValid)
+                    {
+                        Debug.WriteLine("Invalid password");
+                        throw new InvalidPasswordException(failureMessages);
+                    }
+                }
+                #endregion
+
                 if (type == RoleType.Admin)
                 {
                     var adminDepartment = await GetAdminDepartment();

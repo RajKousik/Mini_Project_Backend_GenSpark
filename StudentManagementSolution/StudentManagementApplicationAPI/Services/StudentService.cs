@@ -9,13 +9,27 @@ using StudentManagementApplicationAPI.Models.DTOs.StudentDTOs;
 
 namespace StudentManagementApplicationAPI.Services
 {
+    /// <summary>
+    /// Service class to handle student-related operations.
+    /// </summary>
     public class StudentService : IStudentService
     {
-        
+        #region Fields
+
         private readonly IRepository<int, Student> _studentRepo;
         private readonly IRepository<int, Department> _departmentRepo;
         private readonly IMapper _mapper;
 
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StudentService"/> class.
+        /// </summary>
+        /// <param name="studentRepo">The student repository.</param>
+        /// <param name="mapper">The mapper.</param>
+        /// <param name="departmentRepo">The department repository.</param>
         public StudentService(IRepository<int, Student> studentRepo, IMapper mapper, IRepository<int, Department> departmentRepo)
         {
             _studentRepo = studentRepo;
@@ -23,6 +37,17 @@ namespace StudentManagementApplicationAPI.Services
             _departmentRepo = departmentRepo;
         }
 
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Deletes a student by email.
+        /// </summary>
+        /// <param name="email">The email of the student.</param>
+        /// <returns>The deleted student.</returns>
+        /// <exception cref="NoSuchStudentExistException">Thrown when the student does not exist.</exception>
+        /// <exception cref="UnableToDeleteStudentException">Thrown when the student cannot be deleted.</exception>
         public async Task<StudentDTO> DeleteStudent(string email)
         {
             try
@@ -36,20 +61,18 @@ namespace StudentManagementApplicationAPI.Services
                 await _studentRepo.Delete(student.StudentRollNo);
                 return _mapper.Map<StudentDTO>(student);
             }
-            catch (UnableToDeleteStudentException ex)
-            {
-                throw new UnableToDeleteStudentException(ex.Message);
-            }
-            catch (NoSuchStudentExistException ex)
-            {
-                throw new NoSuchStudentExistException(ex.Message);
-            }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
 
+        /// <summary>
+        /// Gets students by name.
+        /// </summary>
+        /// <param name="name">The name of the students.</param>
+        /// <returns>A list of students.</returns>
+        /// <exception cref="NoStudentsExistsException">Thrown when no students exist.</exception>
         public async Task<IEnumerable<StudentDTO>> GetStudentByName(string name)
         {
             try
@@ -61,16 +84,17 @@ namespace StudentManagementApplicationAPI.Services
                 }
                 return _mapper.Map<IEnumerable<StudentDTO>>(students);
             }
-            catch (NoStudentsExistsException ex)
-            {
-                throw new NoStudentsExistsException(ex.Message);
-            }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
 
+        /// <summary>
+        /// Gets all students.
+        /// </summary>
+        /// <returns>A list of students.</returns>
+        /// <exception cref="NoStudentsExistsException">Thrown when no students exist.</exception>
         public async Task<IEnumerable<StudentDTO>> GetAllStudents()
         {
             try
@@ -82,16 +106,18 @@ namespace StudentManagementApplicationAPI.Services
                 }
                 return _mapper.Map<IEnumerable<StudentDTO>>(students);
             }
-            catch (NoStudentsExistsException ex)
-            {
-                throw new NoStudentsExistsException(ex.Message);
-            }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
 
+        /// <summary>
+        /// Gets a student by email.
+        /// </summary>
+        /// <param name="email">The email of the student.</param>
+        /// <returns>The student.</returns>
+        /// <exception cref="NoSuchStudentExistException">Thrown when the student does not exist.</exception>
         public async Task<StudentDTO> GetStudentByEmail(string email)
         {
             try
@@ -104,16 +130,18 @@ namespace StudentManagementApplicationAPI.Services
 
                 return _mapper.Map<StudentDTO>(student);
             }
-            catch (NoSuchStudentExistException ex)
-            {
-                throw new NoSuchStudentExistException(ex.Message);
-            }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
 
+        /// <summary>
+        /// Gets a student by roll number.
+        /// </summary>
+        /// <param name="studentRollNo">The roll number of the student.</param>
+        /// <returns>The student.</returns>
+        /// <exception cref="NoSuchStudentExistException">Thrown when the student does not exist.</exception>
         public async Task<StudentDTO> GetStudentById(int studentRollNo)
         {
             try
@@ -126,16 +154,19 @@ namespace StudentManagementApplicationAPI.Services
 
                 return _mapper.Map<StudentDTO>(student);
             }
-            catch (NoSuchStudentExistException ex)
-            {
-                throw new NoSuchStudentExistException(ex.Message);
-            }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
 
+        /// <summary>
+        /// Gets students by department.
+        /// </summary>
+        /// <param name="departmentId">The department ID.</param>
+        /// <returns>A list of students.</returns>
+        /// <exception cref="NoSuchDepartmentExistException">Thrown when the department does not exist.</exception>
+        /// <exception cref="NoStudentsExistsException">Thrown when no students exist in the department.</exception>
         public async Task<IEnumerable<StudentDTO>> GetStudentsByDepartment(int departmentId)
         {
             try
@@ -153,20 +184,22 @@ namespace StudentManagementApplicationAPI.Services
                 }
                 return _mapper.Map<IEnumerable<StudentDTO>>(students);
             }
-            catch (NoSuchStudentExistException ex)
-            {
-                throw new NoSuchStudentExistException(ex.Message);
-            }
-            catch (NoSuchDepartmentExistException ex)
-            {
-                throw new NoSuchDepartmentExistException(ex.Message);
-            }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
 
+        /// <summary>
+        /// Updates a student by email.
+        /// </summary>
+        /// <param name="dto">The student DTO.</param>
+        /// <param name="email">The email of the student.</param>
+        /// <returns>The updated student.</returns>
+        /// <exception cref="NoSuchStudentExistException">Thrown when the student does not exist.</exception>
+        /// <exception cref="NoSuchDepartmentExistException">Thrown when the department does not exist.</exception>
+        /// <exception cref="CannotAddStudentToAdminDepartmentException">Thrown when trying to add a student to the Admin department.</exception>
+        /// <exception cref="UnableToUpdateStudentException">Thrown when the student cannot be updated.</exception>
         public async Task<StudentDTO> UpdateStudent(StudentDTO dto, string email)
         {
             try
@@ -215,27 +248,14 @@ namespace StudentManagementApplicationAPI.Services
                 await _studentRepo.Update(studentInDB);
                 return _mapper.Map<StudentDTO>(studentInDB);
             }
-            catch (NoSuchStudentExistException ex)
-            {
-                throw new NoSuchStudentExistException(ex.Message);
-            }
-            catch (NoSuchDepartmentExistException ex)
-            {
-                throw new NoSuchDepartmentExistException(ex.Message);
-            }
-            catch (CannotAddStudentToAdminDepartmentException ex)
-            {
-                throw new CannotAddStudentToAdminDepartmentException(ex.Message);
-            }
-            catch (UnableToUpdateStudentException ex)
-            {
-                throw new UnableToUpdateStudentException(ex.Message);
-            }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
+
+        #endregion
     }
+
 
 }

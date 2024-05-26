@@ -1,3 +1,5 @@
+using Easy_Password_Validator.Models;
+using Easy_Password_Validator;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -105,6 +107,10 @@ namespace StudentManagementApplicationAPI
 
 
 
+            #endregion
+
+            #region Password Validator
+            builder.Services.AddTransient(service => new PasswordValidatorService(new PasswordRequirements()));
             #endregion
 
             #region Authentication
