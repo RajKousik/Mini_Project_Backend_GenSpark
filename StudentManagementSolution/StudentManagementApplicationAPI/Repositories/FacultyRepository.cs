@@ -100,9 +100,7 @@ namespace StudentManagementApplicationAPI.Repositories
             var faculties = await _context.Faculties.Include(f => f.Department)
                                                     .ToListAsync();
 
-            return faculties.Count == 0
-                ? throw new NoFacultiesExistsException("No Faculty members found in the database!")
-                : faculties;
+            return  faculties;
         }
 
         #endregion
