@@ -109,6 +109,7 @@ namespace StudentManagementApplicationAPI
             builder.Services.AddScoped<IGradeService , GradeService>();
             builder.Services.AddScoped<IStudentAttendanceService , StudentAttendanceService>();
 
+            //builder.Services.AddTransient<TokenManagerMiddleware>();
 
 
             #endregion
@@ -139,7 +140,7 @@ namespace StudentManagementApplicationAPI
             #endregion
 
             var app = builder.Build();
-
+            //app.UseMiddleware<TokenManagerMiddleware>();
             #region Swagger Configurations
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

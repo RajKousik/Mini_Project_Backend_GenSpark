@@ -7,8 +7,11 @@ using StudentManagementApplicationAPI.Exceptions.StudentExceptions;
 using StudentManagementApplicationAPI.Exceptions.UnAuthorizationExceptions;
 using StudentManagementApplicationAPI.Interfaces.Service;
 using StudentManagementApplicationAPI.Interfaces.Service.AuthService;
+using StudentManagementApplicationAPI.Interfaces.Service.TokenService;
 using StudentManagementApplicationAPI.Models.DTOs.StudentDTOs;
 using StudentManagementApplicationAPI.Models.ErrorModels;
+using StudentManagementApplicationAPI.Services;
+using System.Security.Claims;
 
 namespace StudentManagementApplicationAPI.Controllers
 {
@@ -22,23 +25,40 @@ namespace StudentManagementApplicationAPI.Controllers
         private readonly IAuthLoginService<StudentLoginReturnDTO, StudentLoginDTO> _authLoginService;
         private readonly IStudentService _studentService;
         private readonly ILogger<StudentController> _logger;
+        private readonly ITokenService _tokenService;
+        //private readonly TokenManagerMiddleware _tokenManagerMiddleware;
         #endregion
 
         #region Constructor
 
         public StudentController(IAuthRegisterService<StudentRegisterReturnDTO, StudentRegisterDTO> authRegisterService,
             IAuthLoginService<StudentLoginReturnDTO, StudentLoginDTO> authLoginService,
-            IStudentService studentService, ILogger<StudentController> logger)
+            IStudentService studentService, ILogger<StudentController> logger, 
+            ITokenService tokenService
+            //, TokenManagerMiddleware tokenManagerMiddleware
+            )
         {
             _authLoginService = authLoginService;
             _authRegisterService = authRegisterService;
             _studentService = studentService;
             _logger = logger;
+            _tokenService = tokenService;
+            //_tokenManagerMiddleware = tokenManagerMiddleware;
+
         }
 
         #endregion
 
         #region End Points
+
+        //[HttpPost("logout")]
+        //public IActionResult Logout()
+        //{
+        //    // Perform logout logic...
+        //    var claim = User.Claims.First();
+        //    _tokenService.AddLoggedOutClaim(claim, _tokenManagerMiddleware);
+        //    return Ok();
+        //}
 
         /// <summary>
         /// Authenticates a student.

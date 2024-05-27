@@ -6,6 +6,7 @@ using StudentManagementApplicationAPI.Exceptions.FacultyExceptions;
 using StudentManagementApplicationAPI.Exceptions.UnAuthorizationExceptions;
 using StudentManagementApplicationAPI.Interfaces.Service;
 using StudentManagementApplicationAPI.Interfaces.Service.AuthService;
+using StudentManagementApplicationAPI.Interfaces.Service.TokenService;
 using StudentManagementApplicationAPI.Models.DTOs.FacultyDTOs;
 using StudentManagementApplicationAPI.Models.Enums;
 using StudentManagementApplicationAPI.Models.ErrorModels;
@@ -23,6 +24,8 @@ namespace StudentManagementApplicationAPI.Controllers
         private readonly IAuthLoginService<FacultyLoginReturnDTO, FacultyLoginDTO> _authLoginService;
         private readonly IFacultyService _facultyService;
         private readonly ILogger<FacultyController> _logger;
+        private readonly ITokenService _tokenService;
+        //private readonly TokenManagerMiddleware _tokenManagerMiddleware;
 
         #endregion
 
@@ -30,15 +33,29 @@ namespace StudentManagementApplicationAPI.Controllers
 
         public FacultyController(IAuthRegisterService<FacultyRegisterReturnDTO, FacultyRegisterDTO> authRegisterService,
                                  IAuthLoginService<FacultyLoginReturnDTO, FacultyLoginDTO> authLoginService,
-                                 IFacultyService facultyService, ILogger<FacultyController> logger)
+                                 IFacultyService facultyService, ILogger<FacultyController> logger,
+                                 ITokenService tokenService
+                                 //, TokenManagerMiddleware tokenManagerMiddleware
+            )
         {
             _authLoginService = authLoginService;
             _authRegisterService = authRegisterService;
             _facultyService = facultyService;
             _logger = logger;
+            _tokenService = tokenService;
+            //_tokenManagerMiddleware = tokenManagerMiddleware;
         }
 
         #endregion
+
+        //[HttpPost("logout")]
+        //public IActionResult Logout()
+        //{
+        //    // Perform logout logic...
+        //    var claim = User.Claims.First();
+        //    _tokenService.AddLoggedOutClaim(claim, _tokenManagerMiddleware);
+        //    return Ok();
+        //}
 
         #region End Points
 

@@ -56,6 +56,12 @@ namespace StudentManagementApplicationAPI.Services
         #endregion
 
         #region Public Methods
+
+        //public void AddLoggedOutClaim(Claim claim, TokenManagerMiddleware middleware)
+        //{
+        //    middleware.AddLoggedOutClaim(claim);
+        //}
+
         #region Summary
         /// <summary>
         /// Generates a JWT token for a faculty member.
