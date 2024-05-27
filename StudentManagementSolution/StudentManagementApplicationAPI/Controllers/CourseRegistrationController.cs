@@ -5,7 +5,7 @@ using StudentManagementApplicationAPI.Exceptions.CourseExceptions;
 using StudentManagementApplicationAPI.Exceptions.CourseRegistrationExceptions;
 using StudentManagementApplicationAPI.Exceptions.ExamExceptions;
 using StudentManagementApplicationAPI.Exceptions.StudentExceptions;
-using StudentManagementApplicationAPI.Interfaces;
+using StudentManagementApplicationAPI.Interfaces.Service;
 using StudentManagementApplicationAPI.Models.DTOs.CourseRegistrationDTOs;
 using StudentManagementApplicationAPI.Models.ErrorModels;
 
@@ -121,7 +121,7 @@ namespace StudentManagementApplicationAPI.Controllers
         /// <param name="courseRegistrationId">The ID of the course registration to be retrieved.</param>
         /// <returns>An ActionResult containing the course registration details.</returns>
         [HttpGet]
-        [Route("CourseRegistrationId")]
+        [Route("{CourseRegistrationId}")]
         [ProducesResponseType(typeof(CourseRegistrationReturnDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]

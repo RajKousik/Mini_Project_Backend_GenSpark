@@ -1,8 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Moq;
 using StudentManagementApplicationAPI.Contexts;
 using StudentManagementApplicationAPI.Exceptions.FacultyExceptions;
 using StudentManagementApplicationAPI.Exceptions.StudentExceptions;
-using StudentManagementApplicationAPI.Interfaces;
+using StudentManagementApplicationAPI.Interfaces.Repository;
+using StudentManagementApplicationAPI.Interfaces.Service.AdminService;
 using StudentManagementApplicationAPI.Models.Db_Models;
 using StudentManagementApplicationAPI.Models.Enums;
 using StudentManagementApplicationAPI.Repositories;
@@ -22,6 +25,7 @@ namespace StudentManagementTest.ServiceTest.AdminServiceTest
         StudentManagementContext context;
         IRepository<int, Student> _studentRepo;
         IRepository<int, Faculty> _facultyRepo;
+        Mock<ILogger<AdminService>> mockLoggerConfig;
         #endregion
 
         #region Setup
@@ -33,6 +37,9 @@ namespace StudentManagementTest.ServiceTest.AdminServiceTest
             context = new StudentManagementContext(optionsBuilder.Options);
             _studentRepo = new StudentRepository(context);
             _facultyRepo = new FacultyRepository(context);
+
+            mockLoggerConfig = new Mock<ILogger<AdminService>>();
+
         }
 
         private async Task SeedDatabaseAsync()
@@ -90,7 +97,7 @@ namespace StudentManagementTest.ServiceTest.AdminServiceTest
         public async Task ActivateStudentSuccess()
         {
             await SeedDatabaseAsync();
-            IAdminService adminService = new AdminService(_studentRepo, _facultyRepo);
+            IAdminService adminService = new AdminService(_studentRepo, _facultyRepo, mockLoggerConfig.Object);
 
             var result = await adminService.ActivateStudent("student1@gmail.com");
 
@@ -102,7 +109,7 @@ namespace StudentManagementTest.ServiceTest.AdminServiceTest
         public async Task ActivateFacultySuccess()
         {
             await SeedDatabaseAsync();
-            IAdminService adminService = new AdminService(_studentRepo, _facultyRepo);
+            IAdminService adminService = new AdminService(_studentRepo, _facultyRepo, mockLoggerConfig.Object);
 
             var result = await adminService.ActivateFaculty("faculty1@gmail.com");
 
@@ -117,7 +124,7 @@ namespace StudentManagementTest.ServiceTest.AdminServiceTest
         [Test, Order(3)]
         public async Task ActivateStudentFailure_InvalidEmail()
         {
-            IAdminService adminService = new AdminService(_studentRepo, _facultyRepo);
+            IAdminService adminService = new AdminService(_studentRepo, _facultyRepo, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchStudentExistException>(async () => await adminService.ActivateStudent("invalidemail@example.com"));
 
@@ -126,7 +133,7 @@ namespace StudentManagementTest.ServiceTest.AdminServiceTest
         [Test, Order(4)]
         public void ActivateFacultyFailure_InvalidEmail()
         {
-            IAdminService adminService = new AdminService(_studentRepo, _facultyRepo);
+            IAdminService adminService = new AdminService(_studentRepo, _facultyRepo, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<FacultyAlreadyActivatedException>(async () => await adminService.ActivateFaculty("faculty1@gmail.com"));
 

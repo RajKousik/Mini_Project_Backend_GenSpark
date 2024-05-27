@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StudentManagementApplicationAPI.Contexts;
 using StudentManagementApplicationAPI.Exceptions.CourseExceptions;
-using StudentManagementApplicationAPI.Interfaces;
+using StudentManagementApplicationAPI.Interfaces.Repository;
 using StudentManagementApplicationAPI.Models.Db_Models;
 using System;
 

@@ -1,4 +1,4 @@
-﻿namespace StudentManagementApplicationAPI.Interfaces
+﻿namespace StudentManagementApplicationAPI.Interfaces.Service.AdminService
 {
     public interface IAdminService
     {

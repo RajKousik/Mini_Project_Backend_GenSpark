@@ -2,7 +2,7 @@
 using StudentManagementApplicationAPI.Contexts;
 using StudentManagementApplicationAPI.Exceptions.GradeExceptions;
 using StudentManagementApplicationAPI.Exceptions.StudentExceptions;
-using StudentManagementApplicationAPI.Interfaces;
+using StudentManagementApplicationAPI.Interfaces.Repository;
 using StudentManagementApplicationAPI.Models.Db_Models;
 using System;
 
@@ -98,9 +98,7 @@ namespace StudentManagementApplicationAPI.Repositories
                                             .Include(g => g.Exam)
                                             .ToListAsync();
 
-            return grades.Count == 0
-                ? throw new NoGradeRecordsExistsException("No Grade records found in the database!")
-                : grades;
+            return  grades;
         }
 
         #endregion

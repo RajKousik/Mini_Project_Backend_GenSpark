@@ -1,6 +1,6 @@
 ﻿using StudentManagementApplicationAPI.Models.DTOs.DepartmentDTOs;
 
-namespace StudentManagementApplicationAPI.Interfaces
+namespace StudentManagementApplicationAPI.Interfaces.Service
 {
     public interface IDepartmentService
     {

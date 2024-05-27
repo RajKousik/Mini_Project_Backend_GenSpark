@@ -1,7 +1,7 @@
 ﻿using StudentManagementApplicationAPI.Models.DTOs.FacultyDTOs;
 using System.Globalization;
 
-namespace StudentManagementApplicationAPI.Interfaces
+namespace StudentManagementApplicationAPI.Interfaces.Service
 {
     public interface IFacultyService
     {

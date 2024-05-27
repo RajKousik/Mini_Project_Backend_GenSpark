@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StudentManagementApplicationAPI.Exceptions.CourseExceptions;
 using StudentManagementApplicationAPI.Exceptions.ExamExceptions;
-using StudentManagementApplicationAPI.Interfaces;
+using StudentManagementApplicationAPI.Interfaces.Service;
 using StudentManagementApplicationAPI.Models.DTOs.ExamDTOs;
 using StudentManagementApplicationAPI.Models.ErrorModels;
 
@@ -95,7 +95,7 @@ namespace StudentManagementApplicationAPI.Controllers
         /// </summary>
         /// <param name="examId">The ID of the exam.</param>
         /// <returns>The exam data transfer object.</returns>
-        [HttpGet("exam-id")]
+        [HttpGet("{examId}")]
         [ProducesResponseType(typeof(ExamReturnDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]

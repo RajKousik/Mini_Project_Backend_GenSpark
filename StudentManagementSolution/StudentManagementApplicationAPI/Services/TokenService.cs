@@ -1,5 +1,5 @@
 ﻿using Microsoft.IdentityModel.Tokens;
-using StudentManagementApplicationAPI.Interfaces;
+using StudentManagementApplicationAPI.Interfaces.Service.TokenService;
 using StudentManagementApplicationAPI.Models.Db_Models;
 using StudentManagementApplicationAPI.Models.Enums;
 using System.IdentityModel.Tokens.Jwt;
@@ -14,6 +14,7 @@ namespace StudentManagementApplicationAPI.Services
 
         private readonly string _secretKey;
         private readonly SymmetricSecurityKey _key;
+        private readonly ILogger<TokenService> _logger;
 
         #endregion
 
@@ -24,10 +25,11 @@ namespace StudentManagementApplicationAPI.Services
         /// </summary>
         /// <param name="configuration">The configuration containing the JWT secret key.</param>
         #endregion
-        public TokenService(IConfiguration configuration)
+        public TokenService(IConfiguration configuration, ILogger<TokenService> logger)
         {
             _secretKey = configuration.GetSection("TokenKey").GetSection("JWT").Value;
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
+            _logger = logger;
         }
         #endregion
 

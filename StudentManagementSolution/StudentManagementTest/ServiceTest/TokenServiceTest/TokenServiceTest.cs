@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Moq;
-using StudentManagementApplicationAPI.Interfaces;
+using StudentManagementApplicationAPI.Interfaces.Service.TokenService;
 using StudentManagementApplicationAPI.Models.Db_Models;
 using StudentManagementApplicationAPI.Models.Enums;
 using StudentManagementApplicationAPI.Services;
@@ -20,6 +21,7 @@ namespace StudentManagementTest.ServiceTest.TokenServiceTest
 
         #region Fields
         ITokenService _tokenService;
+        Mock<ILogger<TokenService>> mockLoggerConfigForToken;
         #endregion
 
         [SetUp]
@@ -31,7 +33,10 @@ namespace StudentManagementTest.ServiceTest.TokenServiceTest
             congigTokenSection.Setup(x => x.GetSection("JWT")).Returns(configurationJWTSection.Object);
             Mock<IConfiguration> mockConfig = new Mock<IConfiguration>();
             mockConfig.Setup(x => x.GetSection("TokenKey")).Returns(congigTokenSection.Object);
-            _tokenService = new TokenService(mockConfig.Object);
+
+            mockLoggerConfigForToken = new Mock<ILogger<TokenService>>();
+
+            _tokenService = new TokenService(mockConfig.Object, mockLoggerConfigForToken.Object);
         }
 
         [Test, Order(1)]

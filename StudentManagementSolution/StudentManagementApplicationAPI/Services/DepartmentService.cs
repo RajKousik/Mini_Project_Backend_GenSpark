@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using StudentManagementApplicationAPI.Exceptions.DepartmentExceptions;
 using StudentManagementApplicationAPI.Exceptions.FacultyExceptions;
-using StudentManagementApplicationAPI.Interfaces;
+using StudentManagementApplicationAPI.Interfaces.Repository;
+using StudentManagementApplicationAPI.Interfaces.Service;
 using StudentManagementApplicationAPI.Models.Db_Models;
 using StudentManagementApplicationAPI.Models.DTOs.DepartmentDTOs;
 using StudentManagementApplicationAPI.Models.Enums;

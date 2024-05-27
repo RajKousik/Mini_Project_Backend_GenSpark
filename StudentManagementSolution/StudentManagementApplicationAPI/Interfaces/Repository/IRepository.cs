@@ -1,4 +1,4 @@
-﻿namespace StudentManagementApplicationAPI.Interfaces
+﻿namespace StudentManagementApplicationAPI.Interfaces.Repository
 {
     public interface IRepository<K, T> where T : class
     {

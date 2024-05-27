@@ -1,6 +1,6 @@
 ﻿using StudentManagementApplicationAPI.Models.Db_Models;
 
-namespace StudentManagementApplicationAPI.Interfaces
+namespace StudentManagementApplicationAPI.Interfaces.Service.TokenService
 {
     public interface ITokenService
     {

@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using StudentManagementApplicationAPI.Contexts;
-using StudentManagementApplicationAPI.Interfaces;
 using StudentManagementApplicationAPI.Mappers;
 using StudentManagementApplicationAPI.Models.Db_Models;
 using StudentManagementApplicationAPI.Models.DTOs.FacultyDTOs;
@@ -13,6 +12,11 @@ using StudentManagementApplicationAPI.Models.DTOs.StudentDTOs;
 using StudentManagementApplicationAPI.Repositories;
 using StudentManagementApplicationAPI.Services;
 using System.Text;
+using StudentManagementApplicationAPI.Interfaces.Repository;
+using StudentManagementApplicationAPI.Interfaces.Service;
+using StudentManagementApplicationAPI.Interfaces.Service.AdminService;
+using StudentManagementApplicationAPI.Interfaces.Service.AuthService;
+using StudentManagementApplicationAPI.Interfaces.Service.TokenService;
 
 namespace StudentManagementApplicationAPI
 {

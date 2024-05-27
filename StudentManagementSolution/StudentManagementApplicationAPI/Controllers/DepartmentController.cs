@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StudentManagementApplicationAPI.Exceptions.DepartmentExceptions;
 using StudentManagementApplicationAPI.Exceptions.FacultyExceptions;
-using StudentManagementApplicationAPI.Interfaces;
+using StudentManagementApplicationAPI.Interfaces.Service;
 using StudentManagementApplicationAPI.Models.DTOs.DepartmentDTOs;
 using StudentManagementApplicationAPI.Models.ErrorModels;
 

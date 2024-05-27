@@ -1,6 +1,6 @@
 ﻿using StudentManagementApplicationAPI.Models.Enums;
 
-namespace StudentManagementApplicationAPI.Interfaces
+namespace StudentManagementApplicationAPI.Interfaces.Service.AuthService
 {
     public interface IAuthRegisterService<T, K> where T : class where K : class
     {

@@ -7,7 +7,9 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using StudentManagementApplicationAPI.Contexts;
 using StudentManagementApplicationAPI.Exceptions.UnAuthorizationExceptions;
-using StudentManagementApplicationAPI.Interfaces;
+using StudentManagementApplicationAPI.Interfaces.Repository;
+using StudentManagementApplicationAPI.Interfaces.Service.AuthService;
+using StudentManagementApplicationAPI.Interfaces.Service.TokenService;
 using StudentManagementApplicationAPI.Models.Db_Models;
 using StudentManagementApplicationAPI.Models.DTOs.StudentDTOs;
 using StudentManagementApplicationAPI.Models.Enums;
@@ -30,6 +32,7 @@ namespace StudentManagementTest.ServiceTest.StudentAuthServiceTest
         PasswordValidatorService passwordValidatorService;
         Mock<IConfiguration> mockPasswordConfig;
         Mock<ILogger<StudentAuthService>> mockLoggerConfig;
+        Mock<ILogger<TokenService>> mockLoggerConfigForToken;
         #endregion
 
         [SetUp]
@@ -45,6 +48,8 @@ namespace StudentManagementTest.ServiceTest.StudentAuthServiceTest
             }));
             _mapper = _config.CreateMapper();
 
+            mockLoggerConfigForToken = new Mock<ILogger<TokenService>>();
+
             Mock<IConfigurationSection> configurationJWTSection = new Mock<IConfigurationSection>();
             configurationJWTSection.Setup(x => x.Value).Returns("Lk3xG9pVqRmZtRwYk7oPnTjWrAsDfGhUi8yBnJkLm9zXx2cVnMl0pOu1tZr4eDcFvGbHnJm5sR3Zn9JyQaPx7oWtUgXhIvDcFeGbVkLmOpNjRbEaUcPy8x6y0Zq4w1u3t5r7i9w2");
             Mock<IConfigurationSection> congigTokenSection = new Mock<IConfigurationSection>();
@@ -59,7 +64,7 @@ namespace StudentManagementTest.ServiceTest.StudentAuthServiceTest
 
             mockLoggerConfig = new Mock<ILogger<StudentAuthService>>();
 
-            _tokenService = new TokenService(mockConfig.Object);
+            _tokenService = new TokenService(mockConfig.Object, mockLoggerConfigForToken.Object);
 
             passwordValidatorService = new PasswordValidatorService(new PasswordRequirements());
         }

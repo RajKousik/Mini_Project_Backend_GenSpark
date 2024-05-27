@@ -5,7 +5,8 @@ using StudentManagementApplicationAPI.Exceptions.CommonExceptions;
 using StudentManagementApplicationAPI.Exceptions.DepartmentExceptions;
 using StudentManagementApplicationAPI.Exceptions.StudentExceptions;
 using StudentManagementApplicationAPI.Exceptions.UnAuthorizationExceptions;
-using StudentManagementApplicationAPI.Interfaces;
+using StudentManagementApplicationAPI.Interfaces.Service;
+using StudentManagementApplicationAPI.Interfaces.Service.AuthService;
 using StudentManagementApplicationAPI.Models.DTOs.StudentDTOs;
 using StudentManagementApplicationAPI.Models.ErrorModels;
 
@@ -251,7 +252,7 @@ namespace StudentManagementApplicationAPI.Controllers
         /// <param name="email">The email of the student to be retrieved.</param>
         /// <returns>An ActionResult containing the student details.</returns>
         #endregion
-        [HttpGet("email/{email}")]
+        [HttpGet("email")]
         [ProducesResponseType(typeof(StudentDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
@@ -281,7 +282,7 @@ namespace StudentManagementApplicationAPI.Controllers
         /// <param name="studentRollNo">The roll number of the student to be retrieved.</param>
         /// <returns>An ActionResult containing the student details.</returns>
         #endregion
-        [HttpGet("id/{studentRollNo}")]
+        [HttpGet("id")]
         [ProducesResponseType(typeof(StudentDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]

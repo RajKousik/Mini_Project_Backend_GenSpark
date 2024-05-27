@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using StudentManagementApplicationAPI.Exceptions.DepartmentExceptions;
 using StudentManagementApplicationAPI.Exceptions.FacultyExceptions;
 using StudentManagementApplicationAPI.Exceptions.UnAuthorizationExceptions;
-using StudentManagementApplicationAPI.Interfaces;
+using StudentManagementApplicationAPI.Interfaces.Service;
+using StudentManagementApplicationAPI.Interfaces.Service.AuthService;
 using StudentManagementApplicationAPI.Models.DTOs.FacultyDTOs;
 using StudentManagementApplicationAPI.Models.Enums;
 using StudentManagementApplicationAPI.Models.ErrorModels;
@@ -364,7 +365,7 @@ namespace StudentManagementApplicationAPI.Controllers
         /// </summary>
         /// <param name="email">The email of the faculty.</param>
         /// <returns>The faculty data transfer object.</returns>
-        [HttpGet("email/{email}")]
+        [HttpGet("email")]
         [ProducesResponseType(typeof(FacultyDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
@@ -392,7 +393,7 @@ namespace StudentManagementApplicationAPI.Controllers
         /// </summary>
         /// <param name="name">The name of the faculty.</param>
         /// <returns>The list of faculty data transfer objects.</returns>
-        [HttpGet("name/{name}")]
+        [HttpGet("name")]
         [ProducesResponseType(typeof(IEnumerable<FacultyDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
@@ -419,7 +420,7 @@ namespace StudentManagementApplicationAPI.Controllers
         /// Retrieves all faculty members.
         /// </summary>
         /// <returns>The list of all faculty data transfer objects.</returns>
-        [HttpGet("all")]
+        [HttpGet]
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(IEnumerable<FacultyDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]

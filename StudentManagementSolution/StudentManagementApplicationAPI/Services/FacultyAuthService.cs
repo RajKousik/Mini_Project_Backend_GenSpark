@@ -4,7 +4,9 @@ using StudentManagementApplicationAPI.Exceptions.CommonExceptions;
 using StudentManagementApplicationAPI.Exceptions.DepartmentExceptions;
 using StudentManagementApplicationAPI.Exceptions.FacultyExceptions;
 using StudentManagementApplicationAPI.Exceptions.UnAuthorizationExceptions;
-using StudentManagementApplicationAPI.Interfaces;
+using StudentManagementApplicationAPI.Interfaces.Repository;
+using StudentManagementApplicationAPI.Interfaces.Service.AuthService;
+using StudentManagementApplicationAPI.Interfaces.Service.TokenService;
 using StudentManagementApplicationAPI.Models.Db_Models;
 using StudentManagementApplicationAPI.Models.DTOs.FacultyDTOs;
 using StudentManagementApplicationAPI.Models.Enums;
@@ -25,6 +27,7 @@ namespace StudentManagementApplicationAPI.Services
         private readonly IMapper _mapper;
         private readonly PasswordValidatorService _passwordValidatorService;
         private readonly bool AllowPasswordValidation;
+        private readonly ILogger<FacultyAuthService> _logger;
 
         #endregion
 
@@ -41,7 +44,8 @@ namespace StudentManagementApplicationAPI.Services
         #endregion
         public FacultyAuthService(ITokenService tokenService, IRepository<int, Faculty> facultyRepo,
             IMapper mapper, IRepository<int, Department> departmentRepo,
-            PasswordValidatorService passwordValidatorService, IConfiguration configuration)
+            PasswordValidatorService passwordValidatorService, IConfiguration configuration,
+            ILogger<FacultyAuthService> logger)
         {
             _tokenService = tokenService;
             _facultyRepo = facultyRepo;
@@ -50,6 +54,7 @@ namespace StudentManagementApplicationAPI.Services
             _passwordValidatorService = passwordValidatorService;
             bool.TryParse(configuration.GetSection("AllowPasswordValidation").Value, out bool allowPasswordValidation);
             AllowPasswordValidation = allowPasswordValidation;
+            _logger = logger;
         }
 
         #endregion
@@ -94,10 +99,12 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (UserNotActivatedException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new UserNotActivatedException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new UnauthorizedUserException("Invalid username or password");
             }
             throw new UnauthorizedUserException("Invalid username or password");
@@ -175,18 +182,22 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (UnableToAddFacultyException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new UnableToAddFacultyException(ex.Message);
             }
             catch (NoSuchDepartmentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchDepartmentExistException(ex.Message);
             }
             catch (DuplicateEmailException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new DuplicateEmailException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 var message = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
                 throw new UnableToRegisterException(message);
             }

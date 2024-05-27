@@ -6,7 +6,7 @@ using StudentManagementApplicationAPI.Exceptions.ExamExceptions;
 using StudentManagementApplicationAPI.Exceptions.FacultyExceptions;
 using StudentManagementApplicationAPI.Exceptions.GradeExceptions;
 using StudentManagementApplicationAPI.Exceptions.StudentExceptions;
-using StudentManagementApplicationAPI.Interfaces;
+using StudentManagementApplicationAPI.Interfaces.Service;
 using StudentManagementApplicationAPI.Models.DTOs.GradeDTOs;
 using StudentManagementApplicationAPI.Models.ErrorModels;
 

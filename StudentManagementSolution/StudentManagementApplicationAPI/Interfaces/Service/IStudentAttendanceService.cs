@@ -1,7 +1,7 @@
 ﻿using StudentManagementApplicationAPI.Models.DTOs.StudentAttendanceDTOs;
 using StudentManagementApplicationAPI.Models.Enums;
 
-namespace StudentManagementApplicationAPI.Interfaces
+namespace StudentManagementApplicationAPI.Interfaces.Service
 {
     public interface IStudentAttendanceService
     {

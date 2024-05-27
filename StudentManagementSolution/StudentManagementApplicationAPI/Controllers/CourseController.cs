@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StudentManagementApplicationAPI.Exceptions.CourseExceptions;
 using StudentManagementApplicationAPI.Exceptions.FacultyExceptions;
-using StudentManagementApplicationAPI.Interfaces;
+using StudentManagementApplicationAPI.Interfaces.Service;
 using StudentManagementApplicationAPI.Models.DTOs.CourseDTOs;
 using StudentManagementApplicationAPI.Models.ErrorModels;
 
@@ -77,7 +77,7 @@ namespace StudentManagementApplicationAPI.Controllers
         /// Retrieves all courses.
         /// </summary>
         /// <returns>An ActionResult containing a list of all courses.</returns>
-        [HttpGet("all")]
+        [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<CourseReturnDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
@@ -105,7 +105,7 @@ namespace StudentManagementApplicationAPI.Controllers
         /// </summary>
         /// <param name="courseId">The ID of the course to be retrieved.</param>
         /// <returns>An ActionResult containing the course details.</returns>
-        [HttpGet]
+        [HttpGet("{courseId}")]
         [ProducesResponseType(typeof(CourseReturnDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]

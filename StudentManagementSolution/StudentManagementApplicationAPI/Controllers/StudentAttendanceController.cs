@@ -5,7 +5,7 @@ using StudentManagementApplicationAPI.Exceptions.CourseExceptions;
 using StudentManagementApplicationAPI.Exceptions.GradeExceptions;
 using StudentManagementApplicationAPI.Exceptions.StudentAttendanceExceptions;
 using StudentManagementApplicationAPI.Exceptions.StudentExceptions;
-using StudentManagementApplicationAPI.Interfaces;
+using StudentManagementApplicationAPI.Interfaces.Service;
 using StudentManagementApplicationAPI.Models.DTOs.StudentAttendanceDTOs;
 using StudentManagementApplicationAPI.Models.Enums;
 using StudentManagementApplicationAPI.Models.ErrorModels;
@@ -205,7 +205,7 @@ namespace StudentManagementApplicationAPI.Controllers
         /// Retrieves all attendance records.
         /// </summary>
         /// <returns>An ActionResult containing a list of all attendance records.</returns>
-        [HttpGet("all")]
+        [HttpGet]
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(IEnumerable<AttendanceReturnDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]

@@ -4,7 +4,9 @@ using StudentManagementApplicationAPI.Exceptions.CommonExceptions;
 using StudentManagementApplicationAPI.Exceptions.DepartmentExceptions;
 using StudentManagementApplicationAPI.Exceptions.StudentExceptions;
 using StudentManagementApplicationAPI.Exceptions.UnAuthorizationExceptions;
-using StudentManagementApplicationAPI.Interfaces;
+using StudentManagementApplicationAPI.Interfaces.Repository;
+using StudentManagementApplicationAPI.Interfaces.Service.AuthService;
+using StudentManagementApplicationAPI.Interfaces.Service.TokenService;
 using StudentManagementApplicationAPI.Models.Db_Models;
 using StudentManagementApplicationAPI.Models.DTOs.StudentDTOs;
 using StudentManagementApplicationAPI.Models.Enums;
@@ -107,6 +109,7 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (UserNotActivatedException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new UserNotActivatedException(ex.Message);
             }
             catch (UnauthorizedUserException ex)
@@ -116,6 +119,7 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new UnauthorizedUserException("Invalid username or password");
             }
             throw new UnauthorizedUserException("Invalid username or password");
@@ -176,26 +180,32 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (CannotAddStudentToAdminDepartmentException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new CannotAddStudentToAdminDepartmentException(ex.Message);
             }
             catch (UnableToAddStudentException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new UnableToAddStudentException(ex.Message);
             }
             catch (NoSuchDepartmentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchDepartmentExistException(ex.Message);
             }
             catch (DuplicateEmailException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new DuplicateEmailException(ex.Message);
             }
             catch (InvalidPasswordException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new InvalidPasswordException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 var message = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
                 throw new UnableToRegisterException(message);
             }
