@@ -28,6 +28,7 @@ namespace StudentManagementApplicationAPI.Services
         private readonly IRepository<int, CourseRegistration> _courseRegistrationRepository;
         private readonly IRepository<int, Faculty> _facultyRepository;
         private readonly IRepository<int, Course> _courseRepository;
+        private readonly ILogger<GradeService> _logger;
 
         #endregion
 
@@ -40,7 +41,8 @@ namespace StudentManagementApplicationAPI.Services
         IRepository<int, CourseRegistration> courseRegistrationRepository,
         IRepository<int, Faculty> facultyRepository,
         IRepository<int, Course> courseRepository,
-        IMapper mapper)
+        IMapper mapper,
+        ILogger<GradeService> logger)
         {
             _gradeRepository = gradeRepository;
             _examRepository = examRepository;
@@ -49,6 +51,7 @@ namespace StudentManagementApplicationAPI.Services
             _courseRegistrationRepository = courseRegistrationRepository;
             _facultyRepository = facultyRepository;
             _courseRepository = courseRepository;
+            _logger = logger;
         }
 
         #endregion
@@ -81,30 +84,37 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoSuchExamExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchExamExistException($"Unable to add grade: {ex.Message}");
             }
             catch (NoSuchStudentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchStudentExistException($"Unable to add grade: {ex.Message}");
             }
             catch (NoSuchFacultyExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchFacultyExistException($"Unable to add grade: {ex.Message}");
             }
             catch (StudentNotOptedForCourseException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new StudentNotOptedForCourseException($"Unable to add grade: {ex.Message}");
             }
             catch (InvalidExamDateException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new InvalidExamDateException($"Unable to add grade: {ex.Message}");
             }
             catch (InvalidMarksScoredException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new InvalidMarksScoredException($"Unable to add grade: {ex.Message}");
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new UnableToAddGradeException($"Unable to add grade: {ex.Message}");
             }
         }
@@ -128,10 +138,12 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoGradeRecordsExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoGradeRecordsExistsException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception($"Unable to retrieve all grades: {ex.Message}");
             }
         }
@@ -155,10 +167,12 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoSuchGradeRecordExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchGradeRecordExistsException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception($"Unable to retrieve grade with ID {gradeId}: {ex.Message}");
             }
         }
@@ -190,14 +204,17 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoGradeRecordsExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoGradeRecordsExistsException(ex.Message);
             }
             catch (NoSuchCourseExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchCourseExistException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception($"Unable to retrieve grades for course with ID {courseId}: {ex.Message}");
             }
         }
@@ -227,14 +244,17 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoGradeRecordsExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoGradeRecordsExistsException(ex.Message);
             }
             catch (NoSuchStudentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchStudentExistException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception($"Unable to retrieve grades for student with ID {studentId}: {ex.Message}");
             }
         }
@@ -290,22 +310,27 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoSuchGradeRecordExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchGradeRecordExistsException($"Unable to update grade: {ex.Message}");
             }
             catch (InvalidGradeException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new InvalidGradeException($"Unable to update grade: {ex.Message}");
             }
             catch (NoSuchFacultyExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchFacultyExistException($"Unable to update grade: {ex.Message}");
             }
             catch (InvalidMarksScoredException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new InvalidMarksScoredException($"Unable to update grade: {ex.Message}");
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new UnableToUpdateGradeException($"Unable to update grade: {ex.Message}");
             }
         }
@@ -330,10 +355,12 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoSuchGradeRecordExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchGradeRecordExistsException($"Unable to delete grade: {ex.Message}");
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new UnableToDeleteGradeException($"Unable to delete grade: {ex.Message}");
             }
         }

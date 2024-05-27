@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Moq;
 using StudentManagementApplicationAPI.Contexts;
 using StudentManagementApplicationAPI.Exceptions.DepartmentExceptions;
 using StudentManagementApplicationAPI.Interfaces.Repository;
@@ -27,6 +29,7 @@ namespace StudentManagementTest.ServiceTest.DepartmentServiceTest
         IRepository<int, Faculty> _facultyRepo;
         IMapper _mapper;
         MapperConfiguration _config;
+        Mock<ILogger<DepartmentService>> mockLoggerConfig;
         #endregion
 
         #region Setup
@@ -43,6 +46,8 @@ namespace StudentManagementTest.ServiceTest.DepartmentServiceTest
                 "StudentManagementApplicationAPI"
             }));
             _mapper = _config.CreateMapper();
+
+            mockLoggerConfig = new Mock<ILogger<DepartmentService>>();
 
         }
 
@@ -134,7 +139,7 @@ namespace StudentManagementTest.ServiceTest.DepartmentServiceTest
         {
             
             await SeedDatabaseAsync();
-            IDepartmentService departmentService = new DepartmentService(_departmentRepo, _mapper, _facultyRepo);
+            IDepartmentService departmentService = new DepartmentService(_departmentRepo, _mapper, _facultyRepo, mockLoggerConfig.Object);
 
             var departmentDTO = new DepartmentDTO { Name = "New Department", HeadId = 2 };
 
@@ -148,7 +153,7 @@ namespace StudentManagementTest.ServiceTest.DepartmentServiceTest
         [Test, Order(2)]
         public async Task GetDepartmentByIdSuccess()
         {
-            IDepartmentService departmentService = new DepartmentService(_departmentRepo, _mapper, _facultyRepo);
+            IDepartmentService departmentService = new DepartmentService(_departmentRepo, _mapper, _facultyRepo, mockLoggerConfig.Object);
 
             var result = await departmentService.GetDepartmentById(2);
 
@@ -159,7 +164,7 @@ namespace StudentManagementTest.ServiceTest.DepartmentServiceTest
         [Test, Order(3)]
         public async Task GetAllDepartmentsSuccess()
         {
-            IDepartmentService departmentService = new DepartmentService(_departmentRepo, _mapper, _facultyRepo);
+            IDepartmentService departmentService = new DepartmentService(_departmentRepo, _mapper, _facultyRepo, mockLoggerConfig.Object);
             //await SeedDatabaseAsync();
 
             var result = await departmentService.GetAllDepartments();
@@ -171,7 +176,7 @@ namespace StudentManagementTest.ServiceTest.DepartmentServiceTest
         [Test, Order(4)]
         public async Task ChangeDepartmentHeadSuccess()
         {
-            IDepartmentService departmentService = new DepartmentService(_departmentRepo, _mapper, _facultyRepo);
+            IDepartmentService departmentService = new DepartmentService(_departmentRepo, _mapper, _facultyRepo, mockLoggerConfig.Object);
             var result = await departmentService.ChangeDepartmentHead(1, 3);
 
             Assert.IsNotNull(result);
@@ -181,7 +186,7 @@ namespace StudentManagementTest.ServiceTest.DepartmentServiceTest
         [Test, Order(5)]
         public async Task DeleteDepartmentSuccess()
         {
-            IDepartmentService departmentService = new DepartmentService(_departmentRepo, _mapper, _facultyRepo);
+            IDepartmentService departmentService = new DepartmentService(_departmentRepo, _mapper, _facultyRepo, mockLoggerConfig.Object);
 
             var result = await departmentService.DeleteDepartment(3);
 
@@ -196,7 +201,7 @@ namespace StudentManagementTest.ServiceTest.DepartmentServiceTest
         [Test, Order(6)]
         public async Task AddDepartmentFailure()
         {
-            IDepartmentService departmentService = new DepartmentService(_departmentRepo, _mapper, _facultyRepo);
+            IDepartmentService departmentService = new DepartmentService(_departmentRepo, _mapper, _facultyRepo, mockLoggerConfig.Object);
 
             var departmentDTO = new DepartmentDTO { Name = "IT", HeadId = 1 }; 
 
@@ -206,7 +211,7 @@ namespace StudentManagementTest.ServiceTest.DepartmentServiceTest
         [Test, Order(7)]
         public async Task DeleteDepartmentFailure()
         {
-            IDepartmentService departmentService = new DepartmentService(_departmentRepo, _mapper, _facultyRepo);
+            IDepartmentService departmentService = new DepartmentService(_departmentRepo, _mapper, _facultyRepo, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchDepartmentExistException>(async () => await departmentService.DeleteDepartment(99)); // Non-existent ID
         }
@@ -214,7 +219,7 @@ namespace StudentManagementTest.ServiceTest.DepartmentServiceTest
         [Test, Order(8)]
         public async Task GetDepartmentByIdFailure()
         {
-            IDepartmentService departmentService = new DepartmentService(_departmentRepo, _mapper, _facultyRepo);
+            IDepartmentService departmentService = new DepartmentService(_departmentRepo, _mapper, _facultyRepo, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchDepartmentExistException>(async () => await departmentService.GetDepartmentById(99)); // Non-existent ID
         }
@@ -223,7 +228,7 @@ namespace StudentManagementTest.ServiceTest.DepartmentServiceTest
         public async Task GetAllDepartmentsFailure()
         {
             await ClearDatabase(); // Ensure no data is present
-            IDepartmentService departmentService = new DepartmentService(_departmentRepo, _mapper, _facultyRepo);
+            IDepartmentService departmentService = new DepartmentService(_departmentRepo, _mapper, _facultyRepo, mockLoggerConfig.Object);
 
             //var result = await departmentService.GetAllDepartments();
 
@@ -235,7 +240,7 @@ namespace StudentManagementTest.ServiceTest.DepartmentServiceTest
         [Test, Order(10)]
         public async Task ChangeDepartmentHeadFailure()
         {
-            IDepartmentService departmentService = new DepartmentService(_departmentRepo, _mapper, _facultyRepo);
+            IDepartmentService departmentService = new DepartmentService(_departmentRepo, _mapper, _facultyRepo, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchDepartmentExistException>(async () => await departmentService.ChangeDepartmentHead(99, 2)); // Non-existent department ID
         }

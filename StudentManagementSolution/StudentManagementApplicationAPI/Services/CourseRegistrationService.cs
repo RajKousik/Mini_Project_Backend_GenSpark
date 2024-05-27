@@ -18,6 +18,7 @@ namespace StudentManagementApplicationAPI.Services
         private readonly IRepository<int, Course> _courseRepository;
         private readonly IRepository<int, Student> _studentRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger<CourseRegistrationService> _logger;
 
         #endregion
 
@@ -33,12 +34,14 @@ namespace StudentManagementApplicationAPI.Services
             IRepository<int, CourseRegistration> courseRegistrationRepository,
             IRepository<int, Course> courseRepository,
             IRepository<int, Student> studentRepository,
-            IMapper mapper)
+            IMapper mapper,
+            ILogger<CourseRegistrationService> logger)
         {
             _courseRegistrationRepository = courseRegistrationRepository;
             _courseRepository = courseRepository;
             _studentRepository = studentRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
         #endregion
@@ -82,18 +85,22 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (StudentAlreadyRegisteredForCourseException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new StudentAlreadyRegisteredForCourseException(ex.Message);
             }
             catch (NoSuchCourseExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchCourseExistException(ex.Message);
             }
             catch (NoSuchStudentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchStudentExistException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new UnableToAddCourseRegistrationException($"Unable to add course registration: {ex.Message}");
             }
         }
@@ -117,10 +124,12 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoCourseRegistrationsExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoCourseRegistrationsExistsException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception($"Unable to retrieve course registrations: {ex.Message}");
             }
         }
@@ -143,10 +152,12 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoSuchCourseRegistrationExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchCourseRegistrationExistException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception($"Unable to retrieve course registration: {ex.Message}");
             }
         }
@@ -197,26 +208,32 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoSuchCourseRegistrationExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchCourseRegistrationExistException(ex.Message);
             }
             catch (NoSuchCourseExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchCourseExistException(ex.Message);
             }
             catch (StudentAlreadyRegisteredForCourseException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new StudentAlreadyRegisteredForCourseException(ex.Message);
             }
             catch (NoSuchStudentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchStudentExistException(ex.Message);
             }
             catch (StudentAlreadyApprovedForCourseException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new StudentAlreadyApprovedForCourseException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new UnableToUpdateCourseRegistrationException($"Unable to update course registration: {ex.Message}");
             }
         }
@@ -248,10 +265,12 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoSuchCourseRegistrationExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchCourseRegistrationExistException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new UnableToDeleteCourseRegistrationException($"Unable to delete course registration: {ex.Message}");
             }
         }
@@ -284,14 +303,17 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoCourseRegistrationsExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoCourseRegistrationsExistsException(ex.Message);
             }
             catch (NoSuchStudentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchStudentExistException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception($"Unable to retrieve courses for student: {ex.Message}");
             }
         }
@@ -324,14 +346,17 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoCourseRegistrationsExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoCourseRegistrationsExistsException(ex.Message);
             }
             catch (NoSuchCourseExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchCourseExistException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception($"Unable to retrieve students for course: {ex.Message}");
             }
         }
@@ -361,18 +386,22 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (CourseRegistrationAlreadyApprovedException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new CourseRegistrationAlreadyApprovedException(ex.Message);
             }
             catch (NoSuchCourseRegistrationExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchCourseRegistrationExistException(ex.Message);
             }
             catch (UnableToUpdateCourseRegistrationException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new UnableToUpdateCourseRegistrationException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new UnableToUpdateCourseRegistrationException($"Unable to approve course registration: {ex.Message}");
             }
         }
@@ -412,14 +441,17 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoCourseRegistrationsExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoCourseRegistrationsExistsException(ex.Message);
             }
             catch (NoSuchStudentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchStudentExistException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new UnableToUpdateCourseRegistrationException($"Unable to approve course registrations for student: {ex.Message}");
             }
         }

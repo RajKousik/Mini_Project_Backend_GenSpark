@@ -122,7 +122,7 @@ namespace StudentManagementTest.ServiceTest.AdminServiceTest
         #region Failure Tests
 
         [Test, Order(3)]
-        public async Task ActivateStudentFailure_InvalidEmail()
+        public void ActivateStudentFailure_InvalidEmail()
         {
             IAdminService adminService = new AdminService(_studentRepo, _facultyRepo, mockLoggerConfig.Object);
 

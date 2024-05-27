@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Moq;
 using StudentManagementApplicationAPI.Contexts;
 using StudentManagementApplicationAPI.Exceptions.DepartmentExceptions;
 using StudentManagementApplicationAPI.Exceptions.StudentExceptions;
@@ -24,6 +26,7 @@ namespace StudentManagementTest.ServiceTest.StudentServiceTest
         IRepository<int, Department> _departmentRepo;
         IMapper _mapper;
         MapperConfiguration _config;
+        Mock<ILogger<StudentService>> mockLoggerConfig;
         #endregion
 
         [SetUp]
@@ -39,6 +42,7 @@ namespace StudentManagementTest.ServiceTest.StudentServiceTest
             }));
             _mapper = _config.CreateMapper();
 
+            mockLoggerConfig = new Mock<ILogger<StudentService>>();
         }
 
         private async Task SeedDatabaseAsync()
@@ -89,7 +93,7 @@ namespace StudentManagementTest.ServiceTest.StudentServiceTest
         public async Task UpdateStudentSuccess()
         {
             await SeedDatabaseAsync();
-            IStudentService studentService = new StudentService(_studentRepo, _mapper, _departmentRepo);
+            IStudentService studentService = new StudentService(_studentRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             var studentDto = new StudentDTO
             {
@@ -112,7 +116,7 @@ namespace StudentManagementTest.ServiceTest.StudentServiceTest
         [Test, Order(2)]
         public async Task GetStudentByIdSuccess()
         {
-            IStudentService studentService = new StudentService(_studentRepo, _mapper, _departmentRepo);
+            IStudentService studentService = new StudentService(_studentRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
 
             var student = await studentService.GetStudentById(1);
@@ -126,7 +130,7 @@ namespace StudentManagementTest.ServiceTest.StudentServiceTest
         [Test, Order(3)]
         public async Task GetStudentByEmailSuccess()
         {
-            IStudentService studentService = new StudentService(_studentRepo, _mapper, _departmentRepo);
+            IStudentService studentService = new StudentService(_studentRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             var student = await studentService.GetStudentByEmail("student1@gmail.com");
 
@@ -139,7 +143,7 @@ namespace StudentManagementTest.ServiceTest.StudentServiceTest
         [Test, Order(4)]
         public async Task GetStudentByNameSuccess()
         {
-            IStudentService studentService = new StudentService(_studentRepo, _mapper, _departmentRepo);
+            IStudentService studentService = new StudentService(_studentRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             var students = await studentService.GetStudentByName("Updated Student");
 
@@ -152,7 +156,7 @@ namespace StudentManagementTest.ServiceTest.StudentServiceTest
         [Test, Order(5)]
         public async Task GetAllStudentsSuccessWithData()
         {
-            IStudentService studentService = new StudentService(_studentRepo, _mapper, _departmentRepo);
+            IStudentService studentService = new StudentService(_studentRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
             var students = await studentService.GetAllStudents();
 
             Assert.IsNotEmpty(students);
@@ -163,7 +167,7 @@ namespace StudentManagementTest.ServiceTest.StudentServiceTest
         [Test, Order(6)]
         public async Task GetStudentsByDepartmentSuccess()
         {
-            IStudentService studentService = new StudentService(_studentRepo, _mapper, _departmentRepo);
+            IStudentService studentService = new StudentService(_studentRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
             var students = await studentService.GetStudentsByDepartment(1);
 
             Assert.IsNotEmpty(students);
@@ -174,7 +178,7 @@ namespace StudentManagementTest.ServiceTest.StudentServiceTest
         [Test, Order(7)]
         public async Task DeleteStudentSuccess()
         {
-            IStudentService studentService = new StudentService(_studentRepo, _mapper, _departmentRepo);
+            IStudentService studentService = new StudentService(_studentRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
             var deletedStudent = await studentService.DeleteStudent("student1@gmail.com");
 
             Assert.That(deletedStudent.Name, Is.EqualTo("Updated Student"));
@@ -184,7 +188,7 @@ namespace StudentManagementTest.ServiceTest.StudentServiceTest
         [Test, Order(8)]
         public void UpdateStudentFailure()
         {
-            IStudentService studentService = new StudentService(_studentRepo, _mapper, _departmentRepo);
+            IStudentService studentService = new StudentService(_studentRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             var studentDto = new StudentDTO
             {
@@ -202,7 +206,7 @@ namespace StudentManagementTest.ServiceTest.StudentServiceTest
         [Test, Order(9)]
         public void GetStudentByIdFailure()
         {
-            IStudentService studentService = new StudentService(_studentRepo, _mapper, _departmentRepo);
+            IStudentService studentService = new StudentService(_studentRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchStudentExistException>(async () => await studentService.GetStudentById(999));
         }
@@ -210,7 +214,7 @@ namespace StudentManagementTest.ServiceTest.StudentServiceTest
         [Test, Order(10)]
         public void GetStudentByEmailFailure()
         {
-            IStudentService studentService = new StudentService(_studentRepo, _mapper, _departmentRepo);
+            IStudentService studentService = new StudentService(_studentRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchStudentExistException>(async () => await studentService.GetStudentByEmail("nonexistent@gmail.com"));
         }
@@ -218,7 +222,7 @@ namespace StudentManagementTest.ServiceTest.StudentServiceTest
         [Test, Order(11)]
         public void GetStudentByNameFailure()
         {
-            IStudentService studentService = new StudentService(_studentRepo, _mapper, _departmentRepo);
+            IStudentService studentService = new StudentService(_studentRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             //var students = await studentService.GetStudentByName("Nonexistent Student");
 
@@ -228,7 +232,7 @@ namespace StudentManagementTest.ServiceTest.StudentServiceTest
         [Test, Order(12)]
         public void GetAllStudentsFailure()
         {
-            IStudentService studentService = new StudentService(_studentRepo, _mapper, _departmentRepo);
+            IStudentService studentService = new StudentService(_studentRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoStudentsExistsException>(async () => await studentService.GetAllStudents());
         }
@@ -236,7 +240,7 @@ namespace StudentManagementTest.ServiceTest.StudentServiceTest
         [Test, Order(13)]
         public void GetStudentsByDepartmentFailure()
         {
-            IStudentService studentService = new StudentService(_studentRepo, _mapper, _departmentRepo);
+            IStudentService studentService = new StudentService(_studentRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             //var students = await studentService.GetStudentsByDepartment(999); // Assuming 999 is a nonexistent department ID
             Assert.ThrowsAsync<NoSuchDepartmentExistException>(async () => await studentService.GetStudentsByDepartment(999));
@@ -246,7 +250,7 @@ namespace StudentManagementTest.ServiceTest.StudentServiceTest
         [Test, Order(14)]
         public void DeleteStudentFailure()
         {
-            IStudentService studentService = new StudentService(_studentRepo, _mapper, _departmentRepo);
+            IStudentService studentService = new StudentService(_studentRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchStudentExistException>(async () => await studentService.DeleteStudent("nonexistent@gmail.com"));
         }

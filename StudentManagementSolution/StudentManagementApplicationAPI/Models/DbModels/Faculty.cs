@@ -51,6 +51,6 @@ namespace StudentManagementApplicationAPI.Models.Db_Models
         public int? DepartmentId { get; set; }
 
         [ForeignKey("DepartmentId")]
-        public Department Department { get; set; }
+        public Department? Department { get; set; }
     }
 }

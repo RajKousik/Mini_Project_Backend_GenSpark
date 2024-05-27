@@ -18,17 +18,19 @@ namespace StudentManagementApplicationAPI.Services
         private readonly IRepository<int, Exam> _examRepository;
         private readonly IRepository<int, Course> _courseRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger<ExamService> _logger;
 
         #endregion
 
         #region Constructor
 
         public ExamService(IRepository<int, Exam> examRepository, IRepository<int, Course> courseRepository,
-            IMapper mapper)
+            IMapper mapper, ILogger<ExamService> logger)
         {
             _examRepository = examRepository;
             _courseRepository = courseRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
         #endregion
@@ -64,26 +66,32 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoSuchCourseExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchCourseExistException($"Unable to add exam: {ex.Message}");
             }
             catch (ExamAlreadyScheduledException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new ExamAlreadyScheduledException($"Unable to add exam: {ex.Message}");
             }
             catch (InvalidTotalMarkException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new InvalidTotalMarkException($"Unable to add exam: {ex.Message}");
             }
             catch (InvalidExamDateException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new InvalidExamDateException($"Unable to add exam: {ex.Message}");
             }
             catch (InvalidExamTypeException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new InvalidExamTypeException($"Unable to add exam: {ex.Message}");
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new UnableToAddExamException($"Unable to add exam: {ex.Message}");
             }
         }
@@ -196,10 +204,12 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoExamsExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoExamsExistsException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception($"Unable to retrieve exams: {ex.Message}");
             }
         }
@@ -223,10 +233,12 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoSuchExamExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchExamExistException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception($"Unable to retrieve exam: {ex.Message}");
             }
         }
@@ -288,10 +300,12 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoSuchExamExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchExamExistException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new UnableToUpdateExamException($"Unable to update exam: {ex.Message}");
             }
         }
@@ -322,10 +336,12 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoSuchExamExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchExamExistException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new UnableToDeleteExamException($"Unable to delete exam: {ex.Message}");
             }
         }
@@ -349,10 +365,12 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoExamsExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoExamsExistsException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception($"Unable to retrieve exams: {ex.Message}");
             }
         }
@@ -384,10 +402,12 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoSuchExamExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchExamExistException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception($"Unable to retrieve exams: {ex.Message}");
             }
         }
@@ -410,10 +430,12 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoSuchExamExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchExamExistException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception($"Unable to retrieve offline exams: {ex.Message}");
             }
         }
@@ -436,10 +458,12 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoSuchExamExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchExamExistException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception($"Unable to retrieve online exams: {ex.Message}");
             }
         }

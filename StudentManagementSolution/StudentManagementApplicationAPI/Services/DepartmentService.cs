@@ -16,17 +16,19 @@ namespace StudentManagementApplicationAPI.Services
         private readonly IRepository<int, Department> _departmentRepository;
         private readonly IRepository<int, Faculty> _facultyRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger<DepartmentService> _logger;
 
         #endregion
 
         #region Constructor
 
         public DepartmentService(IRepository<int, Department> departmentRepository, IMapper mapper,
-            IRepository<int, Faculty> facultyRepository)
+            IRepository<int, Faculty> facultyRepository, ILogger<DepartmentService> logger)
         {
             _departmentRepository = departmentRepository;
             _facultyRepository = facultyRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
         #endregion
@@ -85,18 +87,22 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (DepartmentAlreadyExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new DepartmentAlreadyExistException(ex.Message);
             }
             catch (NoSuchFacultyExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchFacultyExistException(ex.Message);
             }
             catch (UnableToAddDepartmentException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new UnableToAddDepartmentException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception(ex.Message);
             }
         }
@@ -126,14 +132,17 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (UnableToDeleteDepartmentException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new UnableToDeleteDepartmentException(ex.Message);
             }
             catch (NoSuchDepartmentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchDepartmentExistException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception(ex.Message);
             }
         }
@@ -157,10 +166,12 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoSuchDepartmentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchDepartmentExistException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception(ex.Message);
             }
         }
@@ -182,10 +193,12 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoDepartmentsExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoDepartmentsExistsException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception("Failed to retrieve departments", ex);
             }
         }
@@ -240,22 +253,27 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoSuchDepartmentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchDepartmentExistException(ex.Message);
             }
             catch (NoSuchFacultyExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchFacultyExistException(ex.Message);
             }
             catch (UnableToUpdateDepartmentException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new UnableToUpdateDepartmentException(ex.Message);
             }
             catch (UnableToUpdateFacultyException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new UnableToUpdateFacultyException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception(ex.Message);
             }
         }

@@ -38,7 +38,7 @@ namespace StudentManagementApplicationAPI.Controllers
         /// <param name="courseDTO">The data transfer object containing course details.</param>
         /// <returns>An ActionResult containing the added course details.</returns>
         [Authorize(Roles = "Admin")]
-        [HttpPost("add")]
+        [HttpPost]
         [ProducesResponseType(typeof(CourseReturnDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]

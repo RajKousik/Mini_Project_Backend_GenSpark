@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Moq;
 using StudentManagementApplicationAPI.Contexts;
 using StudentManagementApplicationAPI.Exceptions.ExamExceptions;
 using StudentManagementApplicationAPI.Interfaces.Repository;
@@ -26,6 +28,7 @@ namespace StudentManagementTest.ServiceTest.ExamServiceTest
         IRepository<int, Course> _courseRepo;
         IMapper _mapper;
         MapperConfiguration _config;
+        Mock<ILogger<ExamService>> mockLoggerConfig;
         #endregion
 
         #region Setup
@@ -39,8 +42,10 @@ namespace StudentManagementTest.ServiceTest.ExamServiceTest
             _courseRepo = new CourseRepository(context);
             _config = new MapperConfiguration(cfg => cfg.AddMaps(new[] {
             "StudentManagementApplicationAPI"
-        }));
+            }));
             _mapper = _config.CreateMapper();
+
+            mockLoggerConfig = new Mock<ILogger<ExamService>>();
         }
 
         private async Task SeedDatabaseAsync()
@@ -162,7 +167,7 @@ namespace StudentManagementTest.ServiceTest.ExamServiceTest
         public async Task AddExamSuccess()
         {
             await SeedDatabaseAsync();
-            IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper);
+            IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
             var examDTO = new ExamDTO
             {
@@ -183,7 +188,7 @@ namespace StudentManagementTest.ServiceTest.ExamServiceTest
         [Test, Order(2)]
         public async Task GetAllExamsSuccess()
         {
-            IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper);
+            IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
             var result = await examService.GetAllExams();
 
@@ -194,7 +199,7 @@ namespace StudentManagementTest.ServiceTest.ExamServiceTest
         [Test, Order(3)]
         public async Task GetExamByIdSuccess()
         {
-            IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper);
+            IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
             var result = await examService.GetExamById(1);
 
@@ -205,7 +210,7 @@ namespace StudentManagementTest.ServiceTest.ExamServiceTest
         [Test, Order(4)]
         public async Task UpdateExamSuccess()
         {
-            IExamService examService = new ExamService(_examRepo,_courseRepo,_mapper);
+            IExamService examService = new ExamService(_examRepo,_courseRepo,_mapper, mockLoggerConfig.Object);
 
             var examDTO = new ExamDTO
             {
@@ -226,7 +231,7 @@ namespace StudentManagementTest.ServiceTest.ExamServiceTest
         [Test, Order(5)]
         public async Task DeleteExamSuccess()
         {
-            IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper);
+            IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
             var result = await examService.DeleteExam(2);
 
@@ -237,7 +242,7 @@ namespace StudentManagementTest.ServiceTest.ExamServiceTest
         [Test, Order(6)]
         public async Task GetExamsByDateSuccess()
         {
-            IExamService examService = new ExamService(_examRepo, _courseRepo,  _mapper);
+            IExamService examService = new ExamService(_examRepo, _courseRepo,  _mapper, mockLoggerConfig.Object);
 
             var result = await examService.GetExamsByDate(new DateTime(2024, 06, 01));
 
@@ -248,7 +253,7 @@ namespace StudentManagementTest.ServiceTest.ExamServiceTest
         [Test, Order(7)]
         public async Task GetUpcomingExamsSuccess()
         {
-            IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper);
+            IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
             var result = await examService.GetUpcomingExams(30);
 
@@ -259,7 +264,7 @@ namespace StudentManagementTest.ServiceTest.ExamServiceTest
         [Test, Order(8)]
         public async Task GetOfflineExamsSuccess()
         {
-            IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper);
+            IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
             var result = await examService.GetOfflineExams();
 
@@ -270,7 +275,7 @@ namespace StudentManagementTest.ServiceTest.ExamServiceTest
         [Test, Order(9)]
         public async Task GetOnlineExamsSuccess()
         {
-            IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper);
+            IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
             var result = await examService.GetOnlineExams();
 
@@ -285,7 +290,7 @@ namespace StudentManagementTest.ServiceTest.ExamServiceTest
         [Test, Order(10)]
         public async Task AddExamFailure()
         {
-            IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper);
+            IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
             var examDTO = new ExamDTO
             {
@@ -304,7 +309,7 @@ namespace StudentManagementTest.ServiceTest.ExamServiceTest
         public async Task GetAllExamsFailure()
         {
             await ClearDatabase();
-            IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper);
+            IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoExamsExistsException>(async () => await examService.GetAllExams());
         }
@@ -312,7 +317,7 @@ namespace StudentManagementTest.ServiceTest.ExamServiceTest
         [Test, Order(12)]
         public async Task GetExamByIdFailure()
         {
-            IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper);
+            IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchExamExistException>(async () => await examService.GetExamById(99)); // Non-existent ID
         }
@@ -320,7 +325,7 @@ namespace StudentManagementTest.ServiceTest.ExamServiceTest
         [Test, Order(13)]
         public async Task UpdateExamFailure()
         {
-            IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper);
+            IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
             var examDTO = new ExamDTO
             {
@@ -338,7 +343,7 @@ namespace StudentManagementTest.ServiceTest.ExamServiceTest
         [Test, Order(14)]
         public async Task DeleteExamFailure()
         {
-            IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper);
+            IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchExamExistException>(async () => await examService.DeleteExam(99)); // Non-existent ID
         }
@@ -346,7 +351,7 @@ namespace StudentManagementTest.ServiceTest.ExamServiceTest
         [Test, Order(15)]
         public async Task GetExamsByDateFailure()
         {
-            IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper);
+            IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoExamsExistsException>(async () => await examService.GetExamsByDate(new DateTime(2025, 01, 01))); // Date with no exams
 
@@ -356,7 +361,7 @@ namespace StudentManagementTest.ServiceTest.ExamServiceTest
         [Test, Order(16)]
         public async Task GetUpcomingExamsFailure()
         {
-            IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper);
+            IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchExamExistException>(async () => await examService.GetUpcomingExams(0)); // No upcoming exams within 0 days
 
@@ -365,7 +370,7 @@ namespace StudentManagementTest.ServiceTest.ExamServiceTest
         [Test, Order(17)]
         public async Task GetOfflineExamsFailure()
         {
-            IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper);
+            IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
 
             Assert.ThrowsAsync<NoSuchExamExistException>(async () => await examService.GetOfflineExams());
@@ -376,7 +381,7 @@ namespace StudentManagementTest.ServiceTest.ExamServiceTest
         public async Task GetOnlineExamsFailure()
         {
 
-            IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper);
+            IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchExamExistException>(async () => await examService.GetOnlineExams());
         }

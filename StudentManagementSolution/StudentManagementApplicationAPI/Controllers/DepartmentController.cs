@@ -39,7 +39,6 @@ namespace StudentManagementApplicationAPI.Controllers
         /// <returns>The added department data transfer object.</returns>
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        [Route("add")]
         [ProducesResponseType(typeof(DepartmentDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]

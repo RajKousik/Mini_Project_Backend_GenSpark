@@ -5,7 +5,6 @@ using StudentManagementApplicationAPI.Interfaces.Repository;
 using StudentManagementApplicationAPI.Interfaces.Service;
 using StudentManagementApplicationAPI.Models.Db_Models;
 using StudentManagementApplicationAPI.Models.DTOs.CourseDTOs;
-using StudentManagementApplicationAPI.Repositories;
 
 namespace StudentManagementApplicationAPI.Services
 {
@@ -15,17 +14,20 @@ namespace StudentManagementApplicationAPI.Services
 
         private readonly IRepository<int, Course> _courseRepository;
         private readonly IRepository<int, Faculty> _facultyRepository;
+        private readonly ILogger<CourseService> _logger;
         private readonly IMapper _mapper;
 
         #endregion
 
         #region Constructor
 
-        public CourseService(IRepository<int, Course> courseRepository, IMapper mapper, IRepository<int, Faculty> facultyRepository)
+        public CourseService(IRepository<int, Course> courseRepository, IMapper mapper, 
+            IRepository<int, Faculty> facultyRepository, ILogger<CourseService> logger)
         {
             _courseRepository = courseRepository;
             _mapper = mapper;
             _facultyRepository = facultyRepository;
+            _logger = logger;
         }
 
         #endregion
@@ -68,14 +70,17 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (CourseAlreadyExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new CourseAlreadyExistsException(ex.Message);
             }
             catch (NoSuchFacultyExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchFacultyExistException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new UnableToAddCourseException($"Unable to add course: {ex.Message}");
             }
         }
@@ -97,10 +102,12 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoCoursesExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoCoursesExistsException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception($"Unable to retrieve courses: {ex.Message}");
             }
         }
@@ -123,10 +130,12 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoSuchCourseExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchCourseExistException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception($"Unable to retrieve course: {ex.Message}");
             }
         }
@@ -149,10 +158,12 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoSuchCourseExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchCourseExistException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception($"Unable to retrieve course: {ex.Message}");
             }
         }
@@ -175,10 +186,12 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoCoursesExistForFacultyException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoCoursesExistForFacultyException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception($"Unable to retrieve courses: {ex.Message}");
             }
         }
@@ -234,18 +247,22 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoSuchCourseExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchCourseExistException(ex.Message);
             }
             catch (CourseAlreadyExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new CourseAlreadyExistsException(ex.Message);
             }
             catch (NoSuchFacultyExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchFacultyExistException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new UnableToUpdateCourseException($"Unable to update course: {ex.Message}");
             }
         }

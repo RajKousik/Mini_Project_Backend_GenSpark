@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Moq;
 using StudentManagementApplicationAPI.Contexts;
 using StudentManagementApplicationAPI.Exceptions.CourseExceptions;
 using StudentManagementApplicationAPI.Exceptions.StudentAttendanceExceptions;
@@ -11,12 +13,9 @@ using StudentManagementApplicationAPI.Models.DTOs.StudentAttendanceDTOs;
 using StudentManagementApplicationAPI.Models.Enums;
 using StudentManagementApplicationAPI.Repositories;
 using StudentManagementApplicationAPI.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
+
 
 namespace StudentManagementTest.ServiceTest.StudentAttendanceServiceTest
 {
@@ -30,6 +29,8 @@ namespace StudentManagementTest.ServiceTest.StudentAttendanceServiceTest
         IRepository<int, StudentAttendance> _attendanceRepo;
         IMapper _mapper;
         MapperConfiguration _config;
+
+        Mock<ILogger<StudentAttendanceService>> mockLoggerConfig;
         #endregion
 
         #region Setup
@@ -47,6 +48,8 @@ namespace StudentManagementTest.ServiceTest.StudentAttendanceServiceTest
             "StudentManagementApplicationAPI"
         }));
             _mapper = _config.CreateMapper();
+
+            mockLoggerConfig = new Mock<ILogger<StudentAttendanceService>>();
         }
 
         private async Task SeedDatabaseAsync()
@@ -133,7 +136,7 @@ namespace StudentManagementTest.ServiceTest.StudentAttendanceServiceTest
         public async Task MarkAttendanceSuccess()
         {
             await SeedDatabaseAsync();
-            IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo);
+            IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo, mockLoggerConfig.Object);
 
             var attendanceDTO = new AttendanceDTO
             {
@@ -153,7 +156,7 @@ namespace StudentManagementTest.ServiceTest.StudentAttendanceServiceTest
         [Test, Order(2)]
         public async Task UpdateAttendanceSuccess()
         {
-            IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo);
+            IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo, mockLoggerConfig.Object);
 
             var result = await attendanceService.UpdateAttendance(1, "Absent");
 
@@ -164,7 +167,7 @@ namespace StudentManagementTest.ServiceTest.StudentAttendanceServiceTest
         [Test, Order(3)]
         public async Task GetAttendanceSuccess()
         {
-            IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo);
+            IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo, mockLoggerConfig.Object);
 
             var result = await attendanceService.GetAttendance(1);
 
@@ -175,7 +178,7 @@ namespace StudentManagementTest.ServiceTest.StudentAttendanceServiceTest
         [Test, Order(4)]
         public async Task GetAllAttendanceRecordsSuccess()
         {
-            IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo);
+            IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo, mockLoggerConfig.Object);
 
             var result = await attendanceService.GetAllAttendanceRecords();
 
@@ -186,7 +189,7 @@ namespace StudentManagementTest.ServiceTest.StudentAttendanceServiceTest
         [Test, Order(5)]
         public async Task GetStudentAttendanceRecordsSuccess()
         {
-            IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo);
+            IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo, mockLoggerConfig.Object);
 
             var result = await attendanceService.GetStudentAttendanceRecords(1);
 
@@ -197,7 +200,7 @@ namespace StudentManagementTest.ServiceTest.StudentAttendanceServiceTest
         [Test, Order(6)]
         public async Task GetCourseAttendanceRecordsSuccess()
         {
-            IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo);
+            IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo,mockLoggerConfig.Object);
 
             var result = await attendanceService.GetCourseAttendanceRecords(1);
 
@@ -208,7 +211,7 @@ namespace StudentManagementTest.ServiceTest.StudentAttendanceServiceTest
         [Test, Order(7)]
         public async Task GetStudentAttendancePercentageSuccess()
         {
-            IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo);
+            IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo, mockLoggerConfig.Object);
 
             var result = await attendanceService.GetStudentAttendancePercentage(1);
 
@@ -220,7 +223,7 @@ namespace StudentManagementTest.ServiceTest.StudentAttendanceServiceTest
         [Test, Order(8)]
         public async Task DeleteAttendanceSuccess()
         {
-            IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo);
+            IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo, mockLoggerConfig.Object);
 
             var result = await attendanceService.DeleteAttendance(1);
 
@@ -236,7 +239,7 @@ namespace StudentManagementTest.ServiceTest.StudentAttendanceServiceTest
         public async Task MarkAttendanceFailure()
         {
             await ClearDatabase();
-            IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo);
+            IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo, mockLoggerConfig.Object);
 
             var attendanceDTO = new AttendanceDTO
             {
@@ -252,7 +255,7 @@ namespace StudentManagementTest.ServiceTest.StudentAttendanceServiceTest
         [Test, Order(10)]
         public async Task UpdateAttendanceFailure()
         {
-            IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo);
+            IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchStudentAttendanceExistException>(async () => await attendanceService.UpdateAttendance(99, "Absent")); // Non-existent attendance ID
         }
@@ -260,7 +263,7 @@ namespace StudentManagementTest.ServiceTest.StudentAttendanceServiceTest
         [Test, Order(11)]
         public async Task DeleteAttendanceFailure()
         {
-            IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo);
+            IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchStudentAttendanceExistException>(async () => await attendanceService.DeleteAttendance(99)); // Non-existent attendance ID
         }
@@ -268,7 +271,7 @@ namespace StudentManagementTest.ServiceTest.StudentAttendanceServiceTest
         [Test, Order(12)]
         public async Task GetAttendanceFailure()
         {
-            IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo);
+            IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchStudentAttendanceExistException>(async () => await attendanceService.GetAttendance(99)); // Non-existent attendance ID
         }
@@ -277,7 +280,7 @@ namespace StudentManagementTest.ServiceTest.StudentAttendanceServiceTest
         public async Task GetAllAttendanceRecordsFailure()
         {
             await ClearDatabase();
-            IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo);
+            IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoStudentAttendancesExistsException>(async () => await attendanceService.GetAllAttendanceRecords());
         }
@@ -285,7 +288,7 @@ namespace StudentManagementTest.ServiceTest.StudentAttendanceServiceTest
         [Test, Order(14)]
         public async Task GetStudentAttendanceRecordsFailure()
         {
-            IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo);
+            IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchStudentExistException>(async () => await attendanceService.GetStudentAttendanceRecords(99)); // Non-existent student ID
         }
@@ -293,7 +296,7 @@ namespace StudentManagementTest.ServiceTest.StudentAttendanceServiceTest
         [Test, Order(15)]
         public async Task GetCourseAttendanceRecordsFailure()
         {
-            IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo);
+            IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchCourseExistException>(async () => await attendanceService.GetCourseAttendanceRecords(99)); // Non-existent course ID
         }
@@ -301,7 +304,7 @@ namespace StudentManagementTest.ServiceTest.StudentAttendanceServiceTest
         [Test, Order(16)]
         public async Task GetStudentAttendancePercentageFailure()
         {
-            IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo);
+            IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchStudentExistException>(async () => await attendanceService.GetStudentAttendancePercentage(99)); // Non-existent student ID
         }

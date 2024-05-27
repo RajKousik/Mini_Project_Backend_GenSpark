@@ -16,17 +16,20 @@ namespace StudentManagementApplicationAPI.Services
 
         private readonly IRepository<int, Faculty> _facultyRepository;
         private readonly IRepository<int, Department> _departmentRepository;
+        private readonly ILogger<FacultyService> _logger;
         private readonly IMapper _mapper;
 
         #endregion
 
         #region Constructor
 
-        public FacultyService(IRepository<int, Faculty> facultyRepository, IMapper mapper, IRepository<int, Department> departmentRepository)
+        public FacultyService(IRepository<int, Faculty> facultyRepository, IMapper mapper, 
+            IRepository<int, Department> departmentRepository, ILogger<FacultyService> logger)
         {
             _facultyRepository = facultyRepository;
             _mapper = mapper;
             _departmentRepository = departmentRepository;
+            _logger = logger;
         }
 
         #endregion
@@ -65,14 +68,17 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch(NoSuchFacultyExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchFacultyExistException(ex.Message);
             }
             catch (UnableToUpdateFacultyException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new UnableToUpdateFacultyException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception($"Something Went Wrong!");
             }
         }
@@ -97,14 +103,17 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoSuchFacultyExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchFacultyExistException(ex.Message);
             }
             catch (UnableToDeleteFacultyException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new UnableToDeleteFacultyException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception(ex.Message);
             }
         }
@@ -128,10 +137,12 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoSuchFacultyExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchFacultyExistException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception(ex.Message);
             }
         }
@@ -155,10 +166,12 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoSuchFacultyExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchFacultyExistException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception(ex.Message);
             }
         }
@@ -181,10 +194,12 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoFacultiesExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoFacultiesExistsException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception(ex.Message);
             }
         }
@@ -206,10 +221,12 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoFacultiesExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoFacultiesExistsException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception(ex.Message);
             }
         }
@@ -231,10 +248,12 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoFacultiesExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoFacultiesExistsException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception(ex.Message);
             }
         }
@@ -256,10 +275,12 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoFacultiesExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoFacultiesExistsException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception(ex.Message);
             }
         }
@@ -281,10 +302,12 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoFacultiesExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoFacultiesExistsException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception(ex.Message);
             }
         }
@@ -306,10 +329,12 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoFacultiesExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoFacultiesExistsException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception(ex.Message);
             }
         }
@@ -332,10 +357,12 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoFacultiesExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoFacultiesExistsException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception(ex.Message);
             }
         }
@@ -373,18 +400,22 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoSuchFacultyExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchFacultyExistException(ex.Message);
             }
             catch (NoSuchDepartmentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchDepartmentExistException(ex.Message);
             }
             catch (UnableToUpdateDepartmentException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new UnableToUpdateDepartmentException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception($"An unexpected error occurred: {ex.Message}");
             }
         }

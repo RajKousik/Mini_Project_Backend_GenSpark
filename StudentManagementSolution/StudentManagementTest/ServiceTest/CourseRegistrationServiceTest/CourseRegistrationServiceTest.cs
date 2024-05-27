@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Moq;
 using StudentManagementApplicationAPI.Contexts;
 using StudentManagementApplicationAPI.Exceptions.CourseExceptions;
 using StudentManagementApplicationAPI.Exceptions.CourseRegistrationExceptions;
@@ -29,6 +31,7 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
         IRepository<int, CourseRegistration> _courseRegistrationRepo;
         IMapper _mapper;
         MapperConfiguration _config;
+        Mock<ILogger<CourseRegistrationService>> mockLoggerConfig;
         #endregion
 
         #region Setup
@@ -45,6 +48,8 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
                 "StudentManagementApplicationAPI"
             }));
             _mapper = _config.CreateMapper();
+
+            mockLoggerConfig = new Mock<ILogger<CourseRegistrationService>>();
         }
 
         private async Task SeedDatabaseAsync()
@@ -134,7 +139,7 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
         public async Task AddCourseRegistrationSuccess()
         {
             await SeedDatabaseAsync();
-            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper);
+            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper, mockLoggerConfig.Object);
 
             var courseRegistrationAddDTO = new CourseRegistrationAddDTO
             {
@@ -165,7 +170,7 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
         [Test, Order(2)]
         public async Task GetAllCourseRegistrationsSuccess()
         {
-            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper);
+            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper, mockLoggerConfig.Object);
 
             var result = await courseRegistrationService.GetAllCourseRegistrations();
 
@@ -176,7 +181,7 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
         [Test, Order(3)]
         public async Task GetCourseRegistrationByIdSuccess()
         {
-            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper);
+            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper, mockLoggerConfig.Object);
 
             var result = await courseRegistrationService.GetCourseRegistrationById(1);
 
@@ -187,7 +192,7 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
         [Test, Order(4)]
         public async Task UpdateCourseRegistrationSuccess()
         {
-            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper);
+            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper, mockLoggerConfig.Object);
 
             var result = await courseRegistrationService.UpdateCourseRegistraion(1, 4);
 
@@ -198,7 +203,7 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
         [Test, Order(5)]
         public async Task GetCoursesRegisteredByStudentSuccess()
         {
-            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper);
+            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper, mockLoggerConfig.Object);
 
             var result = await courseRegistrationService.GetCoursesRegisteredByStudent(1);
 
@@ -209,7 +214,7 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
         [Test, Order(6)]
         public async Task GetRegisteredStudentsForCourseSuccess()
         {
-            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper);
+            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper, mockLoggerConfig.Object);
 
             var result = await courseRegistrationService.GetRegisteredStudentsForCourse(2);
 
@@ -220,7 +225,7 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
         [Test, Order(7)]
         public async Task ApproveCourseRegistrationsSuccess()
         {
-            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper);
+            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper, mockLoggerConfig.Object);
 
             var result = await courseRegistrationService.ApproveCourseRegistrations(1);
 
@@ -232,7 +237,7 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
         [Test, Order(8)]
         public async Task DeleteCourseRegistrationSuccess()
         {
-            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper);
+            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper, mockLoggerConfig.Object);
 
             var result = await courseRegistrationService.DeleteCourseRegistration(2);
 
@@ -243,7 +248,7 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
         [Test, Order(9)]
         public async Task ApproveCourseRegistrationsForStudentSuccess()
         {
-            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper);
+            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper, mockLoggerConfig.Object);
 
             var result = await courseRegistrationService.ApproveCourseRegistrationsForStudent(1);
 
@@ -257,7 +262,7 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
         [Test, Order(10)]
         public async Task AddCourseRegistrationFailure()
         {
-            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo,_mapper);
+            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo,_mapper, mockLoggerConfig.Object);
 
             var courseRegistrationAddDTO = new CourseRegistrationAddDTO
             {
@@ -272,7 +277,7 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
         public async Task GetAllCourseRegistrationsFailure()
         {
             await ClearDatabase();
-            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper);
+            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoCourseRegistrationsExistsException>(async () => await courseRegistrationService.GetAllCourseRegistrations());
         }
@@ -280,7 +285,7 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
         [Test, Order(12)]
         public async Task GetCourseRegistrationByIdFailure()
         {
-            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper);
+            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchCourseRegistrationExistException>(async () => await courseRegistrationService.GetCourseRegistrationById(99)); // Non-existent ID
         }
@@ -288,7 +293,7 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
         [Test, Order(13)]
         public async Task UpdateCourseRegistrationFailure()
         {
-            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper);
+            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchCourseRegistrationExistException>(async () => await courseRegistrationService.UpdateCourseRegistraion(99, 2)); // Non-existent course registration ID
         }
@@ -296,7 +301,7 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
         [Test, Order(14)]
         public async Task DeleteCourseRegistrationFailure()
         {
-            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper);
+            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchCourseRegistrationExistException>(async () => await courseRegistrationService.DeleteCourseRegistration(99)); // Non-existent course registration ID
         }
@@ -304,7 +309,7 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
         [Test, Order(15)]
         public async Task GetCoursesRegisteredByStudentFailure()
         {
-            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper);
+            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchStudentExistException>(async () => await courseRegistrationService.GetCoursesRegisteredByStudent(99)); // Non-existent student ID
 
@@ -313,7 +318,7 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
         [Test, Order(16)]
         public async Task GetRegisteredStudentsForCourseFailure()
         {
-            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper);
+            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchCourseExistException>(async () => await courseRegistrationService.GetRegisteredStudentsForCourse(99)); // Non-existent course ID
         }
@@ -321,7 +326,7 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
         [Test, Order(17)]
         public async Task ApproveCourseRegistrationsFailure()
         {
-            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper);
+            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchCourseRegistrationExistException>(async () => await courseRegistrationService.ApproveCourseRegistrations(99)); // Non-existent course registration ID
         }
@@ -329,7 +334,7 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
         [Test, Order(18)]
         public async Task ApproveCourseRegistrationsForStudentFailure()
         {
-            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper);
+            ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchStudentExistException>(async () => await courseRegistrationService.ApproveCourseRegistrationsForStudent(99)); // Non-existent student ID
         }

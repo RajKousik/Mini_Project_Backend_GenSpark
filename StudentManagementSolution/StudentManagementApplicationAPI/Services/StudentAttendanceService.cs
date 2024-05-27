@@ -20,6 +20,7 @@ namespace StudentManagementApplicationAPI.Services
         private readonly IRepository<int, StudentAttendance> _attendanceRepository;
         private readonly IMapper _mapper;
         private readonly IRepository<int, CourseRegistration> _courseRegistrationRepository;
+        private readonly ILogger<StudentAttendanceService> _logger;
         #endregion
 
         #region Constructor
@@ -33,13 +34,15 @@ namespace StudentManagementApplicationAPI.Services
             IRepository<int, Course> courseRepository,
             IRepository<int, CourseRegistration> courseRegistrationRepository,
             IMapper mapper,
-            IRepository<int, StudentAttendance> attendanceRepository)
+            IRepository<int, StudentAttendance> attendanceRepository,
+            ILogger<StudentAttendanceService> logger)
         {
             _studentRepository = studentRepository;
             _courseRepository = courseRepository;
             _attendanceRepository = attendanceRepository;
             _mapper = mapper;
             _courseRegistrationRepository = courseRegistrationRepository;
+            _logger = logger;
         }
         #endregion
 
@@ -80,30 +83,37 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoSuchStudentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchStudentExistException($"Unable to mark attendance: {ex.Message}");
             }
             catch (InvalidAttendanceStatusException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new InvalidAttendanceStatusException($"Unable to mark attendance: {ex.Message}");
             }
             catch (NoSuchCourseExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchCourseExistException($"Unable to mark attendance: {ex.Message}");
             }
             catch (StudentNotOptedForCourseException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new StudentNotOptedForCourseException($"Unable to mark attendance: {ex.Message}");
             }
             catch (AttendanceRecordAlreadyExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new AttendanceRecordAlreadyExistsException($"Unable to mark attendance: {ex.Message}");
             }
             catch (InvalidAttendanceDateException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new InvalidAttendanceDateException($"Unable to mark attendance: {ex.Message}");
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new UnableToAddStudentAttendanceException($"Unable to mark attendance: {ex.Message}");
             }
         }
@@ -128,10 +138,12 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoSuchStudentAttendanceExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchStudentAttendanceExistException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception($"An error occurred while retrieving the attendance record: {ex.Message}");
             }
         }
@@ -155,10 +167,12 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoStudentAttendancesExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoStudentAttendancesExistsException(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception($"An error occurred while retrieving all attendance records: {ex.Message}");
             }
         }
@@ -190,14 +204,17 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoSuchStudentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchStudentExistException($"Unable to retrieve attendance records: {ex.Message}");
             }
             catch (NoSuchStudentAttendanceExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchStudentAttendanceExistException($"Unable to retrieve attendance records: {ex.Message}");
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception($"An error occurred while retrieving attendance records for student with ID {studentId}: {ex.Message}");
             }
         }
@@ -229,14 +246,17 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoSuchCourseExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchCourseExistException($"Unable to retrieve attendance records: {ex.Message}");
             }
             catch (NoSuchStudentAttendanceExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchStudentAttendanceExistException($"Unable to retrieve attendance records: {ex.Message}");
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception($"An error occurred while retrieving attendance records for course with ID {courseId}: {ex.Message}");
             }
         }
@@ -281,18 +301,22 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoSuchStudentAttendanceExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchStudentAttendanceExistException($"Unable to update attendance: {ex.Message}");
             }
             catch (InvalidAttendanceStatusException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new InvalidAttendanceStatusException($"Unable to update attendance: {ex.Message}");
             }
             catch (InvalidAttendanceUpdateException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new InvalidAttendanceUpdateException($"Unable to update attendance: {ex.Message}");
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception($"An error occurred while updating attendance record with ID {attendanceId}: {ex.Message}");
             }
         }
@@ -320,10 +344,12 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoSuchStudentAttendanceExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchStudentAttendanceExistException($"Unable to delete attendance: {ex.Message}");
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception($"An error occurred while deleting attendance record with ID {attendanceId}: {ex.Message}");
             }
         }
@@ -375,14 +401,17 @@ namespace StudentManagementApplicationAPI.Services
             }
             catch (NoSuchStudentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoSuchStudentExistException($"Unable to retrieve attendance percentage: {ex.Message}");
             }
             catch (NoStudentAttendancesExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 throw new NoStudentAttendancesExistsException($"Unable to retrieve attendance percentage: {ex.Message}");
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw new Exception($"An error occurred while retrieving attendance percentage for student with ID {studentId}: {ex.Message}");
             }
         }

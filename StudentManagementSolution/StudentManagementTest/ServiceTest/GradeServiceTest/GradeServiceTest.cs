@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Moq;
 using StudentManagementApplicationAPI.Contexts;
 using StudentManagementApplicationAPI.Exceptions.CourseExceptions;
 using StudentManagementApplicationAPI.Exceptions.GradeExceptions;
@@ -32,6 +34,8 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
         IRepository<int, Course> _courseRepo;
         IMapper _mapper;
         MapperConfiguration _config;
+        Mock<ILogger<GradeService>> mockLoggerConfig;
+
         #endregion
 
         #region Setup
@@ -51,6 +55,8 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
                 "StudentManagementApplicationAPI"
             }));
             _mapper = _config.CreateMapper();
+
+            mockLoggerConfig = new Mock<ILogger<GradeService>>();
         }
 
         private async Task SeedDatabaseAsync()
@@ -152,7 +158,7 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
         public async Task AddGradeSuccess()
         {
             await SeedDatabaseAsync();
-            IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper);
+            IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
             var gradeDTO = new GradeDTO
             {
@@ -172,7 +178,7 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
         [Test, Order(2)]
         public async Task GetAllGradesSuccess()
         {
-            IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper);
+            IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
             var result = await gradeService.GetAllGrades();
 
@@ -183,7 +189,7 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
         [Test, Order(3)]
         public async Task GetGradeByIdSuccess()
         {
-            IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper);
+            IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
             var result = await gradeService.GetGradeById(1);
 
@@ -194,7 +200,7 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
         [Test, Order(4)]
         public async Task UpdateGradeSuccess()
         {
-            IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper);
+            IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
             var gradeUpdateDTO = new GradeUpdateDTO
             {
@@ -212,7 +218,7 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
         [Test, Order(5)]
         public async Task GetStudentGradesSuccess()
         {
-            IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper);
+            IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
             var result = await gradeService.GetStudentGrades(1);
 
@@ -223,7 +229,7 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
         [Test, Order(6)]
         public async Task GetCourseGradesSuccess()
         {
-            IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper);
+            IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
             var result = await gradeService.GetCourseGrades(1);
 
@@ -234,7 +240,7 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
         [Test, Order(7)]
         public async Task DeleteGradeSuccess()
         {
-            IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper);
+            IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
             var result = await gradeService.DeleteGrade(1);
 
@@ -253,7 +259,7 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
         [Test, Order(8)]
         public async Task AddGradeFailure()
         {
-            IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper);
+            IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
             var gradeDTO = new GradeDTO
             {
@@ -271,7 +277,7 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
         public async Task GetAllGradesFailure()
         {
             await ClearDatabase();
-            IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper);
+            IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoGradeRecordsExistsException>(async () => await gradeService.GetAllGrades());
         }
@@ -279,7 +285,7 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
         [Test, Order(10)]
         public async Task GetGradeByIdFailure()
         {
-            IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper);
+            IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchGradeRecordExistsException>(async () => await gradeService.GetGradeById(99)); // Non-existent grade ID
         }
@@ -287,7 +293,7 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
         [Test, Order(11)]
         public async Task UpdateGradeFailure()
         {
-            IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper);
+            IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
             var gradeUpdateDTO = new GradeUpdateDTO
             {
@@ -302,7 +308,7 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
         [Test, Order(12)]
         public async Task DeleteGradeFailure()
         {
-            IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper);
+            IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchGradeRecordExistsException>(async () => await gradeService.DeleteGrade(99)); // Non-existent grade ID
         }
@@ -310,7 +316,7 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
         [Test, Order(13)]
         public async Task GetStudentGradesFailure()
         {
-            IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper);
+            IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchStudentExistException>(async () => await gradeService.GetStudentGrades(99)); // Non-existent student ID
         }
@@ -318,7 +324,7 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
         [Test, Order(14)]
         public async Task GetCourseGradesFailure()
         {
-            IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper);
+            IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchCourseExistException>(async () => await gradeService.GetCourseGrades(99)); // Non-existent course ID
         }

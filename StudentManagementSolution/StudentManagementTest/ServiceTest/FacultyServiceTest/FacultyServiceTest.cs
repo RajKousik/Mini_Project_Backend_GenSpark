@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Moq;
 using StudentManagementApplicationAPI.Contexts;
 using StudentManagementApplicationAPI.Exceptions.FacultyExceptions;
 using StudentManagementApplicationAPI.Interfaces.Repository;
@@ -23,6 +25,8 @@ namespace StudentManagementTest.ServiceTest.FacultyServiceTest
         IRepository<int, Faculty> _facultyRepo;
         IMapper _mapper;
         MapperConfiguration _config;
+
+        Mock<ILogger<FacultyService>> mockLoggerConfig;
         #endregion
 
         #region Setup
@@ -39,6 +43,8 @@ namespace StudentManagementTest.ServiceTest.FacultyServiceTest
                 "StudentManagementApplicationAPI"
             }));
             _mapper = _config.CreateMapper();
+
+            mockLoggerConfig = new Mock<ILogger<FacultyService>>();
 
         }
 
@@ -164,7 +170,7 @@ namespace StudentManagementTest.ServiceTest.FacultyServiceTest
         public async Task UpdateFacultySuccess()
         {
             await SeedDatabaseAsync();
-            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo);
+            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             var facultyDto = new FacultyDTO
             {
@@ -184,7 +190,7 @@ namespace StudentManagementTest.ServiceTest.FacultyServiceTest
         [Test, Order(2)]
         public async Task GetFacultyByIdSuccess()
         {
-            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo);
+            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             var faculty = await facultyService.GetFacultyById(1);
 
@@ -195,7 +201,7 @@ namespace StudentManagementTest.ServiceTest.FacultyServiceTest
         [Test, Order(3)]
         public async Task GetFacultyByEmailSuccess()
         {
-            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo);
+            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             var faculty = await facultyService.GetFacultyByEmail("faculty1@gmail.com");
 
@@ -206,7 +212,7 @@ namespace StudentManagementTest.ServiceTest.FacultyServiceTest
         [Test, Order(4)]
         public async Task ChangeDepartmentSuccess()
         {
-            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo);
+            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             var faculty = await facultyService.ChangeDepartment(1, 2);
 
@@ -217,7 +223,7 @@ namespace StudentManagementTest.ServiceTest.FacultyServiceTest
         [Test, Order(5)]
         public async Task GetFacultyByNameSuccess()
         {
-            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo);
+            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             var faculties = await facultyService.GetFacultyByName("Updated Faculty");
 
@@ -228,7 +234,7 @@ namespace StudentManagementTest.ServiceTest.FacultyServiceTest
         [Test, Order(6)]
         public async Task GetAllFacultiesSuccess()
         {
-            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo);
+            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             var faculties = await facultyService.GetAll();
 
@@ -239,7 +245,7 @@ namespace StudentManagementTest.ServiceTest.FacultyServiceTest
         [Test, Order(7)]
         public async Task DeleteFacultySuccess()
         {
-            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo);
+            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             var deletedFaculty = await facultyService.DeleteFaculty("faculty1@gmail.com");
 
@@ -251,7 +257,7 @@ namespace StudentManagementTest.ServiceTest.FacultyServiceTest
         public async Task GetProfessorsSuccess()
         {
             await AddFaculties();
-            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo);
+            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             var professors = await facultyService.GetProfessors();
 
@@ -262,7 +268,7 @@ namespace StudentManagementTest.ServiceTest.FacultyServiceTest
         [Test, Order(9)]
         public async Task GetAssociateProfessorsSuccess()
         {
-            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo);
+            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             var associateProfessors = await facultyService.GetAssociateProfessors();
 
@@ -273,7 +279,7 @@ namespace StudentManagementTest.ServiceTest.FacultyServiceTest
         [Test, Order(10)]
         public async Task GetAssistantProfessorsSuccess()
         {
-            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo);
+            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             var assistantProfessors = await facultyService.GetAssistantProfessors();
 
@@ -284,7 +290,7 @@ namespace StudentManagementTest.ServiceTest.FacultyServiceTest
         [Test, Order(11)]
         public async Task GetHeadOfDepartmentSuccess()
         {
-            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo);
+            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             var headOfDepartments = await facultyService.GetHeadOfDepartment();
 
@@ -295,7 +301,7 @@ namespace StudentManagementTest.ServiceTest.FacultyServiceTest
         [Test, Order(12)]
         public async Task GetFacultiesByDepartmentSuccess()
         {
-            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo);
+            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             var faculties = await facultyService.GetFacultiesByDepartment(1);
 
@@ -310,7 +316,7 @@ namespace StudentManagementTest.ServiceTest.FacultyServiceTest
         public async Task UpdateFacultyFailure()
         {
             await ClearDatabase();
-            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo);
+            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             var facultyDto = new FacultyDTO
             {
@@ -327,7 +333,7 @@ namespace StudentManagementTest.ServiceTest.FacultyServiceTest
         [Test, Order(14)]
         public async Task GetFacultyByIdFailure()
         {
-            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo);
+            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchFacultyExistException>(async () => await facultyService.GetFacultyById(99));
         }
@@ -335,7 +341,7 @@ namespace StudentManagementTest.ServiceTest.FacultyServiceTest
         [Test, Order(15)]
         public async Task GetFacultyByEmailFailure()
         {
-            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo);
+            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchFacultyExistException>(async () => await facultyService.GetFacultyByEmail("nonexisting@gmail.com"));
         }
@@ -343,7 +349,7 @@ namespace StudentManagementTest.ServiceTest.FacultyServiceTest
         [Test, Order(16)]
         public async Task ChangeDepartmentFailure()
         {
-            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo);
+            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchFacultyExistException>(async () => await facultyService.ChangeDepartment(99, 2));
         }
@@ -351,7 +357,7 @@ namespace StudentManagementTest.ServiceTest.FacultyServiceTest
         [Test, Order(17)]
         public async Task GetFacultyByNameFailure()
         {
-            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo);
+            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             //var faculties = await facultyService.GetFacultyByName("NonExisting Faculty");
             Assert.ThrowsAsync<NoFacultiesExistsException>(async () => await facultyService.GetFacultyByName("NonExisting Faculty"));
@@ -361,14 +367,14 @@ namespace StudentManagementTest.ServiceTest.FacultyServiceTest
         [Test, Order(18)]
         public async Task GetAllFacultiesFailure()
         {
-            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo);
+            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
             Assert.ThrowsAsync<NoFacultiesExistsException>(async () => await facultyService.GetAll());
         }
 
         [Test, Order(19)]
         public async Task DeleteFacultyFailure()
         {
-            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo);
+            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchFacultyExistException>(async () => await facultyService.DeleteFaculty("nonexisting@gmail.com"));
         }
@@ -377,7 +383,7 @@ namespace StudentManagementTest.ServiceTest.FacultyServiceTest
         public async Task GetProfessorsFailure()
         {
             await ClearDatabase(); // Ensure no data is present
-            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo);
+            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoFacultiesExistsException>(async () => await facultyService.GetProfessors());
         }
@@ -386,7 +392,7 @@ namespace StudentManagementTest.ServiceTest.FacultyServiceTest
         public async Task GetAssociateProfessorsFailure()
         {
             await ClearDatabase(); // Ensure no data is present
-            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo);
+            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoFacultiesExistsException>(async () => await facultyService.GetAssociateProfessors());
         }
@@ -395,7 +401,7 @@ namespace StudentManagementTest.ServiceTest.FacultyServiceTest
         public async Task GetAssistantProfessorsFailure()
         {
             await ClearDatabase(); // Ensure no data is present
-            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo);
+            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoFacultiesExistsException>(async () => await facultyService.GetAssistantProfessors());
         }
@@ -404,7 +410,7 @@ namespace StudentManagementTest.ServiceTest.FacultyServiceTest
         public async Task GetHeadOfDepartmentFailure()
         {
             await ClearDatabase(); // Ensure no data is present
-            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo);
+            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoFacultiesExistsException>(async () => await facultyService.GetHeadOfDepartment());
         }
@@ -413,7 +419,7 @@ namespace StudentManagementTest.ServiceTest.FacultyServiceTest
         public async Task GetFacultiesByDepartmentFailure()
         {
             await ClearDatabase(); // Ensure no data is present
-            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo);
+            IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoFacultiesExistsException>(async () => await facultyService.GetFacultiesByDepartment(99));
         }
