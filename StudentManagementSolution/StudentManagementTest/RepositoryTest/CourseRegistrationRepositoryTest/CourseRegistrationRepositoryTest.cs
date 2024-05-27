@@ -145,13 +145,13 @@ namespace StudentManagementTest.RepositoryTest.CourseRegistrationRepositoryTest
         }
 
         [Test, Order(9)]
-        public async Task UpdateCourseRegistrationFailure()
+        public void UpdateCourseRegistrationFailure()
         {
             Assert.ThrowsAsync<ArgumentNullException>(async () => await courseRegistrationRepo.Update(null));
         }
 
         [Test, Order(10)]
-        public async Task DeleteCourseRegistrationFailure()
+        public void DeleteCourseRegistrationFailure()
         {
             Assert.ThrowsAsync<NoSuchCourseRegistrationExistException>(async () => await courseRegistrationRepo.Delete(1));
         }

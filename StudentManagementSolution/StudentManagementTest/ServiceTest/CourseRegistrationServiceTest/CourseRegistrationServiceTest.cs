@@ -36,7 +36,7 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
 
         #region Setup
         [SetUp]
-        public async Task Setup()
+        public void Setup()
         {
             DbContextOptionsBuilder optionsBuilder = new DbContextOptionsBuilder()
                                                                 .UseInMemoryDatabase("dummyCourseRegistrationServiceDB");
@@ -260,7 +260,7 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
 
         #region Failure Tests
         [Test, Order(10)]
-        public async Task AddCourseRegistrationFailure()
+        public void AddCourseRegistrationFailure()
         {
             ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo,_mapper, mockLoggerConfig.Object);
 
@@ -283,7 +283,7 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
         }
 
         [Test, Order(12)]
-        public async Task GetCourseRegistrationByIdFailure()
+        public void GetCourseRegistrationByIdFailure()
         {
             ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper, mockLoggerConfig.Object);
 
@@ -291,7 +291,7 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
         }
 
         [Test, Order(13)]
-        public async Task UpdateCourseRegistrationFailure()
+        public void UpdateCourseRegistrationFailure()
         {
             ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper, mockLoggerConfig.Object);
 
@@ -299,7 +299,7 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
         }
 
         [Test, Order(14)]
-        public async Task DeleteCourseRegistrationFailure()
+        public void DeleteCourseRegistrationFailure()
         {
             ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper, mockLoggerConfig.Object);
 
@@ -307,7 +307,7 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
         }
 
         [Test, Order(15)]
-        public async Task GetCoursesRegisteredByStudentFailure()
+        public void GetCoursesRegisteredByStudentFailure()
         {
             ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper, mockLoggerConfig.Object);
 
@@ -316,7 +316,7 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
         }
 
         [Test, Order(16)]
-        public async Task GetRegisteredStudentsForCourseFailure()
+        public void GetRegisteredStudentsForCourseFailure()
         {
             ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper, mockLoggerConfig.Object);
 
@@ -324,7 +324,7 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
         }
 
         [Test, Order(17)]
-        public async Task ApproveCourseRegistrationsFailure()
+        public void ApproveCourseRegistrationsFailure()
         {
             ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper, mockLoggerConfig.Object);
 
@@ -332,7 +332,7 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
         }
 
         [Test, Order(18)]
-        public async Task ApproveCourseRegistrationsForStudentFailure()
+        public void ApproveCourseRegistrationsForStudentFailure()
         {
             ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper, mockLoggerConfig.Object);
 

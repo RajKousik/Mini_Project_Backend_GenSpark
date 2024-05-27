@@ -30,7 +30,7 @@ namespace StudentManagementTest.ServiceTest.StudentServiceTest
         #endregion
 
         [SetUp]
-        public async Task Setup()
+        public void Setup()
         {
             DbContextOptionsBuilder optionsBuilder = new DbContextOptionsBuilder()
                                                                 .UseInMemoryDatabase("dummyStudentServiceDB");

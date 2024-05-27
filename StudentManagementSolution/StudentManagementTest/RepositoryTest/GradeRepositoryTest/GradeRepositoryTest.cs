@@ -157,13 +157,13 @@ namespace StudentManagementTest.RepositoryTest.GradeRepositoryTest
         }
 
         [Test, Order(9)]
-        public async Task UpdateGradeFailure()
+        public void UpdateGradeFailure()
         {
             Assert.ThrowsAsync<ArgumentNullException>(async () => await gradeRepo.Update(null));
         }
 
         [Test, Order(10)]
-        public async Task DeleteGradeFailure()
+        public void DeleteGradeFailure()
         {
             Assert.ThrowsAsync<NoSuchGradeRecordExistsException>(async () => await gradeRepo.Delete(1));
         }

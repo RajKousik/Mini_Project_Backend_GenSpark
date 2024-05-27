@@ -257,7 +257,7 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
         #region Failure Tests
 
         [Test, Order(8)]
-        public async Task AddGradeFailure()
+        public void AddGradeFailure()
         {
             IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
@@ -283,7 +283,7 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
         }
 
         [Test, Order(10)]
-        public async Task GetGradeByIdFailure()
+        public void GetGradeByIdFailure()
         {
             IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
@@ -291,7 +291,7 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
         }
 
         [Test, Order(11)]
-        public async Task UpdateGradeFailure()
+        public void UpdateGradeFailure()
         {
             IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
@@ -306,7 +306,7 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
         }
 
         [Test, Order(12)]
-        public async Task DeleteGradeFailure()
+        public void DeleteGradeFailure()
         {
             IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
@@ -314,7 +314,7 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
         }
 
         [Test, Order(13)]
-        public async Task GetStudentGradesFailure()
+        public void GetStudentGradesFailure()
         {
             IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
@@ -322,7 +322,7 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
         }
 
         [Test, Order(14)]
-        public async Task GetCourseGradesFailure()
+        public void GetCourseGradesFailure()
         {
             IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 

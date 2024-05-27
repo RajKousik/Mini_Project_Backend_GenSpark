@@ -31,7 +31,7 @@ namespace StudentManagementTest.ServiceTest.FacultyServiceTest
 
         #region Setup
         [SetUp]
-        public async Task Setup()
+        public void Setup()
         {
             DbContextOptionsBuilder optionsBuilder = new DbContextOptionsBuilder()
                                                                 .UseInMemoryDatabase("dummyFacultyServiceDB");
@@ -331,7 +331,7 @@ namespace StudentManagementTest.ServiceTest.FacultyServiceTest
         }
 
         [Test, Order(14)]
-        public async Task GetFacultyByIdFailure()
+        public void GetFacultyByIdFailure()
         {
             IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
@@ -339,7 +339,7 @@ namespace StudentManagementTest.ServiceTest.FacultyServiceTest
         }
 
         [Test, Order(15)]
-        public async Task GetFacultyByEmailFailure()
+        public void GetFacultyByEmailFailure()
         {
             IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
@@ -347,7 +347,7 @@ namespace StudentManagementTest.ServiceTest.FacultyServiceTest
         }
 
         [Test, Order(16)]
-        public async Task ChangeDepartmentFailure()
+        public void ChangeDepartmentFailure()
         {
             IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
@@ -355,7 +355,7 @@ namespace StudentManagementTest.ServiceTest.FacultyServiceTest
         }
 
         [Test, Order(17)]
-        public async Task GetFacultyByNameFailure()
+        public void GetFacultyByNameFailure()
         {
             IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
@@ -365,14 +365,14 @@ namespace StudentManagementTest.ServiceTest.FacultyServiceTest
         }
 
         [Test, Order(18)]
-        public async Task GetAllFacultiesFailure()
+        public void GetAllFacultiesFailure()
         {
             IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
             Assert.ThrowsAsync<NoFacultiesExistsException>(async () => await facultyService.GetAll());
         }
 
         [Test, Order(19)]
-        public async Task DeleteFacultyFailure()
+        public void DeleteFacultyFailure()
         {
             IFacultyService facultyService = new FacultyService(_facultyRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 

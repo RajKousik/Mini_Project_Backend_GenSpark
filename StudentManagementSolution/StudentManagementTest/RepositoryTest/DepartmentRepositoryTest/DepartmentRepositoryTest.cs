@@ -109,13 +109,13 @@ namespace StudentManagementTest.RepositoryTest.DepartmentRepositoryTest
         }
 
         [Test, Order(9)]
-        public async Task UpdateDepartmentFailure()
+        public void UpdateDepartmentFailure()
         {
             Assert.ThrowsAsync<ArgumentNullException>(async () => await departmentRepo.Update(null));
         }
 
         [Test, Order(10)]
-        public async Task DeleteDepartmentFailure()
+        public void DeleteDepartmentFailure()
         {
             Assert.ThrowsAsync<NoSuchDepartmentExistException>(async () => await departmentRepo.Delete(1));
         }

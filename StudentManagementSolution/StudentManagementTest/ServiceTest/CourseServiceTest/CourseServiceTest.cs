@@ -31,7 +31,7 @@ namespace StudentManagementTest.ServiceTest.CourseServiceTest
 
         #region Setup
         [SetUp]
-        public async Task Setup()
+        public void Setup()
         {
             DbContextOptionsBuilder optionsBuilder = new DbContextOptionsBuilder()
                                                                 .UseInMemoryDatabase("dummyCourseServiceDB");
@@ -191,7 +191,7 @@ namespace StudentManagementTest.ServiceTest.CourseServiceTest
 
         #region Failure Test
         [Test, Order(7)]
-        public async Task AddCourseFailure()
+        public void AddCourseFailure()
         {
             ICourseService courseService = new CourseService(_courseRepo, _mapper, _facultyRepo, mockLoggerConfig.Object);
 
@@ -206,7 +206,7 @@ namespace StudentManagementTest.ServiceTest.CourseServiceTest
         }
 
         [Test, Order(8)]
-        public async Task GetCourseByIdFailure()
+        public void GetCourseByIdFailure()
         {
             ICourseService courseService = new CourseService(_courseRepo, _mapper, _facultyRepo, mockLoggerConfig.Object);
 
@@ -214,7 +214,7 @@ namespace StudentManagementTest.ServiceTest.CourseServiceTest
         }
 
         [Test, Order(9)]
-        public async Task GetCourseByNameFailure()
+        public void GetCourseByNameFailure()
         {
             ICourseService courseService = new CourseService(_courseRepo, _mapper, _facultyRepo, mockLoggerConfig.Object);
 
@@ -222,7 +222,7 @@ namespace StudentManagementTest.ServiceTest.CourseServiceTest
         }
 
         [Test, Order(10)]
-        public async Task GetCourseByFacultyFailure()
+        public void GetCourseByFacultyFailure()
         {
             ICourseService courseService = new CourseService(_courseRepo, _mapper, _facultyRepo, mockLoggerConfig.Object);
 
@@ -230,7 +230,7 @@ namespace StudentManagementTest.ServiceTest.CourseServiceTest
         }
 
         [Test, Order(11)]
-        public async Task UpdateCourseFailure()
+        public void UpdateCourseFailure()
         {
             ICourseService courseService = new CourseService(_courseRepo, _mapper, _facultyRepo, mockLoggerConfig.Object);
 

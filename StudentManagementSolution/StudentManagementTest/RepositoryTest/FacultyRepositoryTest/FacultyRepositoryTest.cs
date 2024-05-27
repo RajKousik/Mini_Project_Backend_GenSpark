@@ -104,13 +104,13 @@ namespace StudentManagementTest.RepositoryTest.FacultyRepositoryTest
         }
 
         [Test, Order(9)]
-        public async Task UpdateFacultyFailure()
+        public void UpdateFacultyFailure()
         {
             Assert.ThrowsAsync<ArgumentNullException>(async () => await facultyRepo.Update(null));
         }
 
         [Test, Order(10)]
-        public async Task DeleteFacultyFailure()
+        public void DeleteFacultyFailure()
         {
             Assert.ThrowsAsync<NoSuchFacultyExistException>(async () => await facultyRepo.Delete(1));
         }

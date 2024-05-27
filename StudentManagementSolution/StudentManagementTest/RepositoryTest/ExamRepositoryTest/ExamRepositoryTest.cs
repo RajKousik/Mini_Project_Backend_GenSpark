@@ -138,13 +138,13 @@ namespace StudentManagementTest.RepositoryTest.ExamRepositoryTest
         }
 
         [Test, Order(9)]
-        public async Task UpdateExamFailure()
+        public void UpdateExamFailure()
         {
             Assert.ThrowsAsync<ArgumentNullException>(async () => await examRepo.Update(null));
         }
 
         [Test, Order(10)]
-        public async Task DeleteExamFailure()
+        public void DeleteExamFailure()
         {
             Assert.ThrowsAsync<NoSuchExamExistException>(async () => await examRepo.Delete(1));
         }

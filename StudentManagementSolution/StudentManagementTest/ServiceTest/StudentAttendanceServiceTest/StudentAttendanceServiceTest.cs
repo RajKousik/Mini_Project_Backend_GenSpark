@@ -253,7 +253,7 @@ namespace StudentManagementTest.ServiceTest.StudentAttendanceServiceTest
         }
 
         [Test, Order(10)]
-        public async Task UpdateAttendanceFailure()
+        public void UpdateAttendanceFailure()
         {
             IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo, mockLoggerConfig.Object);
 
@@ -261,7 +261,7 @@ namespace StudentManagementTest.ServiceTest.StudentAttendanceServiceTest
         }
 
         [Test, Order(11)]
-        public async Task DeleteAttendanceFailure()
+        public void DeleteAttendanceFailure()
         {
             IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo, mockLoggerConfig.Object);
 
@@ -269,7 +269,7 @@ namespace StudentManagementTest.ServiceTest.StudentAttendanceServiceTest
         }
 
         [Test, Order(12)]
-        public async Task GetAttendanceFailure()
+        public void GetAttendanceFailure()
         {
             IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo, mockLoggerConfig.Object);
 
@@ -286,7 +286,7 @@ namespace StudentManagementTest.ServiceTest.StudentAttendanceServiceTest
         }
 
         [Test, Order(14)]
-        public async Task GetStudentAttendanceRecordsFailure()
+        public void GetStudentAttendanceRecordsFailure()
         {
             IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo, mockLoggerConfig.Object);
 
@@ -294,7 +294,7 @@ namespace StudentManagementTest.ServiceTest.StudentAttendanceServiceTest
         }
 
         [Test, Order(15)]
-        public async Task GetCourseAttendanceRecordsFailure()
+        public void GetCourseAttendanceRecordsFailure()
         {
             IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo, mockLoggerConfig.Object);
 
@@ -302,7 +302,7 @@ namespace StudentManagementTest.ServiceTest.StudentAttendanceServiceTest
         }
 
         [Test, Order(16)]
-        public async Task GetStudentAttendancePercentageFailure()
+        public void GetStudentAttendancePercentageFailure()
         {
             IStudentAttendanceService attendanceService = new StudentAttendanceService(_studentRepo, _courseRepo, _courseRegistrationRepo, _mapper, _attendanceRepo, mockLoggerConfig.Object);
 

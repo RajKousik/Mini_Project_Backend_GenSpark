@@ -34,7 +34,7 @@ namespace StudentManagementTest.ServiceTest.DepartmentServiceTest
 
         #region Setup
         [SetUp]
-        public async Task Setup()
+        public void Setup()
         {
             DbContextOptionsBuilder optionsBuilder = new DbContextOptionsBuilder()
                                                                 .UseInMemoryDatabase("dummyDepartmentServiceDB");
@@ -199,7 +199,7 @@ namespace StudentManagementTest.ServiceTest.DepartmentServiceTest
         #region Failure Tests
 
         [Test, Order(6)]
-        public async Task AddDepartmentFailure()
+        public void AddDepartmentFailure()
         {
             IDepartmentService departmentService = new DepartmentService(_departmentRepo, _mapper, _facultyRepo, mockLoggerConfig.Object);
 
@@ -209,7 +209,7 @@ namespace StudentManagementTest.ServiceTest.DepartmentServiceTest
         }
 
         [Test, Order(7)]
-        public async Task DeleteDepartmentFailure()
+        public void DeleteDepartmentFailure()
         {
             IDepartmentService departmentService = new DepartmentService(_departmentRepo, _mapper, _facultyRepo, mockLoggerConfig.Object);
 
@@ -217,7 +217,7 @@ namespace StudentManagementTest.ServiceTest.DepartmentServiceTest
         }
 
         [Test, Order(8)]
-        public async Task GetDepartmentByIdFailure()
+        public void GetDepartmentByIdFailure()
         {
             IDepartmentService departmentService = new DepartmentService(_departmentRepo, _mapper, _facultyRepo, mockLoggerConfig.Object);
 
@@ -238,7 +238,7 @@ namespace StudentManagementTest.ServiceTest.DepartmentServiceTest
         }
 
         [Test, Order(10)]
-        public async Task ChangeDepartmentHeadFailure()
+        public void ChangeDepartmentHeadFailure()
         {
             IDepartmentService departmentService = new DepartmentService(_departmentRepo, _mapper, _facultyRepo, mockLoggerConfig.Object);
 

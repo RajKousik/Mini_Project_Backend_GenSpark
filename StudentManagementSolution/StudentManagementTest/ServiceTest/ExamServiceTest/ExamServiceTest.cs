@@ -33,7 +33,7 @@ namespace StudentManagementTest.ServiceTest.ExamServiceTest
 
         #region Setup
         [SetUp]
-        public async Task Setup()
+        public void Setup()
         {
             DbContextOptionsBuilder optionsBuilder = new DbContextOptionsBuilder()
                                                                 .UseInMemoryDatabase("dummyExamServiceDB");
@@ -288,7 +288,7 @@ namespace StudentManagementTest.ServiceTest.ExamServiceTest
         #region Failure Tests
 
         [Test, Order(10)]
-        public async Task AddExamFailure()
+        public void AddExamFailure()
         {
             IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
@@ -315,7 +315,7 @@ namespace StudentManagementTest.ServiceTest.ExamServiceTest
         }
 
         [Test, Order(12)]
-        public async Task GetExamByIdFailure()
+        public void GetExamByIdFailure()
         {
             IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
@@ -323,7 +323,7 @@ namespace StudentManagementTest.ServiceTest.ExamServiceTest
         }
 
         [Test, Order(13)]
-        public async Task UpdateExamFailure()
+        public void UpdateExamFailure()
         {
             IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
@@ -341,7 +341,7 @@ namespace StudentManagementTest.ServiceTest.ExamServiceTest
         }
 
         [Test, Order(14)]
-        public async Task DeleteExamFailure()
+        public void DeleteExamFailure()
         {
             IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
@@ -349,7 +349,7 @@ namespace StudentManagementTest.ServiceTest.ExamServiceTest
         }
 
         [Test, Order(15)]
-        public async Task GetExamsByDateFailure()
+        public void GetExamsByDateFailure()
         {
             IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
@@ -359,7 +359,7 @@ namespace StudentManagementTest.ServiceTest.ExamServiceTest
         }
 
         [Test, Order(16)]
-        public async Task GetUpcomingExamsFailure()
+        public void GetUpcomingExamsFailure()
         {
             IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
@@ -368,7 +368,7 @@ namespace StudentManagementTest.ServiceTest.ExamServiceTest
         }
 
         [Test, Order(17)]
-        public async Task GetOfflineExamsFailure()
+        public void GetOfflineExamsFailure()
         {
             IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
@@ -378,7 +378,7 @@ namespace StudentManagementTest.ServiceTest.ExamServiceTest
         }
 
         [Test, Order(18)]
-        public async Task GetOnlineExamsFailure()
+        public void GetOnlineExamsFailure()
         {
 
             IExamService examService = new ExamService(_examRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
