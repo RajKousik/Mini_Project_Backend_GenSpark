@@ -15,7 +15,7 @@ namespace StudentManagementApplicationAPI.Controllers
     /// <summary>
     /// Controller for managing student attendance.
     /// </summary>
-    [Route("api/student-attendance")]
+    [Route("api/v1/student-attendance")]
     [ApiController]
 
     public class StudentAttendanceController : ControllerBase
@@ -23,6 +23,7 @@ namespace StudentManagementApplicationAPI.Controllers
         #region Private Fields
 
         private readonly IStudentAttendanceService _studentAttendanceService;
+        private readonly ILogger<StudentAttendanceController> _logger;
 
         #endregion
 
@@ -32,9 +33,11 @@ namespace StudentManagementApplicationAPI.Controllers
         /// Constructor for the StudentAttendanceController.
         /// </summary>
         /// <param name="studentAttendanceService">The injected student attendance service.</param>
-        public StudentAttendanceController(IStudentAttendanceService studentAttendanceService)
+        public StudentAttendanceController(IStudentAttendanceService studentAttendanceService,
+                ILogger<StudentAttendanceController> logger)
         {
             _studentAttendanceService = studentAttendanceService;
+            _logger = logger;
         }
 
         #endregion
@@ -61,30 +64,37 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchStudentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (NoSuchCourseExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (StudentNotOptedForCourseException ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(new ErrorModel(400, ex.Message));
             }
             catch (AttendanceRecordAlreadyExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(new ErrorModel(400, ex.Message));
             }
             catch (InvalidAttendanceDateException ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(new ErrorModel(400, ex.Message));
             }
             catch (InvalidAttendanceStatusException ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(new ErrorModel(400, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -108,10 +118,12 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchStudentAttendanceExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -138,18 +150,22 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchStudentAttendanceExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (InvalidAttendanceStatusException ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(new ErrorModel(400, ex.Message));
             }
             catch (InvalidAttendanceUpdateException ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(new ErrorModel(400, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -174,10 +190,12 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchStudentAttendanceExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -201,10 +219,12 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoStudentAttendancesExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -229,14 +249,17 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchStudentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (NoSuchStudentAttendanceExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -261,18 +284,22 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoStudentAttendancesExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (NoSuchCourseExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (NoSuchStudentAttendanceExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -295,14 +322,17 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchStudentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (NoStudentAttendancesExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }

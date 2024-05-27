@@ -12,7 +12,7 @@ using StudentManagementApplicationAPI.Services;
 
 namespace StudentManagementApplicationAPI.Controllers
 {
-    [Route("api/faculty")]
+    [Route("api/v1/faculty")]
     [ApiController]
     public class FacultyController : ControllerBase
     {
@@ -21,6 +21,7 @@ namespace StudentManagementApplicationAPI.Controllers
         private readonly IAuthRegisterService<FacultyRegisterReturnDTO, FacultyRegisterDTO> _authRegisterService;
         private readonly IAuthLoginService<FacultyLoginReturnDTO, FacultyLoginDTO> _authLoginService;
         private readonly IFacultyService _facultyService;
+        private readonly ILogger<FacultyController> _logger;
 
         #endregion
 
@@ -28,11 +29,12 @@ namespace StudentManagementApplicationAPI.Controllers
 
         public FacultyController(IAuthRegisterService<FacultyRegisterReturnDTO, FacultyRegisterDTO> authRegisterService,
                                  IAuthLoginService<FacultyLoginReturnDTO, FacultyLoginDTO> authLoginService,
-                                 IFacultyService facultyService)
+                                 IFacultyService facultyService, ILogger<FacultyController> logger)
         {
             _authLoginService = authLoginService;
             _authRegisterService = authRegisterService;
             _facultyService = facultyService;
+            _logger = logger;
         }
 
         #endregion
@@ -59,14 +61,17 @@ namespace StudentManagementApplicationAPI.Controllers
                 }
                 catch (UserNotActivatedException ex)
                 {
+                    _logger.LogError(ex.Message);
                     return StatusCode(StatusCodes.Status403Forbidden, new ErrorModel(403, ex.Message));
                 }
                 catch (UnauthorizedUserException ex)
                 {
+                    _logger.LogError(ex.Message);
                     return StatusCode(StatusCodes.Status401Unauthorized, new ErrorModel(401, ex.Message));
                 }
                 catch (Exception ex)
                 {
+                    _logger.LogError(ex.Message);
                     return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, $"An unexpected error occurred: {ex.Message}"));
                 }
             }
@@ -93,22 +98,27 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchDepartmentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (DuplicateEmailException ex)
             {
+                _logger.LogError(ex.Message);
                 return Conflict(new ErrorModel(409, ex.Message));
             }
             catch (UnableToRegisterException ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(new ErrorModel(400, ex.Message));
             }
             catch (UnableToAddFacultyException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, $"An unexpected error occurred : {ex.Message}"));
             }
         }
@@ -133,22 +143,27 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchDepartmentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (DuplicateEmailException ex)
             {
+                _logger.LogError(ex.Message);
                 return Conflict(new ErrorModel(409, ex.Message));
             }
             catch (UnableToRegisterException ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(new ErrorModel(400, ex.Message));
             }
             catch (UnableToAddFacultyException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, $"An unexpected error occurred : {ex.Message}"));
             }
         }
@@ -173,22 +188,27 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchDepartmentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (DuplicateEmailException ex)
             {
+                _logger.LogError(ex.Message);
                 return Conflict(new ErrorModel(409, ex.Message));
             }
             catch (UnableToRegisterException ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(new ErrorModel(400, ex.Message));
             }
             catch (UnableToAddFacultyException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, $"An unexpected error occurred : {ex.Message}"));
             }
         }
@@ -213,22 +233,27 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchDepartmentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (DuplicateEmailException ex)
             {
+                _logger.LogError(ex.Message);
                 return Conflict(new ErrorModel(409, ex.Message));
             }
             catch (UnableToRegisterException ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(new ErrorModel(400, ex.Message));
             }
             catch (UnableToAddFacultyException ex) // Replace with specific Faculty registration exception
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, $"An unexpected error occurred : {ex.Message}"));
             }
         }
@@ -255,14 +280,17 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchFacultyExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (UnableToUpdateFacultyException ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(new ErrorModel(400, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -287,14 +315,17 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchFacultyExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (UnableToDeleteFacultyException ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(new ErrorModel(400, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -318,10 +349,12 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchFacultyExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -344,10 +377,12 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchFacultyExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -370,10 +405,12 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoFacultiesExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -396,10 +433,12 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoFacultiesExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -422,10 +461,12 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoFacultiesExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -448,10 +489,12 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoFacultiesExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -474,10 +517,12 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoFacultiesExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -500,10 +545,12 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoFacultiesExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -527,10 +574,12 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoFacultiesExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -558,18 +607,22 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchFacultyExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (NoSuchDepartmentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (UnableToUpdateDepartmentException ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(new ErrorModel(400, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, $"An unexpected error occurred: {ex.Message}"));
             }
         }

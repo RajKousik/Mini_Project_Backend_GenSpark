@@ -9,21 +9,23 @@ using StudentManagementApplicationAPI.Models.ErrorModels;
 
 namespace StudentManagementApplicationAPI.Controllers
 {
-    [Route("api/departments")]
+    [Route("api/v1/departments")]
     [ApiController]
     public class DepartmentController : ControllerBase
     {
         #region Private Fields
 
         private readonly IDepartmentService _departmentService;
+        private readonly ILogger<DepartmentController> _logger;
 
         #endregion
 
         #region Constructor
 
-        public DepartmentController(IDepartmentService departmentService)
+        public DepartmentController(IDepartmentService departmentService, ILogger<DepartmentController> logger)
         {
             _departmentService = departmentService;
+            _logger = logger;
         }
 
         #endregion
@@ -50,18 +52,22 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (DepartmentAlreadyExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(409, ex.Message));
             }
             catch (NoSuchFacultyExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(404, ex.Message));
             }
             catch (UnableToAddDepartmentException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -84,10 +90,12 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchDepartmentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status404NotFound, new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -108,10 +116,12 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoDepartmentsExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status404NotFound, new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -137,22 +147,27 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchDepartmentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status404NotFound, new ErrorModel(404, ex.Message));
             }
             catch (NoSuchFacultyExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status404NotFound, new ErrorModel(404, ex.Message));
             }
             catch (UnableToUpdateDepartmentException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status400BadRequest, new ErrorModel(400, ex.Message));
             }
             catch (UnableToUpdateFacultyException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status400BadRequest, new ErrorModel(400, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }

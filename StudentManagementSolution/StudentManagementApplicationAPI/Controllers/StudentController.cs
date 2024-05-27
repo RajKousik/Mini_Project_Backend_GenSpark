@@ -11,7 +11,7 @@ using StudentManagementApplicationAPI.Models.ErrorModels;
 
 namespace StudentManagementApplicationAPI.Controllers
 {
-    [Route("api/students")]
+    [Route("api/v1/students")]
     [ApiController]
     public class StudentController : ControllerBase
     {
@@ -20,17 +20,19 @@ namespace StudentManagementApplicationAPI.Controllers
         private readonly IAuthRegisterService<StudentRegisterReturnDTO, StudentRegisterDTO> _authRegisterService;
         private readonly IAuthLoginService<StudentLoginReturnDTO, StudentLoginDTO> _authLoginService;
         private readonly IStudentService _studentService;
+        private readonly ILogger<StudentController> _logger;
         #endregion
 
         #region Constructor
 
         public StudentController(IAuthRegisterService<StudentRegisterReturnDTO, StudentRegisterDTO> authRegisterService,
             IAuthLoginService<StudentLoginReturnDTO, StudentLoginDTO> authLoginService,
-            IStudentService studentService)
+            IStudentService studentService, ILogger<StudentController> logger)
         {
             _authLoginService = authLoginService;
             _authRegisterService = authRegisterService;
             _studentService = studentService;
+            _logger = logger;
         }
 
         #endregion
@@ -57,14 +59,17 @@ namespace StudentManagementApplicationAPI.Controllers
                 }
                 catch (UserNotActivatedException ex)
                 {
+                    _logger.LogError(ex.Message);
                     return StatusCode(StatusCodes.Status403Forbidden, new ErrorModel(403, ex.Message));
                 }
                 catch (UnauthorizedUserException ex)
                 {
+                    _logger.LogError(ex.Message);
                     return StatusCode(StatusCodes.Status401Unauthorized, new ErrorModel(401, ex.Message));
                 }
                 catch (Exception ex)
                 {
+                    _logger.LogError(ex.Message);
                     return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, $"An unexpected error occurred: {ex.Message}"));
                 }
             }
@@ -91,30 +96,37 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (CannotAddStudentToAdminDepartmentException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status400BadRequest, new ErrorModel(400, ex.Message));
             }
             catch (NoSuchDepartmentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (InvalidPasswordException ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(new ErrorModel(400, ex.Message));
             }
             catch (DuplicateEmailException ex)
             {
+                _logger.LogError(ex.Message);
                 return Conflict(new ErrorModel(409, ex.Message));
             }
             catch (UnableToRegisterException ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(new ErrorModel(400, ex.Message));
             }
             catch (UnableToAddStudentException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, $"An unexpected error occurred : {ex.Message}"));
             }
         }
@@ -141,22 +153,27 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchStudentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (CannotAddStudentToAdminDepartmentException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status400BadRequest, new ErrorModel(400, ex.Message));
             }
             catch (NoSuchDepartmentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status404NotFound, new ErrorModel(404, ex.Message));
             }
             catch (UnableToUpdateStudentException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, $"An unexpected error occurred : {ex.Message}"));
             }
         }
@@ -182,14 +199,17 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchStudentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (UnableToDeleteStudentException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, $"An unexpected error occurred : {ex.Message}"));
             }
         }
@@ -214,10 +234,12 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch(NoStudentsExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status400BadRequest, new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, $"An unexpected error occurred : {ex.Message}"));
             }
         }
@@ -242,10 +264,12 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchStudentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, $"An unexpected error occurred : {ex.Message}"));
             }
         }
@@ -270,10 +294,12 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchStudentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, $"An unexpected error occurred : {ex.Message}"));
             }
         }
@@ -299,10 +325,12 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchStudentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, $"An unexpected error occurred : {ex.Message}"));
             }
         }
@@ -328,14 +356,17 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchDepartmentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (NoStudentsExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, $"An unexpected error occurred : {ex.Message}"));
             }
         }

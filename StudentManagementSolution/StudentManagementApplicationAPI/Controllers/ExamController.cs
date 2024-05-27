@@ -9,12 +9,13 @@ using StudentManagementApplicationAPI.Models.ErrorModels;
 
 namespace StudentManagementApplicationAPI.Controllers
 {
-    [Route("api/exams")]
+    [Route("api/v1/exams")]
     [ApiController]
     public class ExamController : ControllerBase
     {
         #region Private Fields
         private readonly IExamService _examService;
+        private readonly ILogger<ExamController> _logger;
         #endregion
 
         #region Controller
@@ -22,9 +23,10 @@ namespace StudentManagementApplicationAPI.Controllers
         /// Injecting the service
         /// </summary>
         /// <param name="examService">Exam Service</param>
-        public ExamController(IExamService examService)
+        public ExamController(IExamService examService, ILogger<ExamController> logger)
         {
             _examService = examService;
+            _logger = logger;
         }
         #endregion
 
@@ -51,30 +53,37 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchCourseExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(404, ex.Message));
             }
             catch (ExamAlreadyScheduledException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(409, ex.Message));
             }
             catch (InvalidTotalMarkException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(400, ex.Message));
             }
             catch (InvalidExamDateException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(400, ex.Message));
             }
             catch (InvalidExamTypeException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(400, ex.Message));
             }
             catch (UnableToAddExamException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -99,10 +108,12 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchExamExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status404NotFound, new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -125,10 +136,12 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoExamsExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status404NotFound, new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -158,10 +171,12 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchExamExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status404NotFound, new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -190,10 +205,12 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchExamExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status404NotFound, new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -219,14 +236,17 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchExamExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status404NotFound, new ErrorModel(404, ex.Message));
             }
             catch (CannotDeleteFinishedExamException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status400BadRequest, new ErrorModel(400, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -252,10 +272,12 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchCourseExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status404NotFound, new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -279,10 +301,12 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchExamExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status404NotFound, new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -306,10 +330,12 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchExamExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status404NotFound, new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }

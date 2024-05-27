@@ -8,7 +8,7 @@ using StudentManagementApplicationAPI.Models.ErrorModels;
 
 namespace StudentManagementApplicationAPI.Controllers
 {
-    [Route("api/admin")]
+    [Route("api/v1/admin")]
     [ApiController]
     [Authorize(Roles = "Admin")]
     public class AdminController : ControllerBase
@@ -16,14 +16,20 @@ namespace StudentManagementApplicationAPI.Controllers
         #region Private Fields
 
         private readonly IAdminService _adminService;
+        private readonly ILogger<AdminController> _logger;
 
         #endregion
 
         #region Constructor
-
-        public AdminController(IAdminService adminService)
+        /// <summary>
+        /// Constructor for the CourseController.
+        /// </summary>
+        /// <param name="adminService"></param>
+        /// <param name="logger"></param>
+        public AdminController(IAdminService adminService, ILogger<AdminController> logger)
         {
             _adminService = adminService;
+            _logger = logger;
         }
 
         #endregion
@@ -54,10 +60,12 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchFacultyExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(500, new ErrorModel(500, $"Internal server error: {ex.Message}"));
             }
         }
@@ -86,10 +94,12 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchStudentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(500, new ErrorModel(500, $"Internal server error: {ex.Message}"));
             }
         }

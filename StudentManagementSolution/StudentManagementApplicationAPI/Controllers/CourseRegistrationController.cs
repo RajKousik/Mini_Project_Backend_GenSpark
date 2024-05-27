@@ -11,12 +11,13 @@ using StudentManagementApplicationAPI.Models.ErrorModels;
 
 namespace StudentManagementApplicationAPI.Controllers
 {
-    [Route("api/course-registrations")]
+    [Route("api/v1/course-registrations")]
     [ApiController]
     public class CourseRegistrationController : ControllerBase
     {
         #region Private Fields
         private readonly ICourseRegistrationService _courseRegistrationService;
+        private readonly ILogger<CourseRegistrationController> _logger;
         #endregion
 
         #region Constructor
@@ -24,9 +25,11 @@ namespace StudentManagementApplicationAPI.Controllers
         /// Constructor for the CourseRegistrationController.
         /// </summary>
         /// <param name="courseRegistrationService">The injected course registration service.</param>
-        public CourseRegistrationController(ICourseRegistrationService courseRegistrationService)
+        public CourseRegistrationController(ICourseRegistrationService courseRegistrationService,
+            ILogger<CourseRegistrationController> logger)
         {
             _courseRegistrationService = courseRegistrationService;
+            _logger = logger;
         }
         #endregion
 
@@ -53,22 +56,27 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (StudentAlreadyRegisteredForCourseException ex)
             {
+                _logger.LogError(ex.Message);
                 return Conflict(new ErrorModel(409, ex.Message));
             }
             catch (NoSuchCourseExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (NoSuchStudentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (UnableToAddCourseRegistrationException ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(new ErrorModel(400, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -94,10 +102,12 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoCourseRegistrationsExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -124,10 +134,12 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchCourseRegistrationExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -158,30 +170,37 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchCourseRegistrationExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (NoSuchCourseExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (NoSuchStudentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (StudentAlreadyRegisteredForCourseException ex)
             {
+                _logger.LogError(ex.Message);
                 return Conflict(new ErrorModel(409, ex.Message));
             }
             catch (StudentAlreadyApprovedForCourseException ex)
             {
+                _logger.LogError(ex.Message);
                 return Conflict(new ErrorModel(409, ex.Message));
             }
             catch (UnableToUpdateCourseRegistrationException ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(new ErrorModel(400, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -208,14 +227,17 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchCourseRegistrationExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (UnableToDeleteCourseRegistrationException ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(new ErrorModel(400, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -243,14 +265,17 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchStudentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (NoCourseRegistrationsExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -278,14 +303,17 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchCourseExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (NoCourseRegistrationsExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -315,18 +343,22 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchCourseRegistrationExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (StudentAlreadyApprovedForCourseException ex)
             {
+                _logger.LogError(ex.Message);
                 return Conflict(new ErrorModel(409, ex.Message));
             }
             catch (UnableToApproveCourseRegistrationException ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(new ErrorModel(400, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
@@ -357,22 +389,27 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchStudentExistException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (NoCourseRegistrationsExistsException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (StudentAlreadyApprovedForCourseException ex)
             {
+                _logger.LogError(ex.Message);
                 return Conflict(new ErrorModel(409, ex.Message));
             }
             catch (UnableToApproveCourseRegistrationException ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(new ErrorModel(400, ex.Message));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
