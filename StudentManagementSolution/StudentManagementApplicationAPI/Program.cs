@@ -17,6 +17,7 @@ using StudentManagementApplicationAPI.Interfaces.Service;
 using StudentManagementApplicationAPI.Interfaces.Service.AdminService;
 using StudentManagementApplicationAPI.Interfaces.Service.AuthService;
 using StudentManagementApplicationAPI.Interfaces.Service.TokenService;
+using WatchDog;
 
 namespace StudentManagementApplicationAPI
 {
@@ -139,6 +140,16 @@ namespace StudentManagementApplicationAPI
 
             #endregion
 
+            #region WatchDog
+
+            builder.Services.AddWatchDogServices(opt =>
+            {
+                opt.SetExternalDbConnString = builder.Configuration.GetConnectionString("WatchDogConnection");
+                opt.DbDriverOption = WatchDog.src.Enums.WatchDogDbDriverEnum.MSSQL;
+            });
+
+            #endregion
+
             var app = builder.Build();
             //app.UseMiddleware<TokenManagerMiddleware>();
             #region Swagger Configurations
@@ -156,6 +167,18 @@ namespace StudentManagementApplicationAPI
             app.UseAuthorization();
             app.MapControllers();
 
+            #endregion
+
+
+            #region WatchDog Configurations
+            app.UseWatchDogExceptionLogger();
+
+            var watchdogCredentials = builder.Configuration.GetSection("WatchDog");
+            app.UseWatchDog(opt =>
+            {
+                opt.WatchPageUsername = watchdogCredentials["username"];
+                opt.WatchPagePassword = watchdogCredentials["password"];
+            });
             #endregion
 
             app.Run();

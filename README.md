@@ -607,6 +607,8 @@ Here are the endpoints formatted with numbering:
       - 404: Not Found (ErrorModel)
       - 500: Server Error (ErrorModel)
 
+### Student Controller
+
 53. **Get Grades by Student ID**
     - **Endpoint:** `/api/v1/grades/student/{studentId}`
     - **Method:** GET

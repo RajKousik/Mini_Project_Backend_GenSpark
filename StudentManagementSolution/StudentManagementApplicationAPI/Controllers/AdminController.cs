@@ -8,6 +8,7 @@ using StudentManagementApplicationAPI.Interfaces.Service.TokenService;
 using StudentManagementApplicationAPI.Models.ErrorModels;
 using StudentManagementApplicationAPI.Services;
 using System.Security.Claims;
+using WatchDog;
 
 namespace StudentManagementApplicationAPI.Controllers
 {
@@ -65,11 +66,13 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchFacultyExistException ex)
             {
+                WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
                 return StatusCode(500, new ErrorModel(500, $"Internal server error: {ex.Message}"));
             }
@@ -99,11 +102,13 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchStudentExistException ex)
             {
+                WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
                 return StatusCode(500, new ErrorModel(500, $"Internal server error: {ex.Message}"));
             }

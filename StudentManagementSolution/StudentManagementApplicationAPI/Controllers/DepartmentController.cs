@@ -6,6 +6,7 @@ using StudentManagementApplicationAPI.Exceptions.FacultyExceptions;
 using StudentManagementApplicationAPI.Interfaces.Service;
 using StudentManagementApplicationAPI.Models.DTOs.DepartmentDTOs;
 using StudentManagementApplicationAPI.Models.ErrorModels;
+using WatchDog;
 
 namespace StudentManagementApplicationAPI.Controllers
 {
@@ -51,21 +52,25 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (DepartmentAlreadyExistException ex)
             {
+                WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(409, ex.Message));
             }
             catch (NoSuchFacultyExistException ex)
             {
+                WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(404, ex.Message));
             }
             catch (UnableToAddDepartmentException ex)
             {
+                WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
             catch (Exception ex)
             {
+                WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
@@ -89,11 +94,13 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchDepartmentExistException ex)
             {
+                WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status404NotFound, new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
@@ -115,11 +122,13 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoDepartmentsExistsException ex)
             {
+                WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status404NotFound, new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
@@ -146,26 +155,31 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchDepartmentExistException ex)
             {
+                WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status404NotFound, new ErrorModel(404, ex.Message));
             }
             catch (NoSuchFacultyExistException ex)
             {
+                WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status404NotFound, new ErrorModel(404, ex.Message));
             }
             catch (UnableToUpdateDepartmentException ex)
             {
+                WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status400BadRequest, new ErrorModel(400, ex.Message));
             }
             catch (UnableToUpdateFacultyException ex)
             {
+                WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status400BadRequest, new ErrorModel(400, ex.Message));
             }
             catch (Exception ex)
             {
+                WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }

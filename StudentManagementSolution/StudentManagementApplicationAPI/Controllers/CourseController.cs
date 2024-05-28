@@ -6,6 +6,7 @@ using StudentManagementApplicationAPI.Exceptions.FacultyExceptions;
 using StudentManagementApplicationAPI.Interfaces.Service;
 using StudentManagementApplicationAPI.Models.DTOs.CourseDTOs;
 using StudentManagementApplicationAPI.Models.ErrorModels;
+using WatchDog;
 
 namespace StudentManagementApplicationAPI.Controllers
 {
@@ -32,6 +33,37 @@ namespace StudentManagementApplicationAPI.Controllers
         #endregion
 
         #region EndPoints
+
+        /// <summary>
+        /// Retrieves a course by its ID.
+        /// </summary>
+        /// <param name="courseId">The ID of the course to be retrieved.</param>
+        /// <returns>An ActionResult containing the course details.</returns>
+        [HttpGet("{courseId}")]
+        [ProducesResponseType(typeof(CourseReturnDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<CourseReturnDTO>> GetCourseById(int courseId)
+        {
+            try
+            {
+                var result = await _courseService.GetCourseById(courseId);
+                return Ok(result);
+            }
+            catch (NoSuchCourseExistException ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return NotFound(new ErrorModel(404, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
+            }
+        }
+
+
         /// <summary>
         /// Adds a new course.
         /// </summary>
@@ -49,25 +81,29 @@ namespace StudentManagementApplicationAPI.Controllers
             try
             {
                 var result = await _courseService.AddCourse(courseDTO);
-                return CreatedAtAction(nameof(GetCourseById), new { departmentId = result.CourseId}, result);
+                return CreatedAtAction(nameof(GetCourseById), new { courseId = result.CourseId }, result);
             }
             catch (CourseAlreadyExistsException ex)
             {
+                WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
                 return Conflict(new ErrorModel(409, ex.Message));
             }
             catch (NoSuchFacultyExistException ex)
             {
+                WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (UnableToAddCourseException ex)
             {
+                WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
                 return BadRequest(new ErrorModel(400, ex.Message));
             }
             catch (Exception ex)
             {
+                WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
@@ -90,43 +126,19 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoCoursesExistsException ex)
             {
+                WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
         }
 
-        /// <summary>
-        /// Retrieves a course by its ID.
-        /// </summary>
-        /// <param name="courseId">The ID of the course to be retrieved.</param>
-        /// <returns>An ActionResult containing the course details.</returns>
-        [HttpGet("{courseId}")]
-        [ProducesResponseType(typeof(CourseReturnDTO), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<CourseReturnDTO>> GetCourseById(int courseId)
-        {
-            try
-            {
-                var result = await _courseService.GetCourseById(courseId);
-                return Ok(result);
-            }
-            catch (NoSuchCourseExistException ex)
-            {
-                _logger.LogError(ex.Message);
-                return NotFound(new ErrorModel(404, ex.Message));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
-            }
-        }
+        
 
         /// <summary>
         /// Retrieves a course by its name.
@@ -147,11 +159,13 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchCourseExistException ex)
             {
+                WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
@@ -176,11 +190,13 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoCoursesExistForFacultyException ex)
             {
+                WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (Exception ex)
             {
+                WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
@@ -208,26 +224,31 @@ namespace StudentManagementApplicationAPI.Controllers
             }
             catch (NoSuchCourseExistException ex)
             {
+                WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (CourseAlreadyExistsException ex)
             {
+                WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
                 return Conflict(new ErrorModel(409, ex.Message));
             }
             catch (NoSuchFacultyExistException ex)
             {
+                WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (UnableToUpdateCourseException ex)
             {
+                WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
                 return BadRequest(new ErrorModel(400, ex.Message));
             }
             catch (Exception ex)
             {
+                WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
             }
