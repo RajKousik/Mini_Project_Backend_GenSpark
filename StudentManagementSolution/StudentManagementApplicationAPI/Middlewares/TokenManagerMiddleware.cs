@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using StudentManagementApplicationAPI.Interfaces.Service.TokenService;
 
 
-namespace StudentManagementApplicationAPI.Services
+namespace StudentManagementApplicationAPI.Middlewares
 {
     //public class TokenManagerMiddleware : IMiddleware
     //{
@@ -19,7 +19,7 @@ namespace StudentManagementApplicationAPI.Services
 
     //    public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     //    {
-            
+
     //        if (context.User.Claims == null || (context.User.Claims != null && !IsLoggedOut(context.User.Claims)))
     //        {
     //            await next(context);

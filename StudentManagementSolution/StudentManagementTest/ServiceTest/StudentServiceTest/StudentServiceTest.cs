@@ -244,6 +244,8 @@ namespace StudentManagementTest.ServiceTest.StudentServiceTest
 
             //var students = await studentService.GetStudentsByDepartment(999); // Assuming 999 is a nonexistent department ID
             Assert.ThrowsAsync<NoSuchDepartmentExistException>(async () => await studentService.GetStudentsByDepartment(999));
+
+            Assert.ThrowsAsync<NoStudentsExistsException>(async () => await studentService.GetStudentsByDepartment(1));
             //Assert.IsEmpty(students);
         }
 

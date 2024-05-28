@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Org.BouncyCastle.Crypto.Macs;
 using StudentManagementApplicationAPI.Contexts;
 using StudentManagementApplicationAPI.Exceptions.CourseExceptions;
 using StudentManagementApplicationAPI.Exceptions.ExamExceptions;
@@ -18,6 +19,7 @@ using StudentManagementApplicationAPI.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -146,7 +148,7 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
             context.Courses.RemoveRange(context.Courses);
             context.Exams.RemoveRange(context.Exams);
             context.Grades.RemoveRange(context.Grades);
-            context.Departments.RemoveRange(context.Departments);
+            //context.Departments.RemoveRange(context.Departments);
             context.Faculties.RemoveRange(context.Faculties);
             context.CourseRegistrations.RemoveRange(context.CourseRegistrations);
             await context.SaveChangesAsync();
@@ -172,7 +174,14 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
             };
 
             var result = await gradeService.AddGrade(gradeDTO);
-
+            Assert.ThrowsAsync<NoSuchStudentExistException>(async () => await gradeService.AddGrade(new GradeDTO
+            {
+                StudentId = 100,
+                ExamId = 1,
+                MarksScored = 90,
+                EvaluatedById = 1,
+                Comments = "Good"
+            }));
             Assert.IsNotNull(result);
             Assert.That(result.MarksScored, Is.EqualTo(90));
         }
@@ -213,6 +222,20 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
 
             var result = await gradeService.UpdateGrade(1, gradeUpdateDTO);
 
+            Assert.ThrowsAsync<NoSuchFacultyExistException>(async () => await gradeService.UpdateGrade(1, gradeUpdateDTO = new GradeUpdateDTO
+            {
+                EvaluatedById = 100,
+                MarksScored = 95,
+                Comments = "Superb!"
+            }));
+
+            Assert.ThrowsAsync<InvalidMarksScoredException>(async () => await gradeService.UpdateGrade(1, gradeUpdateDTO = new GradeUpdateDTO
+            {
+                EvaluatedById = 1,
+                MarksScored = 120,
+                Comments = "Superb!"
+            }));
+            ;
             Assert.IsNotNull(result);
             Assert.That(result.MarksScored, Is.EqualTo(95));
         }
@@ -350,11 +373,31 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
         }
 
         [Test, Order(13)]
-        public void GetStudentGradesFailure()
+        public async Task GetStudentGradesFailure()
         {
             IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchStudentExistException>(async () => await gradeService.GetStudentGrades(99)); // Non-existent student ID
+            var hmac = new HMACSHA512();
+            var student1 = new Student
+            {
+                Name = "student2",
+                Email = "student2@gmail.com",
+                DOB = new DateTime(2000, 01, 01),
+                Gender = "Male",
+                Address = "Chennai",
+                Mobile = "9876523418",
+                Status = ActivationStatus.Active,
+                PasswordHashKey = hmac.Key,
+                HashedPassword = hmac.ComputeHash(Encoding.UTF8.GetBytes("student2")),
+                DepartmentId = 1
+            };
+
+            await context.Students.AddRangeAsync(student1);
+            await context.SaveChangesAsync();
+
+            Assert.ThrowsAsync<NoGradeRecordsExistsException>(async () => await gradeService.GetStudentGrades(2));
+
         }
 
         [Test, Order(14)]

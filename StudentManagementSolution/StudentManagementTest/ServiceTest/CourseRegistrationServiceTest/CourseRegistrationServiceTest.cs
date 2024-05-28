@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -10,6 +11,7 @@ using StudentManagementApplicationAPI.Exceptions.StudentExceptions;
 using StudentManagementApplicationAPI.Interfaces.Repository;
 using StudentManagementApplicationAPI.Interfaces.Service;
 using StudentManagementApplicationAPI.Models.Db_Models;
+using StudentManagementApplicationAPI.Models.DTOs.CourseDTOs;
 using StudentManagementApplicationAPI.Models.DTOs.CourseRegistrationDTOs;
 using StudentManagementApplicationAPI.Models.Enums;
 using StudentManagementApplicationAPI.Repositories;
@@ -202,9 +204,12 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
             ICourseRegistrationService courseRegistrationService = new CourseRegistrationService(_courseRegistrationRepo, _courseRepo, _studentRepo, _mapper, mockLoggerConfig.Object);
 
             var result = await courseRegistrationService.UpdateCourseRegistraion(1, 4);
-
             Assert.IsNotNull(result);
             Assert.That(result.CourseId, Is.EqualTo(4));
+
+            Assert.ThrowsAsync<NoSuchCourseRegistrationExistException>(async () => await courseRegistrationService.UpdateCourseRegistraion(1000, 4));
+
+            Assert.ThrowsAsync<NoSuchCourseExistException>(async () => await courseRegistrationService.UpdateCourseRegistraion(1, 1000));
         }
 
         [Test, Order(5)]

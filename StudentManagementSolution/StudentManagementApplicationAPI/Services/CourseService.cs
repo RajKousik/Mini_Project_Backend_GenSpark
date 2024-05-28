@@ -122,10 +122,6 @@ namespace StudentManagementApplicationAPI.Services
             try
             {
                 var course = await _courseRepository.GetById(courseId);
-                if (course == null)
-                {
-                    throw new NoSuchCourseExistException($"Course with ID {courseId} does not exist.");
-                }
                 return _mapper.Map<CourseReturnDTO>(course);
             }
             catch (NoSuchCourseExistException ex)
@@ -208,10 +204,6 @@ namespace StudentManagementApplicationAPI.Services
             {
                 // Check if the course exists
                 var course = await _courseRepository.GetById(courseId);
-                if (course == null)
-                {
-                    throw new NoSuchCourseExistException($"Course with ID {courseId} does not exist.");
-                }
 
                 // Check if the new course name already exists
                 if (!string.IsNullOrEmpty(courseDTO.Name))

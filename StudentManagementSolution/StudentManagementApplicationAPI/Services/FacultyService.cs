@@ -128,10 +128,6 @@ namespace StudentManagementApplicationAPI.Services
             try
             {
                 var faculty = await _facultyRepository.GetById(facultyId);
-                if (faculty == null)
-                {
-                    throw new NoSuchFacultyExistException($"Faculty with ID {facultyId} does not exist.");
-                }
 
                 return _mapper.Map<FacultyDTO>(faculty);
             }
@@ -380,10 +376,7 @@ namespace StudentManagementApplicationAPI.Services
 
                 // Check if the department exists
                 var department = await _departmentRepository.GetById(deptId);
-                if (department == null)
-                {
-                    throw new NoSuchDepartmentExistException($"Department with ID {deptId} does not exist.");
-                }
+
 
                 // Check if the faculty is the head of any department
                 if(faculty.Role == RoleType.Head_Of_Department)

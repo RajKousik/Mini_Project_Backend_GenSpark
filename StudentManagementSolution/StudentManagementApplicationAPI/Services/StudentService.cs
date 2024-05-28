@@ -221,10 +221,10 @@ namespace StudentManagementApplicationAPI.Services
                 }
                 return _mapper.Map<IEnumerable<StudentDTO>>(students);
             }
-            catch (NoSuchStudentExistException ex)
+            catch (NoStudentsExistsException ex)
             {
                 _logger.LogError(ex.Message);
-                throw new NoSuchStudentExistException(ex.Message);
+                throw new NoStudentsExistsException(ex.Message);
             }
             catch (NoSuchDepartmentExistException ex)
             {

@@ -225,10 +225,6 @@ namespace StudentManagementApplicationAPI.Services
             try
             {
                 var student = await _studentRepository.GetById(studentId);
-                if (student == null)
-                {
-                    throw new NoSuchStudentExistException($"Student with ID {studentId} does not exist.");
-                }
                 var allGrades = await _gradeRepository.GetAll();
                 var studentGrades = allGrades.Where(g => g.StudentId == studentId).ToList();
                 if (studentGrades.Count == 0)
@@ -307,11 +303,6 @@ namespace StudentManagementApplicationAPI.Services
             {
                 _logger.LogError(ex.Message);
                 throw new NoSuchGradeRecordExistsException($"Unable to update grade: {ex.Message}");
-            }
-            catch (InvalidGradeException ex)
-            {
-                _logger.LogError(ex.Message);
-                throw new InvalidGradeException($"Unable to update grade: {ex.Message}");
             }
             catch (NoSuchFacultyExistException ex)
             {

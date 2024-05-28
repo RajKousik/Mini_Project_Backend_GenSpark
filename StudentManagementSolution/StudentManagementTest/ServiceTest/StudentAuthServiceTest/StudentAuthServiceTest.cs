@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Org.BouncyCastle.Crypto.Macs;
 using StudentManagementApplicationAPI.Contexts;
 using StudentManagementApplicationAPI.Exceptions.UnAuthorizationExceptions;
 using StudentManagementApplicationAPI.Interfaces.Repository;
@@ -107,7 +108,21 @@ namespace StudentManagementTest.ServiceTest.StudentAuthServiceTest
                 DepartmentId = 1
             };
 
-            await context.Students.AddRangeAsync(student1);
+            var student6 = new Student
+            {
+                Name = "student6",
+                Email = "student6@gmail.com",
+                DOB = new DateTime(2000, 01, 01),
+                Gender = "Male",
+                Address = "Chennai",
+                Mobile = "9876523418",
+                Status = ActivationStatus.Inactive,
+                PasswordHashKey = hmac.Key,
+                HashedPassword = hmac.ComputeHash(Encoding.UTF8.GetBytes("student6")),
+                DepartmentId = 1
+            };
+
+            await context.Students.AddRangeAsync(student1, student6);
 
             await context.SaveChangesAsync();
         }
@@ -128,8 +143,16 @@ namespace StudentManagementTest.ServiceTest.StudentAuthServiceTest
 
             StudentLoginReturnDTO result = await studentLoginService.Login(studentLoginDTO);
 
+            studentLoginDTO = new StudentLoginDTO
+            {
+                Email = "student6@gmail.com",
+                Password = "student6"
+            };
+
+            Assert.ThrowsAsync<UserNotActivatedException>(async()=>await studentLoginService.Login(studentLoginDTO));
+
             Assert.IsNotNull(result);
-            Assert.That(result.Email, Is.EqualTo(studentLoginDTO.Email));
+            Assert.That(result.Email, Is.EqualTo("student1@gmail.com"));
 
         }
 
@@ -143,11 +166,21 @@ namespace StudentManagementTest.ServiceTest.StudentAuthServiceTest
             StudentLoginDTO studentLoginDTO = new StudentLoginDTO
             {
                 Email = "student1@gmail.com",
-                Password = "student123"
+                Password = "student123" //wrong password
             };
+
 
             Assert.ThrowsAsync<UnauthorizedUserException>(async () => await studentLoginService.Login(studentLoginDTO));
 
+
+            studentLoginDTO = new StudentLoginDTO
+            {
+                Email = "student123@gmail.com", // non existing mail id
+                Password = "student123"
+            };
+
+
+            Assert.ThrowsAsync<UnauthorizedUserException>(async () => await studentLoginService.Login(studentLoginDTO));
         }
 
         [Test, Order(3)]
@@ -179,7 +212,7 @@ namespace StudentManagementTest.ServiceTest.StudentAuthServiceTest
         public void RegisterFailureTest()
         {
 
-            //IAuthRegisterService<StudentRegisterReturnDTO, StudentRegisterDTO> studentResgiterService = new StudentAuthService(_tokenService, _studentRepo, _mapper, _departmentRepo); ;
+
             IAuthRegisterService<StudentRegisterReturnDTO, StudentRegisterDTO> studentResgiterService = new StudentAuthService(_tokenService, _studentRepo, _mapper, _departmentRepo, passwordValidatorService, mockPasswordConfig.Object, mockLoggerConfig.Object); 
 
             StudentRegisterDTO studentRegisterDTO = new StudentRegisterDTO

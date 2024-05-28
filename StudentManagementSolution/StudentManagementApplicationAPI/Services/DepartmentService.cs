@@ -53,10 +53,6 @@ namespace StudentManagementApplicationAPI.Services
 
                 var isFacultyExist = await _facultyRepository.GetById((int)departmentDTO.HeadId);
 
-                if (isFacultyExist == null)
-                {
-                    throw new NoSuchFacultyExistException();
-                }
 
                 if(isFacultyExist.Role == RoleType.Admin || isFacultyExist.Role == RoleType.Head_Of_Department)
                 {
@@ -118,10 +114,7 @@ namespace StudentManagementApplicationAPI.Services
             try
             {
                 var department = await _departmentRepository.GetById(departmentId);
-                if (department == null)
-                {
-                    throw new NoSuchDepartmentExistException();
-                }
+
 
                 var deletedDepartment = await _departmentRepository.Delete(departmentId);
                 if(deletedDepartment == null)
@@ -157,10 +150,7 @@ namespace StudentManagementApplicationAPI.Services
             try
             {
                 var department = await _departmentRepository.GetById(departmentId);
-                if (department == null)
-                {
-                    throw new NoSuchDepartmentExistException();
-                }
+
 
                 return _mapper.Map<DepartmentDTO>(department);
             }
@@ -214,19 +204,11 @@ namespace StudentManagementApplicationAPI.Services
             try
             {
                 var department = await _departmentRepository.GetById(departmentId);
-                if (department == null)
-                {
-                    throw new NoSuchDepartmentExistException();
-                }
 
                 
 
                 var isFacultyExist = await _facultyRepository.GetById(newHeadDepartmentId);
 
-                if (isFacultyExist == null)
-                {
-                    throw new NoSuchFacultyExistException();
-                }
 
                 if(isFacultyExist.Role == RoleType.Admin)
                 {

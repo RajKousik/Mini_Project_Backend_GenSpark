@@ -58,16 +58,10 @@ namespace StudentManagementApplicationAPI.Services
             try
             {
                 var student = await _studentRepository.GetById(courseRegistrationAddDTO.StudentId);
-                if (student == null)
-                {
-                    throw new NoSuchStudentExistException($"Student with ID {courseRegistrationAddDTO.StudentId} does not exist.");
-                }
+
 
                 var course = await _courseRepository.GetById(courseRegistrationAddDTO.CourseId);
-                if (course == null)
-                {
-                    throw new NoSuchCourseExistException($"Course with ID {courseRegistrationAddDTO.CourseId} does not exist.");
-                }
+
 
                 // Check if the student is already registered for the course
                 var alreadyRegistered = (await _courseRegistrationRepository.GetAll())
@@ -144,10 +138,7 @@ namespace StudentManagementApplicationAPI.Services
             try
             {
                 var courseRegistration = await _courseRegistrationRepository.GetById(courseRegistrationId);
-                if (courseRegistration == null)
-                {
-                    throw new NoSuchCourseRegistrationExistException($"Course registration with ID {courseRegistrationId} does not exist.");
-                }
+
                 return _mapper.Map<CourseRegistrationReturnDTO>(courseRegistration);
             }
             catch (NoSuchCourseRegistrationExistException ex)
@@ -173,17 +164,10 @@ namespace StudentManagementApplicationAPI.Services
             try
             {
                 var courseRegistration = await _courseRegistrationRepository.GetById(courseRegistrationId);
-                if (courseRegistration == null)
-                {
-                    throw new NoSuchCourseRegistrationExistException($"Course registration with ID {courseRegistrationId} does not exist.");
-                }
+
 
 
                 var course = await _courseRepository.GetById(courseId);
-                if (course == null)
-                {
-                    throw new NoSuchCourseExistException($"Course with ID {courseId} does not exist.");
-                }
 
                 if (courseRegistration.IsApproved)
                 {
@@ -221,11 +205,6 @@ namespace StudentManagementApplicationAPI.Services
                 _logger.LogError(ex.Message);
                 throw new StudentAlreadyRegisteredForCourseException(ex.Message);
             }
-            catch (NoSuchStudentExistException ex)
-            {
-                _logger.LogError(ex.Message);
-                throw new NoSuchStudentExistException(ex.Message);
-            }
             catch (StudentAlreadyApprovedForCourseException ex)
             {
                 _logger.LogError(ex.Message);
@@ -248,10 +227,7 @@ namespace StudentManagementApplicationAPI.Services
             try
             {
                 var courseRegistration = await _courseRegistrationRepository.GetById(courseRegistrationId);
-                if (courseRegistration == null)
-                {
-                    throw new NoSuchCourseRegistrationExistException($"Course registration with ID {courseRegistrationId} does not exist.");
-                }
+
 
                 if(courseRegistration.IsApproved)
                 {
@@ -285,10 +261,7 @@ namespace StudentManagementApplicationAPI.Services
             try
             {
                 var studentExists = await _studentRepository.GetById(studentId);
-                if (studentExists == null)
-                {
-                    throw new NoSuchStudentExistException($"Student with ID {studentId} does not exist.");
-                }
+
 
                 var courseRegistrations = (await _courseRegistrationRepository.GetAll())
                     .Where(cr => cr.StudentId == studentId)
@@ -328,10 +301,7 @@ namespace StudentManagementApplicationAPI.Services
             try
             {
                 var courseExists = await _courseRepository.GetById(courseId);
-                if (courseExists == null)
-                {
-                    throw new NoSuchCourseExistException($"Course with ID {courseId} does not exist.");
-                }
+
 
                 var courseRegistrations = (await _courseRegistrationRepository.GetAll())
                     .Where(cr => cr.CourseId == courseId)
@@ -371,10 +341,7 @@ namespace StudentManagementApplicationAPI.Services
             try
             {
                 var courseRegistration = await _courseRegistrationRepository.GetById(courseRegistrationId);
-                if (courseRegistration == null)
-                {
-                    throw new NoSuchCourseRegistrationExistException($"Course registration with ID {courseRegistrationId} does not exist.");
-                }
+
                 if(courseRegistration.IsApproved == true)
                 {
                     throw new CourseRegistrationAlreadyApprovedException($"The course registration with Id {courseRegistrationId} already approved");
@@ -394,11 +361,6 @@ namespace StudentManagementApplicationAPI.Services
                 _logger.LogError(ex.Message);
                 throw new NoSuchCourseRegistrationExistException(ex.Message);
             }
-            catch (UnableToUpdateCourseRegistrationException ex)
-            {
-                _logger.LogError(ex.Message);
-                throw new UnableToUpdateCourseRegistrationException(ex.Message);
-            }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
@@ -416,10 +378,7 @@ namespace StudentManagementApplicationAPI.Services
             try
             {
                 var studentExists = await _studentRepository.GetById(studentId);
-                if (studentExists == null)
-                {
-                    throw new NoSuchStudentExistException($"Student with ID {studentId} does not exist.");
-                }
+
 
                 var courseRegistrations = (await _courseRegistrationRepository.GetAll())
                     .Where(cr => cr.StudentId == studentId && !cr.IsApproved)

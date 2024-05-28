@@ -203,6 +203,13 @@ namespace StudentManagementTest.ServiceTest.CourseServiceTest
             }; // Invalid Name
 
             Assert.ThrowsAsync<CourseAlreadyExistsException>(async () => await courseService.AddCourse(courseDTO));
+
+            Assert.ThrowsAsync<NoSuchFacultyExistException>(async () => await courseService.AddCourse(new CourseDTO
+            {
+                Name = "Newly added course",
+                Description = "This is a new course",
+                FacultyId = 100
+            }));
         }
 
         [Test, Order(8)]

@@ -256,10 +256,7 @@ namespace StudentManagementApplicationAPI.Services
             try
             {
                 var exam = await _examRepository.GetById(examId);
-                if (exam == null)
-                {
-                    throw new NoSuchExamExistException($"Exam with ID {examId} does not exist.");
-                }
+                
 
                 await ValidateExam(examDTO);
 

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using StudentManagementApplicationAPI.Contexts;
+using StudentManagementApplicationAPI.Exceptions.CourseExceptions;
 using StudentManagementApplicationAPI.Exceptions.ExamExceptions;
 using StudentManagementApplicationAPI.Interfaces.Repository;
 using StudentManagementApplicationAPI.Interfaces.Service;
@@ -303,6 +304,16 @@ namespace StudentManagementTest.ServiceTest.ExamServiceTest
             };
 
             Assert.ThrowsAsync<ExamAlreadyScheduledException>(async () => await examService.AddExam(examDTO));
+
+            Assert.ThrowsAsync<NoSuchCourseExistException>(async () => await examService.AddExam(new ExamDTO
+            {
+                CourseId = 100,
+                TotalMark = 100,
+                ExamDate = new DateOnly(2024, 8, 1),
+                StartTime = new TimeOnly(10, 0, 0),
+                EndTime = new TimeOnly(12, 0, 0),
+                ExamType = "Online"
+            }));
         }
 
         [Test, Order(11)]

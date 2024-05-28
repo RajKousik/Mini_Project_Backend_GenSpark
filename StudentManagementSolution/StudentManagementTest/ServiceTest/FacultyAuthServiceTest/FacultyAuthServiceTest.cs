@@ -88,7 +88,21 @@ namespace StudentManagementTest.ServiceTest.FacultyAuthServiceTest
                 HashedPassword = hmac.ComputeHash(Encoding.UTF8.GetBytes("faculty1")),
                 DepartmentId = 1,
             };
-            await context.Faculties.AddRangeAsync(faculty1);
+            var faculty4 = new Faculty()
+            {
+                Name = "faculty4",
+                Email = "faculty4@gmail.com",
+                DOB = new DateTime(2000, 01, 01),
+                Gender = "Male",
+                Address = "Chennai",
+                Mobile = "9876523418",
+                Role = RoleType.Admin,
+                Status = ActivationStatus.Inactive,
+                PasswordHashKey = hmac.Key,
+                HashedPassword = hmac.ComputeHash(Encoding.UTF8.GetBytes("faculty4")),
+                DepartmentId = 1,
+            };
+            await context.Faculties.AddRangeAsync(faculty1, faculty4);
 
             var department1 = new Department { Name = "Computer Science", HeadId = 1 };
 
@@ -148,6 +162,12 @@ namespace StudentManagementTest.ServiceTest.FacultyAuthServiceTest
             };
 
             Assert.ThrowsAsync<UnauthorizedUserException>(async () => await facultyLoginService.Login(facultyLoginDTO));
+
+            Assert.ThrowsAsync<UserNotActivatedException>(async () => await facultyLoginService.Login(new FacultyLoginDTO
+            {
+                Email = "faculty4@gmail.com",
+                Password = "faculty4"
+            }));
 
         }
 

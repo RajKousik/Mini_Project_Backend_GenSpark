@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using StudentManagementApplicationAPI.Contexts;
 using StudentManagementApplicationAPI.Exceptions.CourseExceptions;
+using StudentManagementApplicationAPI.Exceptions.GradeExceptions;
 using StudentManagementApplicationAPI.Exceptions.StudentAttendanceExceptions;
 using StudentManagementApplicationAPI.Exceptions.StudentExceptions;
 using StudentManagementApplicationAPI.Interfaces.Repository;
@@ -92,6 +93,13 @@ namespace StudentManagementTest.ServiceTest.StudentAttendanceServiceTest
                 FacultyId = 1
             };
 
+            var course2 = new Course
+            {
+                Name = "Math2",
+                Description = "Math2 Course",
+                FacultyId = 1
+            };
+
             var courseRegistration1 = new CourseRegistration
             {
                 CourseId = 1,
@@ -111,7 +119,7 @@ namespace StudentManagementTest.ServiceTest.StudentAttendanceServiceTest
             await context.Students.AddRangeAsync(student1);
             await context.Faculties.AddRangeAsync(faculty1);
             await context.Departments.AddRangeAsync(department1);
-            await context.Courses.AddRangeAsync(course1);
+            await context.Courses.AddRangeAsync(course1, course2);
             await context.StudentAttendances.AddRangeAsync(attendance1);
             await context.CourseRegistrations.AddRangeAsync(courseRegistration1);
             await context.SaveChangesAsync();
@@ -142,6 +150,16 @@ namespace StudentManagementTest.ServiceTest.StudentAttendanceServiceTest
             };
 
             var result = await attendanceService.MarkAttendance(attendanceDTO);
+
+            Assert.ThrowsAsync<AttendanceRecordAlreadyExistsException>(async () => await attendanceService.MarkAttendance(attendanceDTO));
+
+            Assert.ThrowsAsync<StudentNotOptedForCourseException>(async () => await attendanceService.MarkAttendance(new AttendanceDTO
+            {
+                StudentRollNo = 1,
+                CourseId = 2,
+                Date = new DateOnly(2023, 8, 2),
+                AttendanceStatus = "present"
+            }));
 
             Assert.IsNotNull(result);
             Assert.That(result.StudentRollNo, Is.EqualTo(1));

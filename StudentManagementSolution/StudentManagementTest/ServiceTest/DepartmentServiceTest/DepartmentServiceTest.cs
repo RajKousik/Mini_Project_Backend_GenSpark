@@ -12,12 +12,8 @@ using StudentManagementApplicationAPI.Models.DTOs.DepartmentDTOs;
 using StudentManagementApplicationAPI.Models.Enums;
 using StudentManagementApplicationAPI.Repositories;
 using StudentManagementApplicationAPI.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace StudentManagementTest.ServiceTest.DepartmentServiceTest
 {
@@ -177,6 +173,8 @@ namespace StudentManagementTest.ServiceTest.DepartmentServiceTest
         {
             IDepartmentService departmentService = new DepartmentService(_departmentRepo, _mapper, _facultyRepo, mockLoggerConfig.Object);
             var result = await departmentService.ChangeDepartmentHead(1, 3);
+
+            Assert.ThrowsAsync<NoSuchFacultyExistException>(async()=> await departmentService.ChangeDepartmentHead(1, 4));
 
             Assert.IsNotNull(result);
             Assert.That(result.HeadId, Is.EqualTo(3));
