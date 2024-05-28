@@ -145,14 +145,21 @@ Configure your application settings in `appsettings.json`:
     }
   },
   "ConnectionStrings": {
-    "DefaultConnection": "<DB_CONNECTION_STRING>"
+    "defaultConnection": "Data Source=823CBX3\\DEMOINSTANCE;Integrated Security=True;Initial Catalog=dbStudentManagement;",
+    "WatchDogConnection": "Data Source=823CBX3\\DEMOINSTANCE;Integrated Security=True;Initial Catalog=WatchDogForStudentManagement;"
+  },
+  "WatchDog": {
+    "username": "admin",
+    "password": "admin"
   },
   "TokenKey": {
-    "JWT": "<SECRET_KEY>"
+    "JWT": "Lk3xG9pVqRmZtRwYk7oPnTjWrAsDfGhUi8yBnJkLm9zXx2cVnMl0pOu1tZr4eDcFvGbHnJm5sR3Zn9JyQaPx7oWtUgXhIvDcFeGbVkLmOpNjRbEaUcPy8x6y0Zq4w1u3t5r7i9w2"
   },
-  "AllowPasswordValidation": false, //if you need password validation, then assign it as true
+  "AllowPasswordValidation": false,
+
   "AllowedHosts": "*"
 }
+
 ```
 
 ### Running the Application
@@ -163,6 +170,10 @@ Configure your application settings in `appsettings.json`:
 
 2. **Access the API**
    Open your browser and navigate to `https://localhost:5001/swagger` to explore the API documentation.
+
+3. **Access WatchDog**
+   `https://localhost:5089/watchdog`
+
 
 ## API Endpoints
 
