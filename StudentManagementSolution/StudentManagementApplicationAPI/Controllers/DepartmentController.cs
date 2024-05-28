@@ -146,11 +146,11 @@ namespace StudentManagementApplicationAPI.Controllers
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<DepartmentDTO>> ChangeDepartmentHead(int departmentId, int newHeadDepartmentId)
+        public async Task<ActionResult<DepartmentDTO>> ChangeDepartmentHead(int departmentId, int newHeadId)
         {
             try
             {
-                var updatedDepartment = await _departmentService.ChangeDepartmentHead(departmentId, newHeadDepartmentId);
+                var updatedDepartment = await _departmentService.ChangeDepartmentHead(departmentId, newHeadId);
                 return Ok(updatedDepartment);
             }
             catch (NoSuchDepartmentExistException ex)
