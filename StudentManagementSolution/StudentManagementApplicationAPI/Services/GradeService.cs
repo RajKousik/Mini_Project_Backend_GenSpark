@@ -102,11 +102,6 @@ namespace StudentManagementApplicationAPI.Services
                 _logger.LogError(ex.Message);
                 throw new StudentNotOptedForCourseException($"Unable to add grade: {ex.Message}");
             }
-            catch (InvalidExamDateException ex)
-            {
-                _logger.LogError(ex.Message);
-                throw new InvalidExamDateException($"Unable to add grade: {ex.Message}");
-            }
             catch (InvalidMarksScoredException ex)
             {
                 _logger.LogError(ex.Message);

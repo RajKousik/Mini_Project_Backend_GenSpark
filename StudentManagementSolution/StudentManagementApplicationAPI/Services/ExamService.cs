@@ -109,17 +109,18 @@ namespace StudentManagementApplicationAPI.Services
 
             var endTime = new DateTime(examDTO.ExamDate.Year, examDTO.ExamDate.Month, examDTO.ExamDate.Day)
                 .Add(examDTO.EndTime.ToTimeSpan());
-            var exam = new Exam()
+            Exam exam;
+            if (Enum.TryParse<ExamType>(examDTO.ExamType, true, out var examTypeEnum))
             {
-                CourseId = examDTO.CourseId,
-                ExamDate = examDTO.ExamDate.ToDateTime(TimeOnly.MinValue),
-                TotalMark = examDTO.TotalMark,
-                StartTime = startTime,
-                EndTime = endTime
-            };
-            if (Enum.TryParse<ExamType>(examDTO.ExamType.ToLower(), true, out var examTypeEnum))
-            {
-                exam.ExamType = examTypeEnum;
+                exam = new Exam()
+                {
+                    CourseId = examDTO.CourseId,
+                    ExamDate = examDTO.ExamDate.ToDateTime(TimeOnly.MinValue),
+                    TotalMark = examDTO.TotalMark,
+                    StartTime = startTime,
+                    EndTime = endTime,
+                    ExamType = examTypeEnum,
+                };
             }
             else
             {
@@ -161,7 +162,7 @@ namespace StudentManagementApplicationAPI.Services
             }
 
             // Validate ExamType
-            if (!Enum.IsDefined(typeof(ExamType), examDTO.ExamType))
+            if (!Enum.TryParse<ExamType>(examDTO.ExamType.ToLower(), true, out var examTypeEnum))
             {
                 throw new InvalidExamTypeException("ExamType must be either 'Online' or 'Offline'.");
             }
