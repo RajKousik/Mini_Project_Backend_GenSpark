@@ -5,6 +5,7 @@ using Moq;
 using StudentManagementApplicationAPI.Contexts;
 using StudentManagementApplicationAPI.Exceptions.CourseExceptions;
 using StudentManagementApplicationAPI.Exceptions.CourseRegistrationExceptions;
+using StudentManagementApplicationAPI.Exceptions.ExamExceptions;
 using StudentManagementApplicationAPI.Exceptions.StudentExceptions;
 using StudentManagementApplicationAPI.Interfaces.Repository;
 using StudentManagementApplicationAPI.Interfaces.Service;
@@ -165,6 +166,12 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
             Assert.IsNotNull(result);
             Assert.That(result.StudentId, Is.EqualTo(1));
             Assert.That(result.CourseId, Is.EqualTo(1));
+
+            Assert.ThrowsAsync<StudentAlreadyRegisteredForCourseException>(async () => await courseRegistrationService.AddCourse(new CourseRegistrationAddDTO
+            {
+                StudentId = 1,
+                CourseId = 3,
+            }));
         }
 
         [Test, Order(2)]
@@ -229,6 +236,8 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
 
             var result = await courseRegistrationService.ApproveCourseRegistrations(1);
 
+            Assert.ThrowsAsync<CourseRegistrationAlreadyApprovedException>(async () => await courseRegistrationService.ApproveCourseRegistrations(1));
+
             Assert.IsNotNull(result);
         }
 
@@ -252,6 +261,8 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
 
             var result = await courseRegistrationService.ApproveCourseRegistrationsForStudent(1);
 
+            Assert.ThrowsAsync<CourseRegistrationAlreadyApprovedException>(async () => await courseRegistrationService.ApproveCourseRegistrations(1));
+
             Assert.IsNotNull(result);
             Assert.IsNotEmpty(result);
         }
@@ -271,6 +282,25 @@ namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
             };
 
             Assert.ThrowsAsync<NoSuchStudentExistException>(async () => await courseRegistrationService.AddCourse(courseRegistrationAddDTO));
+
+            courseRegistrationAddDTO = new CourseRegistrationAddDTO
+            {
+                StudentId = 1, 
+                CourseId = 55// Non-existent Course ID
+            };
+
+            Assert.ThrowsAsync<NoSuchCourseExistException>(async () => await courseRegistrationService.AddCourse(courseRegistrationAddDTO));
+
+            courseRegistrationAddDTO = new CourseRegistrationAddDTO
+            {
+                StudentId = 1, // Non-existent Student ID
+                CourseId = 3
+            };
+
+            Assert.ThrowsAsync<StudentAlreadyRegisteredForCourseException>(async () => await courseRegistrationService.AddCourse(courseRegistrationAddDTO));
+
+
+
         }
 
         [Test, Order(11)]

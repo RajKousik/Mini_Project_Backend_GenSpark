@@ -4,6 +4,8 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using StudentManagementApplicationAPI.Contexts;
 using StudentManagementApplicationAPI.Exceptions.CourseExceptions;
+using StudentManagementApplicationAPI.Exceptions.ExamExceptions;
+using StudentManagementApplicationAPI.Exceptions.FacultyExceptions;
 using StudentManagementApplicationAPI.Exceptions.GradeExceptions;
 using StudentManagementApplicationAPI.Exceptions.StudentExceptions;
 using StudentManagementApplicationAPI.Interfaces.Repository;
@@ -271,6 +273,39 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
             };
 
             Assert.ThrowsAsync<NoSuchStudentExistException>(async () => await gradeService.AddGrade(gradeDTO));
+
+            gradeDTO = new GradeDTO
+            {
+                StudentId = 1, 
+                ExamId = 200,// Non-existent Exam ID
+                EvaluatedById = 1,
+                MarksScored = 90,
+                Comments = "Good!"
+            };
+
+            Assert.ThrowsAsync<NoSuchExamExistException>(async () => await gradeService.AddGrade(gradeDTO));
+
+            gradeDTO = new GradeDTO
+            {
+                StudentId = 1, 
+                ExamId = 1,
+                EvaluatedById = 1000, // Non-existent Evalauted by ID
+                MarksScored = 79,
+                Comments = "Good!"
+            };
+
+            Assert.ThrowsAsync<NoSuchFacultyExistException>(async () => await gradeService.AddGrade(gradeDTO));
+
+            gradeDTO = new GradeDTO
+            {
+                StudentId = 1,
+                ExamId = 1,
+                EvaluatedById = 1, // Non-existent Evalauted by ID
+                MarksScored = 120,
+                Comments = "Good!"
+            };
+
+            Assert.ThrowsAsync<InvalidMarksScoredException>(async () => await gradeService.AddGrade(gradeDTO));
         }
 
         [Test, Order(9)]
@@ -303,6 +338,7 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
             };
 
             Assert.ThrowsAsync<NoSuchGradeRecordExistsException>(async () => await gradeService.UpdateGrade(99, gradeUpdateDTO)); // Non-existent grade ID
+
         }
 
         [Test, Order(12)]
@@ -327,6 +363,8 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
             IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchCourseExistException>(async () => await gradeService.GetCourseGrades(99)); // Non-existent course ID
+
+            Assert.ThrowsAsync<NoSuchCourseExistException>(async () => await gradeService.GetCourseGrades(1));
         }
 
         #endregion

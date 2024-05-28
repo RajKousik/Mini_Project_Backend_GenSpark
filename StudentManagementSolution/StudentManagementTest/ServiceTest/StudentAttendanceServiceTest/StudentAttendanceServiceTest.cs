@@ -119,11 +119,6 @@ namespace StudentManagementTest.ServiceTest.StudentAttendanceServiceTest
 
         private async Task ClearDatabase()
         {
-            context.Students.RemoveRange(context.Students);
-            context.Courses.RemoveRange(context.Courses);
-            context.Departments.RemoveRange(context.Departments);
-            context.Faculties.RemoveRange(context.Faculties);
-            context.CourseRegistrations.RemoveRange(context.CourseRegistrations);
             context.StudentAttendances.RemoveRange(context.StudentAttendances);
             await context.SaveChangesAsync();
         }
@@ -250,6 +245,36 @@ namespace StudentManagementTest.ServiceTest.StudentAttendanceServiceTest
             };
 
             Assert.ThrowsAsync<NoSuchStudentExistException>(async () => await attendanceService.MarkAttendance(attendanceDTO));
+
+            attendanceDTO = new AttendanceDTO
+            {
+                StudentRollNo = 1, 
+                CourseId = 99, // Non-existent course no
+                Date = new DateOnly(2024, 8, 2),
+                AttendanceStatus = "Present"
+            };
+
+            Assert.ThrowsAsync<NoSuchCourseExistException>(async () => await attendanceService.MarkAttendance(attendanceDTO));
+
+            attendanceDTO = new AttendanceDTO
+            {
+                StudentRollNo = 1,
+                CourseId = 1, 
+                Date = new DateOnly(2024, 8, 2), // future date
+                AttendanceStatus = "Present"
+            };
+
+            Assert.ThrowsAsync<InvalidAttendanceDateException>(async () => await attendanceService.MarkAttendance(attendanceDTO));
+
+            attendanceDTO = new AttendanceDTO
+            {
+                StudentRollNo = 1,
+                CourseId = 1, 
+                Date = new DateOnly(2023, 8, 2),
+                AttendanceStatus = "not present"    //invalid statuas
+            };
+
+            Assert.ThrowsAsync<InvalidAttendanceStatusException>(async () => await attendanceService.MarkAttendance(attendanceDTO));
         }
 
         [Test, Order(10)]

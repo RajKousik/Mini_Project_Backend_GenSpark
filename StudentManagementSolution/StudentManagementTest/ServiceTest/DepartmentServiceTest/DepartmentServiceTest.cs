@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using StudentManagementApplicationAPI.Contexts;
 using StudentManagementApplicationAPI.Exceptions.DepartmentExceptions;
+using StudentManagementApplicationAPI.Exceptions.FacultyExceptions;
 using StudentManagementApplicationAPI.Interfaces.Repository;
 using StudentManagementApplicationAPI.Interfaces.Service;
 using StudentManagementApplicationAPI.Models.Db_Models;
@@ -125,9 +126,7 @@ namespace StudentManagementTest.ServiceTest.DepartmentServiceTest
 
         private async Task ClearDatabase()
         {
-            context.Students.RemoveRange(context.Students);
             context.Departments.RemoveRange(context.Departments);
-            context.Faculties.RemoveRange(context.Faculties);
             await context.SaveChangesAsync();
         }
 
@@ -206,6 +205,10 @@ namespace StudentManagementTest.ServiceTest.DepartmentServiceTest
             var departmentDTO = new DepartmentDTO { Name = "IT", HeadId = 1 }; 
 
             Assert.ThrowsAsync<DepartmentAlreadyExistException>(async () => await departmentService.AddDepartment(departmentDTO));
+
+            departmentDTO = new DepartmentDTO { Name = "Non IT", HeadId = 100 };
+
+            Assert.ThrowsAsync<NoSuchFacultyExistException>(async () => await departmentService.AddDepartment(departmentDTO));
         }
 
         [Test, Order(7)]
@@ -238,11 +241,18 @@ namespace StudentManagementTest.ServiceTest.DepartmentServiceTest
         }
 
         [Test, Order(10)]
-        public void ChangeDepartmentHeadFailure()
+        public async Task ChangeDepartmentHeadFailureAsync()
         {
             IDepartmentService departmentService = new DepartmentService(_departmentRepo, _mapper, _facultyRepo, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchDepartmentExistException>(async () => await departmentService.ChangeDepartmentHead(99, 2)); // Non-existent department ID
+
+
+            var department2 = new DepartmentDTO { Name = "Non IT", HeadId = 2 };
+
+
+
+            Assert.ThrowsAsync<UnableToAddDepartmentException>(async () => await departmentService.AddDepartment(department2));
         }
 
 
