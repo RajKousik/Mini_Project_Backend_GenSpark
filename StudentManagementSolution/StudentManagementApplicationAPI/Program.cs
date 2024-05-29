@@ -157,7 +157,11 @@ namespace StudentManagementApplicationAPI
             #endregion
 
             var app = builder.Build();
+
+            #region Middleware Configurations
             //app.UseMiddleware<TokenManagerMiddleware>();
+            #endregion
+
             #region Swagger Configurations
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
