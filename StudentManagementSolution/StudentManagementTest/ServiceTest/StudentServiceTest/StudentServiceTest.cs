@@ -11,7 +11,7 @@ using StudentManagementApplicationAPI.Models.Db_Models;
 using StudentManagementApplicationAPI.Models.DTOs.StudentDTOs;
 using StudentManagementApplicationAPI.Models.Enums;
 using StudentManagementApplicationAPI.Repositories;
-using StudentManagementApplicationAPI.Services;
+using StudentManagementApplicationAPI.Services.Student_Service;
 using System.Security.Cryptography;
 using System.Text;
 

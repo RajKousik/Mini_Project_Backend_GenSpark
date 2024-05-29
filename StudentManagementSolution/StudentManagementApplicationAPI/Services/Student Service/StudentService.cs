@@ -8,7 +8,7 @@ using StudentManagementApplicationAPI.Models.DTOs.StudentDTOs;
 
 
 
-namespace StudentManagementApplicationAPI.Services
+namespace StudentManagementApplicationAPI.Services.Student_Service
 {
     /// <summary>
     /// Service class to handle student-related operations.
@@ -30,7 +30,7 @@ namespace StudentManagementApplicationAPI.Services
         /// <param name="studentRepo">The student repository.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="departmentRepo">The department repository.</param>
-        public StudentService(IRepository<int, Student> studentRepo, IMapper mapper, 
+        public StudentService(IRepository<int, Student> studentRepo, IMapper mapper,
             IRepository<int, Department> departmentRepo, ILogger<StudentService> logger)
         {
             _studentRepo = studentRepo;
@@ -136,7 +136,7 @@ namespace StudentManagementApplicationAPI.Services
                 throw new Exception(ex.Message);
             }
         }
-        
+
         /// <summary>
         /// Gets a student by email.
         /// </summary>

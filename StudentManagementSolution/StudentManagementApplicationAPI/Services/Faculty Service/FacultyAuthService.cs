@@ -15,7 +15,7 @@ using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace StudentManagementApplicationAPI.Services
+namespace StudentManagementApplicationAPI.Services.Faculty_Service
 {
     public class FacultyAuthService : IAuthRegisterService<FacultyRegisterReturnDTO, FacultyRegisterDTO>, IAuthLoginService<FacultyLoginReturnDTO, FacultyLoginDTO>
     {

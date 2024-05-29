@@ -11,7 +11,7 @@ using StudentManagementApplicationAPI.Models.DTOs.GradeDTOs;
 using StudentManagementApplicationAPI.Models.Enums;
 using StudentManagementApplicationAPI.Repositories;
 
-namespace StudentManagementApplicationAPI.Services
+namespace StudentManagementApplicationAPI.Services.Exam_Service
 {
     public class GradeService : IGradeService
     {
@@ -124,7 +124,7 @@ namespace StudentManagementApplicationAPI.Services
             {
                 var grades = (await _gradeRepository.GetAll()).ToList();
 
-                if(grades.Count == 0)
+                if (grades.Count == 0)
                 {
                     throw new NoGradeRecordsExistsException();
                 }
@@ -190,7 +190,7 @@ namespace StudentManagementApplicationAPI.Services
                 var allGrades = await _gradeRepository.GetAll();
                 var courseGrades = allGrades.Where(g => g.Exam.CourseId == courseId).ToList();
 
-                if(courseGrades.Count == 0)
+                if (courseGrades.Count == 0)
                 {
                     throw new NoGradeRecordsExistsException();
                 }
@@ -421,7 +421,7 @@ namespace StudentManagementApplicationAPI.Services
         private double CalculatePercentage(int marksScored, int totalMark)
         {
             // Calculation of percentage based on marks scored and total marks
-            return ((double)marksScored / totalMark * 100);
+            return (double)marksScored / totalMark * 100;
         }
 
         /// <summary>

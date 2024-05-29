@@ -10,7 +10,7 @@ using StudentManagementApplicationAPI.Models.DTOs.StudentAttendanceDTOs;
 using StudentManagementApplicationAPI.Models.Enums;
 using StudentManagementApplicationAPI.Repositories;
 
-namespace StudentManagementApplicationAPI.Services
+namespace StudentManagementApplicationAPI.Services.Student_Service
 {
     public class StudentAttendanceService : IStudentAttendanceService
     {
@@ -276,7 +276,7 @@ namespace StudentManagementApplicationAPI.Services
         {
             try
             {
-                
+
 
                 var existingAttendance = await _attendanceRepository.GetById(attendanceId);
                 if (existingAttendance == null)
@@ -388,7 +388,7 @@ namespace StudentManagementApplicationAPI.Services
                     double totalAttendance = attendanceRecordsForCourse.Count();
                     double presentCount = attendanceRecordsForCourse.Count(ar => ar.AttendanceStatus == AttendanceStatus.Present.ToString()
                                                                             || ar.AttendanceStatus == AttendanceStatus.Od.ToString());
-                    double attendancePercentage = (presentCount / totalAttendance) * 100;
+                    double attendancePercentage = presentCount / totalAttendance * 100;
 
                     attendancePercentageDTOs.Add(new AttendancePercentageDTO
                     {

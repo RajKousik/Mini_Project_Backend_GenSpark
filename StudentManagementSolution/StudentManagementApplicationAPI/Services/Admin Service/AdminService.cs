@@ -7,7 +7,7 @@ using StudentManagementApplicationAPI.Models.Db_Models;
 using StudentManagementApplicationAPI.Models.Enums;
 using StudentManagementApplicationAPI.Repositories;
 
-namespace StudentManagementApplicationAPI.Services
+namespace StudentManagementApplicationAPI.Services.Admin_Service
 {
     public class AdminService : IAdminService
     {
@@ -26,7 +26,7 @@ namespace StudentManagementApplicationAPI.Services
         /// </summary>
         /// <param name="studentRepository">The repository for student data.</param>
         /// <param name="facultyRepository">The repository for faculty data.</param>
-        public AdminService(IRepository<int, Student> studentRepository, 
+        public AdminService(IRepository<int, Student> studentRepository,
             IRepository<int, Faculty> facultyRepository,
             ILogger<AdminService> logger)
         {

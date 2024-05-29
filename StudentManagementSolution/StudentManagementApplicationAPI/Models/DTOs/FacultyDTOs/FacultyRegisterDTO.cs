@@ -20,7 +20,8 @@ namespace StudentManagementApplicationAPI.Models.DTOs.FacultyDTOs
         [StringLength(10)]
         public string Gender { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Mobile no. is required")]
+        [RegularExpression("^(\\+\\d{1,2}\\s?)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}$", ErrorMessage = "Please enter valid phone no.")]
         public string Mobile { get; set; }
 
         [Required]

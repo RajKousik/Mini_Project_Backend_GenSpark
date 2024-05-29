@@ -7,7 +7,7 @@ using StudentManagementApplicationAPI.Models.Db_Models;
 using StudentManagementApplicationAPI.Models.DTOs.DepartmentDTOs;
 using StudentManagementApplicationAPI.Models.Enums;
 
-namespace StudentManagementApplicationAPI.Services
+namespace StudentManagementApplicationAPI.Services.Department_Service
 {
     public class DepartmentService : IDepartmentService
     {
@@ -46,28 +46,28 @@ namespace StudentManagementApplicationAPI.Services
             {
                 var departmentExist = (await _departmentRepository.GetAll()).FirstOrDefault(d => d.Name == departmentDTO.Name);
 
-                if(departmentExist != null)
+                if (departmentExist != null)
                 {
                     throw new DepartmentAlreadyExistException();
                 }
 
-                var isFacultyExist = await _facultyRepository.GetById((int)departmentDTO.HeadId);
+                var isFacultyExist = await _facultyRepository.GetById(departmentDTO.HeadId);
 
 
-                if(isFacultyExist.Role == RoleType.Admin || isFacultyExist.Role == RoleType.Head_Of_Department)
+                if (isFacultyExist.Role == RoleType.Admin || isFacultyExist.Role == RoleType.Head_Of_Department)
                 {
                     throw new UnableToAddDepartmentException("Unable to add department head");
                 }
 
-                
 
-                
+
+
 
                 var department = _mapper.Map<Department>(departmentDTO);
 
                 var addedDepartment = await _departmentRepository.Add(department);
 
-                if(addedDepartment == null)
+                if (addedDepartment == null)
                 {
                     throw new UnableToAddDepartmentException();
                 }
@@ -117,7 +117,7 @@ namespace StudentManagementApplicationAPI.Services
 
 
                 var deletedDepartment = await _departmentRepository.Delete(departmentId);
-                if(deletedDepartment == null)
+                if (deletedDepartment == null)
                 {
                     throw new UnableToDeleteDepartmentException();
                 }
@@ -175,11 +175,11 @@ namespace StudentManagementApplicationAPI.Services
             try
             {
                 var departments = (await _departmentRepository.GetAll()).ToList();
-                if(departments.Count == 0)
+                if (departments.Count == 0)
                 {
                     throw new NoDepartmentsExistsException();
                 }
-                return _mapper.Map<IEnumerable<DepartmentDTO>>(departments); 
+                return _mapper.Map<IEnumerable<DepartmentDTO>>(departments);
             }
             catch (NoDepartmentsExistsException ex)
             {
@@ -205,17 +205,17 @@ namespace StudentManagementApplicationAPI.Services
             {
                 var department = await _departmentRepository.GetById(departmentId);
 
-                
+
 
                 var isFacultyExist = await _facultyRepository.GetById(newHeadDepartmentId);
 
 
-                if(isFacultyExist.Role == RoleType.Admin)
+                if (isFacultyExist.Role == RoleType.Admin)
                 {
                     throw new Exception("Admin cannot be added as a department Head");
                 }
 
-                if(isFacultyExist.DepartmentId != departmentId)
+                if (isFacultyExist.DepartmentId != departmentId)
                 {
                     throw new UnableToUpdateDepartmentException("Faculty from other department cannot be made as Head");
                 }

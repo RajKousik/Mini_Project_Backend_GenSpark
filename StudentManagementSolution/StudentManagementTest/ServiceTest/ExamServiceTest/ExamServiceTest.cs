@@ -12,6 +12,7 @@ using StudentManagementApplicationAPI.Models.DTOs.ExamDTOs;
 using StudentManagementApplicationAPI.Models.Enums;
 using StudentManagementApplicationAPI.Repositories;
 using StudentManagementApplicationAPI.Services;
+using StudentManagementApplicationAPI.Services.Exam_Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;

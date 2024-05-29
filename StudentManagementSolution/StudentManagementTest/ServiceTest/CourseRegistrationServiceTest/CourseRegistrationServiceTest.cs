@@ -1,27 +1,20 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using StudentManagementApplicationAPI.Contexts;
 using StudentManagementApplicationAPI.Exceptions.CourseExceptions;
 using StudentManagementApplicationAPI.Exceptions.CourseRegistrationExceptions;
-using StudentManagementApplicationAPI.Exceptions.ExamExceptions;
 using StudentManagementApplicationAPI.Exceptions.StudentExceptions;
 using StudentManagementApplicationAPI.Interfaces.Repository;
 using StudentManagementApplicationAPI.Interfaces.Service;
 using StudentManagementApplicationAPI.Models.Db_Models;
-using StudentManagementApplicationAPI.Models.DTOs.CourseDTOs;
 using StudentManagementApplicationAPI.Models.DTOs.CourseRegistrationDTOs;
 using StudentManagementApplicationAPI.Models.Enums;
 using StudentManagementApplicationAPI.Repositories;
-using StudentManagementApplicationAPI.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using StudentManagementApplicationAPI.Services.Course_Service;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace StudentManagementTest.ServiceTest.CourseRegistrationServiceTest
 {

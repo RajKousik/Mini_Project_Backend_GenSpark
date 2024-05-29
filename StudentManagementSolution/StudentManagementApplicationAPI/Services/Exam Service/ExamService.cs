@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using StudentManagementApplicationAPI.Exceptions.CourseExceptions;
 using StudentManagementApplicationAPI.Exceptions.ExamExceptions;
 using StudentManagementApplicationAPI.Interfaces.Repository;
@@ -7,9 +6,8 @@ using StudentManagementApplicationAPI.Interfaces.Service;
 using StudentManagementApplicationAPI.Models.Db_Models;
 using StudentManagementApplicationAPI.Models.DTOs.ExamDTOs;
 using StudentManagementApplicationAPI.Models.Enums;
-using StudentManagementApplicationAPI.Repositories;
 
-namespace StudentManagementApplicationAPI.Services
+namespace StudentManagementApplicationAPI.Services.Exam_Service
 {
     public class ExamService : IExamService
     {

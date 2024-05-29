@@ -11,7 +11,7 @@ using StudentManagementApplicationAPI.Models.Db_Models;
 using StudentManagementApplicationAPI.Models.DTOs.DepartmentDTOs;
 using StudentManagementApplicationAPI.Models.Enums;
 using StudentManagementApplicationAPI.Repositories;
-using StudentManagementApplicationAPI.Services;
+using StudentManagementApplicationAPI.Services.Department_Service;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -255,7 +255,6 @@ namespace StudentManagementTest.ServiceTest.DepartmentServiceTest
 
 
         #endregion
-
 
     }
 }

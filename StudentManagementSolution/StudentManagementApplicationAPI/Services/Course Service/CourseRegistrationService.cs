@@ -8,7 +8,7 @@ using StudentManagementApplicationAPI.Interfaces.Service;
 using StudentManagementApplicationAPI.Models.Db_Models;
 using StudentManagementApplicationAPI.Models.DTOs.CourseRegistrationDTOs;
 
-namespace StudentManagementApplicationAPI.Services
+namespace StudentManagementApplicationAPI.Services.Course_Service
 {
     public class CourseRegistrationService : ICourseRegistrationService
     {
@@ -109,7 +109,7 @@ namespace StudentManagementApplicationAPI.Services
             {
                 var courseRegistrations = (await _courseRegistrationRepository.GetAll()).ToList();
 
-                if(courseRegistrations.Count == 0)
+                if (courseRegistrations.Count == 0)
                 {
                     throw new NoCourseRegistrationsExistsException();
                 }
@@ -229,7 +229,7 @@ namespace StudentManagementApplicationAPI.Services
                 var courseRegistration = await _courseRegistrationRepository.GetById(courseRegistrationId);
 
 
-                if(courseRegistration.IsApproved)
+                if (courseRegistration.IsApproved)
                 {
                     throw new UnableToDeleteCourseRegistrationException("Once the registration is approved, the registration cannot be deleted");
                 }
@@ -267,7 +267,7 @@ namespace StudentManagementApplicationAPI.Services
                     .Where(cr => cr.StudentId == studentId)
                     .ToList();
 
-                if(courseRegistrations.Count == 0)
+                if (courseRegistrations.Count == 0)
                 {
                     throw new NoCourseRegistrationsExistsException($"The Student with {studentId} has no course registrations"); ;
                 }
@@ -342,7 +342,7 @@ namespace StudentManagementApplicationAPI.Services
             {
                 var courseRegistration = await _courseRegistrationRepository.GetById(courseRegistrationId);
 
-                if(courseRegistration.IsApproved == true)
+                if (courseRegistration.IsApproved == true)
                 {
                     throw new CourseRegistrationAlreadyApprovedException($"The course registration with Id {courseRegistrationId} already approved");
                 }
@@ -384,7 +384,7 @@ namespace StudentManagementApplicationAPI.Services
                     .Where(cr => cr.StudentId == studentId && !cr.IsApproved)
                     .ToList();
 
-                if(courseRegistrations.Count == 0)
+                if (courseRegistrations.Count == 0)
                 {
                     throw new NoCourseRegistrationsExistsException($"There is no course registrations to be approved for student with Roll No {studentId}");
                 }

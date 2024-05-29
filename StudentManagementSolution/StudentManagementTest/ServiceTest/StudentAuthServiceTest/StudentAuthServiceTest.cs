@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Org.BouncyCastle.Crypto.Macs;
 using StudentManagementApplicationAPI.Contexts;
 using StudentManagementApplicationAPI.Exceptions.UnAuthorizationExceptions;
 using StudentManagementApplicationAPI.Interfaces.Repository;
@@ -15,7 +14,8 @@ using StudentManagementApplicationAPI.Models.Db_Models;
 using StudentManagementApplicationAPI.Models.DTOs.StudentDTOs;
 using StudentManagementApplicationAPI.Models.Enums;
 using StudentManagementApplicationAPI.Repositories;
-using StudentManagementApplicationAPI.Services;
+using StudentManagementApplicationAPI.Services.Student_Service;
+using StudentManagementApplicationAPI.Services.Token;
 using System.Security.Cryptography;
 using System.Text;
 

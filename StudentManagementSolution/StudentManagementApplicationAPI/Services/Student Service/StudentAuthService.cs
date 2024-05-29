@@ -15,7 +15,7 @@ using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace StudentManagementApplicationAPI.Services
+namespace StudentManagementApplicationAPI.Services.Student_Service
 {
     #region Summary
     /// <summary>
@@ -49,11 +49,11 @@ namespace StudentManagementApplicationAPI.Services
         /// <param name="passwordValidatorService">The passwoord validator service.</param>
         #endregion
         public StudentAuthService(
-            ITokenService tokenService, 
-            IRepository<int, Student> studentRepo, 
+            ITokenService tokenService,
+            IRepository<int, Student> studentRepo,
             IMapper mapper,
             IRepository<int, Department> departmentRepo,
-            PasswordValidatorService passwordValidatorService, 
+            PasswordValidatorService passwordValidatorService,
             IConfiguration configuration,
             ILogger<StudentAuthService> logger
             )

@@ -15,6 +15,8 @@ using StudentManagementApplicationAPI.Models.DTOs.FacultyDTOs;
 using StudentManagementApplicationAPI.Models.Enums;
 using StudentManagementApplicationAPI.Repositories;
 using StudentManagementApplicationAPI.Services;
+using StudentManagementApplicationAPI.Services.Faculty_Service;
+using StudentManagementApplicationAPI.Services.Token;
 using System.Security.Cryptography;
 using System.Text;
 

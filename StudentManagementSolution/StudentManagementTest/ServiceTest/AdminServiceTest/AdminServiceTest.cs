@@ -9,13 +9,9 @@ using StudentManagementApplicationAPI.Interfaces.Service.AdminService;
 using StudentManagementApplicationAPI.Models.Db_Models;
 using StudentManagementApplicationAPI.Models.Enums;
 using StudentManagementApplicationAPI.Repositories;
-using StudentManagementApplicationAPI.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using StudentManagementApplicationAPI.Services.Admin_Service;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace StudentManagementTest.ServiceTest.AdminServiceTest
 {

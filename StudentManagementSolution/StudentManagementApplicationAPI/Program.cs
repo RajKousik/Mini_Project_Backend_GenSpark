@@ -10,7 +10,6 @@ using StudentManagementApplicationAPI.Models.Db_Models;
 using StudentManagementApplicationAPI.Models.DTOs.FacultyDTOs;
 using StudentManagementApplicationAPI.Models.DTOs.StudentDTOs;
 using StudentManagementApplicationAPI.Repositories;
-using StudentManagementApplicationAPI.Services;
 using System.Text;
 using StudentManagementApplicationAPI.Interfaces.Repository;
 using StudentManagementApplicationAPI.Interfaces.Service;
@@ -18,6 +17,13 @@ using StudentManagementApplicationAPI.Interfaces.Service.AdminService;
 using StudentManagementApplicationAPI.Interfaces.Service.AuthService;
 using StudentManagementApplicationAPI.Interfaces.Service.TokenService;
 using WatchDog;
+using StudentManagementApplicationAPI.Services.Token;
+using StudentManagementApplicationAPI.Services.Student_Service;
+using StudentManagementApplicationAPI.Services.Faculty_Service;
+using StudentManagementApplicationAPI.Services.Admin_Service;
+using StudentManagementApplicationAPI.Services.Department_Service;
+using StudentManagementApplicationAPI.Services.Course_Service;
+using StudentManagementApplicationAPI.Services.Exam_Service;
 
 namespace StudentManagementApplicationAPI
 {

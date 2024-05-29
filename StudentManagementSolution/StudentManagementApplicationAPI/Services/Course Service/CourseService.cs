@@ -6,7 +6,7 @@ using StudentManagementApplicationAPI.Interfaces.Service;
 using StudentManagementApplicationAPI.Models.Db_Models;
 using StudentManagementApplicationAPI.Models.DTOs.CourseDTOs;
 
-namespace StudentManagementApplicationAPI.Services
+namespace StudentManagementApplicationAPI.Services.Course_Service
 {
     public class CourseService : ICourseService
     {
@@ -21,7 +21,7 @@ namespace StudentManagementApplicationAPI.Services
 
         #region Constructor
 
-        public CourseService(IRepository<int, Course> courseRepository, IMapper mapper, 
+        public CourseService(IRepository<int, Course> courseRepository, IMapper mapper,
             IRepository<int, Faculty> facultyRepository, ILogger<CourseService> logger)
         {
             _courseRepository = courseRepository;
@@ -46,7 +46,7 @@ namespace StudentManagementApplicationAPI.Services
 
                 var courseExists = (await _courseRepository.GetAll()).Any(c => c.Name == courseDTO.Name);
 
-                if(courseExists) 
+                if (courseExists)
                 {
                     throw new CourseAlreadyExistsException($"Course with Name {courseDTO.Name} already exists.");
                 }
@@ -94,7 +94,7 @@ namespace StudentManagementApplicationAPI.Services
             try
             {
                 var courses = (await _courseRepository.GetAll()).ToList();
-                if( courses.Count == 0)
+                if (courses.Count == 0)
                 {
                     throw new NoCoursesExistsException();
                 }

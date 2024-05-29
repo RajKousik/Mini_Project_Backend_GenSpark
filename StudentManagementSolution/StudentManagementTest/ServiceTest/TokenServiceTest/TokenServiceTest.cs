@@ -4,7 +4,7 @@ using Moq;
 using StudentManagementApplicationAPI.Interfaces.Service.TokenService;
 using StudentManagementApplicationAPI.Models.Db_Models;
 using StudentManagementApplicationAPI.Models.Enums;
-using StudentManagementApplicationAPI.Services;
+using StudentManagementApplicationAPI.Services.Token;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;

@@ -6,7 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace StudentManagementApplicationAPI.Services
+namespace StudentManagementApplicationAPI.Services.Token
 {
     public class TokenService : ITokenService
     {
@@ -94,7 +94,7 @@ namespace StudentManagementApplicationAPI.Services
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, student.StudentRollNo.ToString()),
-                new Claim(ClaimTypes.Role, RoleType.Student.ToString()),            
+                new Claim(ClaimTypes.Role, RoleType.Student.ToString()),
                 new Claim(ClaimTypes.Email, student.Email),
                 new Claim("FullName", student.Name)
             };
