@@ -63,6 +63,13 @@ namespace StudentManagementApplicationAPI.Services.Course_Service
                 var course = await _courseRepository.GetById(courseRegistrationAddDTO.CourseId);
 
 
+                if(student.EWallet < course.CourseFees)
+                {
+                    throw new InsufficientWallentBalanceException("Not enough balance in the student wallet");
+                }    
+
+
+
                 // Check if the student is already registered for the course
                 var alreadyRegistered = (await _courseRegistrationRepository.GetAll())
                                         .Any(cr => cr.CourseId == courseRegistrationAddDTO.CourseId && cr.StudentId == courseRegistrationAddDTO.StudentId);
@@ -75,7 +82,16 @@ namespace StudentManagementApplicationAPI.Services.Course_Service
                 courseRegistration.Comments = "Registered! Yet to be Approved!";
                 courseRegistration.IsApproved = false;
                 await _courseRegistrationRepository.Add(courseRegistration);
+
+                student.EWallet -= course.CourseFees;
+                await _studentRepository.Update(student);
+
                 return _mapper.Map<CourseRegistrationReturnDTO>(courseRegistration);
+            }
+            catch (InsufficientWallentBalanceException ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new InsufficientWallentBalanceException(ex.Message);
             }
             catch (StudentAlreadyRegisteredForCourseException ex)
             {
@@ -165,7 +181,9 @@ namespace StudentManagementApplicationAPI.Services.Course_Service
             {
                 var courseRegistration = await _courseRegistrationRepository.GetById(courseRegistrationId);
 
-
+                Student student = await _studentRepository.GetById(courseRegistration.StudentId);
+                Course OldCourse = await _courseRepository.GetById(courseRegistration.CourseId);
+                
 
                 var course = await _courseRepository.GetById(courseId);
 
@@ -186,6 +204,17 @@ namespace StudentManagementApplicationAPI.Services.Course_Service
                 courseRegistration.CourseId = courseId;
                 courseRegistration.IsApproved = false;
                 courseRegistration.Comments = "Updated! Yet to be approved";
+
+                student.EWallet += OldCourse.CourseFees;
+                
+                if(student.EWallet < course.CourseFees)
+                {
+                    throw new InsufficientWallentBalanceException();
+                }
+
+                student.EWallet -= course.CourseFees;
+
+                await _studentRepository.Update(student);
 
                 await _courseRegistrationRepository.Update(courseRegistration);
                 return _mapper.Map<CourseRegistrationReturnDTO>(courseRegistration);
@@ -234,9 +263,19 @@ namespace StudentManagementApplicationAPI.Services.Course_Service
                     throw new UnableToDeleteCourseRegistrationException("Once the registration is approved, the registration cannot be deleted");
                 }
 
+                
+
                 courseRegistration.Comments = "Registration Deleted!";
 
+                var student = await _studentRepository.GetById(courseRegistration.StudentId);
+                var course = await _courseRepository.GetById(courseRegistration.CourseId);
+                student.EWallet += course.CourseFees;
+
+                
                 await _courseRegistrationRepository.Delete(courseRegistrationId);
+
+                await _studentRepository.Update(student);
+
                 return _mapper.Map<CourseRegistrationReturnDTO>(courseRegistration);
             }
             catch (NoSuchCourseRegistrationExistException ex)

@@ -12,5 +12,6 @@ namespace StudentManagementApplicationAPI.Interfaces.Service
         public Task<IEnumerable<StudentDTO>> GetStudentByName(string name);
         public Task<IEnumerable<StudentDTO>> GetAllStudents();
         public Task<IEnumerable<StudentDTO>> GetStudentsByDepartment(int departmentId);
+        public Task<StudentWalletReturnDTO> RechargeWallet(StudentWalletDTO studentWalletDTO);
     }
 }

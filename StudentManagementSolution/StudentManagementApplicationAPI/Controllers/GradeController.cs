@@ -321,7 +321,11 @@ namespace StudentManagementApplicationAPI.Controllers
         }
 
 
-
+        /// <summary>
+        ///  Retrives top 5 students for each course
+        /// </summary>
+        /// <param name="courseId">Course Id</param>
+        /// <returns></returns>
         [HttpGet("top-students/course/{courseId}")]
         [ProducesResponseType(typeof(IEnumerable<GradeReturnDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]

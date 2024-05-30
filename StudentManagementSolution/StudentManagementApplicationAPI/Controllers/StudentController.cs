@@ -11,6 +11,7 @@ using StudentManagementApplicationAPI.Interfaces.Service.TokenService;
 using StudentManagementApplicationAPI.Models.DTOs.StudentDTOs;
 using StudentManagementApplicationAPI.Models.ErrorModels;
 using StudentManagementApplicationAPI.Services;
+using StudentManagementApplicationAPI.Services.Student_Service;
 using System.Security.Claims;
 using WatchDog;
 
@@ -200,6 +201,46 @@ namespace StudentManagementApplicationAPI.Controllers
                 WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status404NotFound, new ErrorModel(404, ex.Message));
+            }
+            catch (UnableToUpdateStudentException ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, $"An unexpected error occurred : {ex.Message}"));
+            }
+        }
+
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut("recharge")]
+        [ProducesResponseType(typeof(StudentDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<StudentDTO>> UpdateRecharge(StudentWalletDTO studentWalletDTO)
+        {
+            try
+            {
+                var result = await _studentService.RechargeWallet(studentWalletDTO);
+                return Ok(result);
+            }
+            catch (NoSuchStudentExistException ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return NotFound(new ErrorModel(404, ex.Message));
+            }
+            catch (InvalidRechargeAmount ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return StatusCode(StatusCodes.Status400BadRequest, new ErrorModel(400, ex.Message));
             }
             catch (UnableToUpdateStudentException ex)
             {

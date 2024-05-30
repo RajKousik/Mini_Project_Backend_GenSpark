@@ -323,6 +323,43 @@ namespace StudentManagementApplicationAPI.Services.Student_Service
             }
         }
 
+        public async Task<StudentWalletReturnDTO> RechargeWallet(StudentWalletDTO studentWalletDTO)
+        {
+            try
+            {
+                var studentInDB = await _studentRepo.GetById(studentWalletDTO.StudentId);
+
+                if (studentWalletDTO.RechargeAmount <= 0)
+                {
+                    throw new InvalidRechargeAmount("Invalid Recharge Amount");
+                }
+
+                studentInDB.EWallet += studentWalletDTO.RechargeAmount;
+
+                var updatedStudent = await _studentRepo.Update(studentInDB);
+
+                StudentWalletReturnDTO result = _mapper.Map<StudentWalletReturnDTO>(updatedStudent);
+                result.StudentId = studentWalletDTO.StudentId;
+                return result;
+
+            }
+            catch (InvalidRechargeAmount ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new InvalidRechargeAmount(ex.Message);
+            }
+            catch (NoSuchStudentExistException ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new NoSuchStudentExistException(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new Exception(ex.Message);
+            }
+        }
+
         #endregion
     }
 

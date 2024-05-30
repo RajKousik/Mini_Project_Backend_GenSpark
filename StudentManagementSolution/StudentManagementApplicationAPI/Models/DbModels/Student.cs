@@ -48,5 +48,7 @@ namespace StudentManagementApplicationAPI.Models.Db_Models
 
         [ForeignKey("DepartmentId")]
         public Department Department { get; set; }
+
+        public double EWallet { get; set; }
     }
 }

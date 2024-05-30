@@ -19,6 +19,7 @@ namespace StudentManagementApplicationAPI.Models.Db_Models
         [ForeignKey("FacultyId")]
         public Faculty Faculty { get; set; }
 
+        public double CourseFees { get; set; }
 
         public IList<CourseRegistration> CourseRegistrations { get; set; }
 
