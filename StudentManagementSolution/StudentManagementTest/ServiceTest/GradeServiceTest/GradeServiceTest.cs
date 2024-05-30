@@ -97,6 +97,13 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
                 FacultyId = 1
             };
 
+            var course2 = new Course
+            {
+                Name = "Science",
+                Description = "Science Course",
+                FacultyId = 1
+            };
+
             var courseRegistration1 = new CourseRegistration
             {
                 CourseId = 1,
@@ -105,9 +112,27 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
                 Comments = "Approved!"
             };
 
+            var courseRegistration2 = new CourseRegistration
+            {
+                CourseId = 2,
+                StudentId = 1,
+                IsApproved = true,
+                Comments = "Approved!"
+            };
+
             var exam1 = new Exam
             {
                 CourseId = 1,
+                TotalMark = 100,
+                ExamDate = new DateTime(2024, 8, 1),
+                StartTime = new DateTime(2024, 8, 1, 10, 0, 0),
+                EndTime = new DateTime(2024, 8, 1, 12, 0, 0),
+                ExamType = ExamType.Online
+            };
+
+            var exam2 = new Exam
+            {
+                CourseId = 2,
                 TotalMark = 100,
                 ExamDate = new DateTime(2024, 8, 1),
                 StartTime = new DateTime(2024, 8, 1, 10, 0, 0),
@@ -129,10 +154,10 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
             await context.Students.AddRangeAsync(student1);
             await context.Faculties.AddRangeAsync(faculty1);
             await context.Departments.AddRangeAsync(department1);
-            await context.Courses.AddRangeAsync(course1);
-            await context.Exams.AddRangeAsync(exam1);
+            await context.Courses.AddRangeAsync(course1, course2);
+            await context.Exams.AddRangeAsync(exam1, exam2);
             await context.Grades.AddRangeAsync(grade1);
-            await context.CourseRegistrations.AddRangeAsync(courseRegistration1);
+            await context.CourseRegistrations.AddRangeAsync(courseRegistration1, courseRegistration2);
             await context.SaveChangesAsync();
         }
 
@@ -161,7 +186,7 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
             var gradeDTO = new GradeDTO
             {
                 StudentId = 1,
-                ExamId = 1,
+                ExamId = 2,
                 MarksScored = 90,
                 EvaluatedById = 1,
                 Comments = "Good"
@@ -176,6 +201,16 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
                 EvaluatedById = 1,
                 Comments = "Good"
             }));
+
+            Assert.ThrowsAsync<NoSuchFacultyExistException>(async () => await gradeService.AddGrade(new GradeDTO
+            {
+                StudentId = 1,
+                ExamId = 1,
+                MarksScored = 90,
+                EvaluatedById = 100,
+                Comments = "Good"
+            }));
+
             Assert.IsNotNull(result);
             Assert.That(result.MarksScored, Is.EqualTo(90));
         }
@@ -254,6 +289,17 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
 
             Assert.IsNotNull(result);
             Assert.IsNotEmpty(result);
+        }
+
+        [Test, Order(6)]
+        public async Task GetTopStudentsSuccess()
+        {
+            IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
+
+            var result = await gradeService.GetTopStudentsByCourse(1);
+
+            Assert.IsNotNull(result);
+
         }
 
         [Test, Order(7)]
@@ -402,6 +448,17 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
             Assert.ThrowsAsync<NoSuchCourseExistException>(async () => await gradeService.GetCourseGrades(99)); // Non-existent course ID
 
             Assert.ThrowsAsync<NoSuchCourseExistException>(async () => await gradeService.GetCourseGrades(1));
+        }
+
+        [Test, Order(15)]
+        public void GetTopStudentsFailure()
+        {
+            IGradeService gradeService = new GradeService(_gradeRepo, _examRepo, _studentRepo, _courseRegistrationRepo, _facultyRepo, _courseRepo, _mapper, mockLoggerConfig.Object);
+
+            Assert.ThrowsAsync<NoSuchCourseExistException>(async ()=> await gradeService.GetTopStudentsByCourse(100));
+
+            //Assert.IsNotNull(result);
+
         }
 
         #endregion

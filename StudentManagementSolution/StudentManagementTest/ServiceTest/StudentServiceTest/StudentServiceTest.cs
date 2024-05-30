@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using StudentManagementApplicationAPI.Contexts;
+using StudentManagementApplicationAPI.Exceptions.CommonExceptions;
 using StudentManagementApplicationAPI.Exceptions.DepartmentExceptions;
 using StudentManagementApplicationAPI.Exceptions.StudentExceptions;
 using StudentManagementApplicationAPI.Interfaces.Repository;
@@ -80,7 +81,8 @@ namespace StudentManagementTest.ServiceTest.StudentServiceTest
                 Status = ActivationStatus.Inactive,
                 PasswordHashKey = hmac.Key,
                 HashedPassword = hmac.ComputeHash(Encoding.UTF8.GetBytes("student1")),
-                DepartmentId = 1
+                DepartmentId = 1,
+                EWallet = 10000,
             };
 
             await context.Students.AddRangeAsync(student1);
@@ -174,6 +176,23 @@ namespace StudentManagementTest.ServiceTest.StudentServiceTest
             Assert.That(students.Count(), Is.EqualTo(1));
         }
 
+        [Test, Order(6)]
+        public async Task UpdateRechargeSuccess()
+        {
+            IStudentService studentService = new StudentService(_studentRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
+            var updatedStudent = await studentService.RechargeWallet(new StudentWalletDTO
+            {
+                StudentId = 1,
+                RechargeAmount = 1000
+            });
+
+            Assert.That(updatedStudent.EWallet, Is.EqualTo(11000));
+            Assert.ThrowsAsync<InvalidRechargeAmount>(async () => await studentService.RechargeWallet(new StudentWalletDTO
+            {
+                StudentId = 1,
+                RechargeAmount = 0
+            }));
+        }
 
         [Test, Order(7)]
         public async Task DeleteStudentSuccess()
@@ -184,6 +203,9 @@ namespace StudentManagementTest.ServiceTest.StudentServiceTest
             Assert.That(deletedStudent.Name, Is.EqualTo("Updated Student"));
             Assert.ThrowsAsync<NoSuchStudentExistException>(async () => await studentService.GetStudentByEmail("student1@gmail.com"));
         }
+
+
+        
 
         [Test, Order(8)]
         public void UpdateStudentFailure()
@@ -255,6 +277,18 @@ namespace StudentManagementTest.ServiceTest.StudentServiceTest
             IStudentService studentService = new StudentService(_studentRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
 
             Assert.ThrowsAsync<NoSuchStudentExistException>(async () => await studentService.DeleteStudent("nonexistent@gmail.com"));
+        }
+
+        [Test, Order(15)]
+        public void UpdateRechargeFailure()
+        {
+            IStudentService studentService = new StudentService(_studentRepo, _mapper, _departmentRepo, mockLoggerConfig.Object);
+
+            Assert.ThrowsAsync<NoSuchStudentExistException>(async () => await studentService.RechargeWallet(new StudentWalletDTO
+            {
+                StudentId = 1,
+                RechargeAmount = 0
+            }));
         }
 
 
