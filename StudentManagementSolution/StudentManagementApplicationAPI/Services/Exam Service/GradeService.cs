@@ -188,10 +188,7 @@ namespace StudentManagementApplicationAPI.Services.Exam_Service
             try
             {
                 var couse = await _courseRepository.GetById(courseId);
-                if (couse == null)
-                {
-                    throw new NoSuchCourseExistException($"Student with ID {courseId} does not exist.");
-                }
+
                 var allGrades = await _gradeRepository.GetAll();
                 var courseGrades = allGrades.Where(g => g.Exam.CourseId == courseId).ToList();
 
@@ -271,17 +268,11 @@ namespace StudentManagementApplicationAPI.Services.Exam_Service
             {
                 // Check if the grade exists
                 var existingGrade = await _gradeRepository.GetById(gradeId);
-                if (existingGrade == null)
-                {
-                    throw new NoSuchGradeRecordExistsException($"Grade with ID {gradeId} does not exist.");
-                }
+
 
                 // Check if the faculty exists
                 var facultyExists = await _facultyRepository.GetById(gradeUpdateDTO.EvaluatedById);
-                if (facultyExists == null)
-                {
-                    throw new NoSuchFacultyExistException($"Faculty with ID {gradeUpdateDTO.EvaluatedById} does not exist.");
-                }
+
 
                 // Check if marks scored is not greater than the exam total mark
                 var exam = await _examRepository.GetById(existingGrade.ExamId);
@@ -336,10 +327,7 @@ namespace StudentManagementApplicationAPI.Services.Exam_Service
             try
             {
                 var grade = await _gradeRepository.GetById(gradeId);
-                if (grade == null)
-                {
-                    throw new NoSuchGradeRecordExistsException($"Grade with ID {gradeId} does not exist.");
-                }
+
 
                 await _gradeRepository.Delete(gradeId);
                 return _mapper.Map<GradeReturnDTO>(grade);
@@ -376,23 +364,13 @@ namespace StudentManagementApplicationAPI.Services.Exam_Service
         {
             // Check if the student exists
             var student = await _studentRepository.GetById(gradeDTO.StudentId);
-            if (student == null)
-            {
-                throw new NoSuchStudentExistException($"Student with ID {gradeDTO.StudentId} does not exist.");
-            }
+
 
             // Check if the exam exists
             var exam = await _examRepository.GetById(gradeDTO.ExamId);
-            if (exam == null)
-            {
-                throw new NoSuchExamExistException($"Exam with ID {gradeDTO.ExamId} does not exist.");
-            }
 
-            if(gradeDTO.StudentId  == student.StudentRollNo && 
-                exam.ExamId == gradeDTO.ExamId)
-            {
-                throw new InvalidGradeException($"Already grade allocated for the student {student.StudentRollNo} for this exam {exam.ExamId}");
-            }
+
+            
 
             // Check if the student has opted for the course corresponding to the exam
             bool isOptedForCourse = await IsStudentOptedForCourse(gradeDTO.StudentId, exam.CourseId);
@@ -403,10 +381,7 @@ namespace StudentManagementApplicationAPI.Services.Exam_Service
 
             // Check if the faculty exists
             var faculty = await _facultyRepository.GetById(gradeDTO.EvaluatedById);
-            if (faculty == null)
-            {
-                throw new NoSuchFacultyExistException($"Faculty with ID {gradeDTO.EvaluatedById} does not exist.");
-            }
+
 
             // Check if the marks scored is not greater than the total mark of the exam
             if (gradeDTO.MarksScored > exam.TotalMark)
@@ -421,7 +396,10 @@ namespace StudentManagementApplicationAPI.Services.Exam_Service
                 throw new InvalidExamDateException($"Grades cannot be given for exams that haven't completed yet.");
             }
 
-
+            if ((await _gradeRepository.GetAll()).Where(g => g.StudentId == gradeDTO.StudentId && g.ExamId == gradeDTO.ExamId).Any())
+            {
+                throw new InvalidGradeException($"Already grade allocated for the student {student.StudentRollNo} for this exam {exam.ExamId}");
+            }
 
         }
 
@@ -501,6 +479,14 @@ namespace StudentManagementApplicationAPI.Services.Exam_Service
             return courseRegistrations.Any(cr => cr.CourseId == courseId);
         }
 
+        /// <summary>
+        /// Retrives top 5 students from courses based on their grade
+        /// </summary>
+        /// <param name="courseId">course id</param>
+        /// <returns></returns>
+        /// <exception cref="NoGradeRecordsExistsException"></exception>
+        /// <exception cref="NoSuchCourseExistException"></exception>
+        /// <exception cref="Exception"></exception>
         public async Task<IEnumerable<GradeReturnDTO>> GetTopStudentsByCourse(int courseId)
         {
             try

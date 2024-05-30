@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using StudentManagementApplicationAPI.Exceptions.CommonExceptions;
 using StudentManagementApplicationAPI.Exceptions.DepartmentExceptions;
 using StudentManagementApplicationAPI.Exceptions.StudentExceptions;
 using StudentManagementApplicationAPI.Interfaces.Repository;

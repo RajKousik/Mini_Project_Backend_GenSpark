@@ -68,6 +68,10 @@ namespace StudentManagementApplicationAPI.Services.Course_Service
                     throw new InsufficientWallentBalanceException("Not enough balance in the student wallet");
                 }    
 
+                if(course.CourseVacancy <= 0)
+                {
+                    throw new InsufficientVacancyException($"Not enough vacancy available for the course {course.CourseId}");
+                }
 
 
                 // Check if the student is already registered for the course
@@ -83,10 +87,19 @@ namespace StudentManagementApplicationAPI.Services.Course_Service
                 courseRegistration.IsApproved = false;
                 await _courseRegistrationRepository.Add(courseRegistration);
 
+                course.CourseVacancy--;
+                await _courseRepository.Update(course);
+
+
                 student.EWallet -= course.CourseFees;
                 await _studentRepository.Update(student);
 
                 return _mapper.Map<CourseRegistrationReturnDTO>(courseRegistration);
+            }
+            catch (InsufficientVacancyException ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new InsufficientVacancyException(ex.Message);
             }
             catch (InsufficientWallentBalanceException ex)
             {
@@ -206,16 +219,25 @@ namespace StudentManagementApplicationAPI.Services.Course_Service
                 courseRegistration.Comments = "Updated! Yet to be approved";
 
                 student.EWallet += OldCourse.CourseFees;
-                
-                if(student.EWallet < course.CourseFees)
+                OldCourse.CourseVacancy++;
+
+
+                if (student.EWallet < course.CourseFees)
                 {
                     throw new InsufficientWallentBalanceException();
                 }
 
+                if(course.CourseVacancy <= 0)
+                {
+                    throw new InsufficientVacancyException();
+                }
+
                 student.EWallet -= course.CourseFees;
+                course.CourseVacancy--;
 
                 await _studentRepository.Update(student);
-
+                await _courseRepository.Update(OldCourse);
+                await _courseRepository.Update(course);
                 await _courseRegistrationRepository.Update(courseRegistration);
                 return _mapper.Map<CourseRegistrationReturnDTO>(courseRegistration);
             }
@@ -271,10 +293,12 @@ namespace StudentManagementApplicationAPI.Services.Course_Service
                 var course = await _courseRepository.GetById(courseRegistration.CourseId);
                 student.EWallet += course.CourseFees;
 
-                
+                course.CourseVacancy++;
+
                 await _courseRegistrationRepository.Delete(courseRegistrationId);
 
                 await _studentRepository.Update(student);
+                await _courseRepository.Update(course);
 
                 return _mapper.Map<CourseRegistrationReturnDTO>(courseRegistration);
             }

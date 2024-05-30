@@ -55,11 +55,17 @@ namespace StudentManagementApplicationAPI.Controllers
                 var result = await _courseRegistrationService.AddCourse(courseRegistrationAddDTO);
                 return CreatedAtAction(nameof(GetCourseRegistrationById), new { courseRegistrationId = result.RegistrationId }, result);
             }
+            catch (InsufficientVacancyException ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return BadRequest(new ErrorModel(400, ex.Message));
+            }
             catch (InsufficientWallentBalanceException ex)
             {
                 WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);
-                return Conflict(new ErrorModel(400, ex.Message));
+                return BadRequest(new ErrorModel(400, ex.Message));
             }
             catch (StudentAlreadyRegisteredForCourseException ex)
             {

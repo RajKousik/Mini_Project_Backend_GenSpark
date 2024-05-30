@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace StudentManagementApplicationAPI.Services.Student_Service
+namespace StudentManagementApplicationAPI.Exceptions.CommonExceptions
 {
     [Serializable]
     public class InvalidRechargeAmount : Exception

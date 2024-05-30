@@ -21,6 +21,8 @@ namespace StudentManagementApplicationAPI.Models.Db_Models
 
         public double CourseFees { get; set; }
 
+        public int CourseVacancy { get; set; }
+
         public IList<CourseRegistration> CourseRegistrations { get; set; }
 
         public IList<Exam> Exams { get; set; }
