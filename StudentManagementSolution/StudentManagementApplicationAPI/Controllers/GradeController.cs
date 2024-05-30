@@ -321,6 +321,38 @@ namespace StudentManagementApplicationAPI.Controllers
         }
 
 
+
+        [HttpGet("top-students/course/{courseId}")]
+        [ProducesResponseType(typeof(IEnumerable<GradeReturnDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<GradeReturnDTO>>> GetTopStudentsByCourse(int courseId)
+        {
+            try
+            {
+                var result = await _gradeService.GetTopStudentsByCourse(courseId);
+                return Ok(result);
+            }
+            catch (NoGradeRecordsExistsException ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return NotFound(new ErrorModel(404, ex.Message));
+            }
+            catch (NoSuchCourseExistException ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return NotFound(new ErrorModel(404, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
+            }
+        }
+
         #endregion
     }
 }

@@ -107,6 +107,11 @@ namespace StudentManagementApplicationAPI.Services.Exam_Service
                 _logger.LogError(ex.Message);
                 throw new InvalidMarksScoredException($"Unable to add grade: {ex.Message}");
             }
+            catch (InvalidGradeException ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new InvalidGradeException($"Unable to add grade: {ex.Message}");
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
@@ -383,6 +388,12 @@ namespace StudentManagementApplicationAPI.Services.Exam_Service
                 throw new NoSuchExamExistException($"Exam with ID {gradeDTO.ExamId} does not exist.");
             }
 
+            if(gradeDTO.StudentId  == student.StudentRollNo && 
+                exam.ExamId == gradeDTO.ExamId)
+            {
+                throw new InvalidGradeException($"Already grade allocated for the student {student.StudentRollNo} for this exam {exam.ExamId}");
+            }
+
             // Check if the student has opted for the course corresponding to the exam
             bool isOptedForCourse = await IsStudentOptedForCourse(gradeDTO.StudentId, exam.CourseId);
             if (!isOptedForCourse)
@@ -409,6 +420,9 @@ namespace StudentManagementApplicationAPI.Services.Exam_Service
             {
                 throw new InvalidExamDateException($"Grades cannot be given for exams that haven't completed yet.");
             }
+
+
+
         }
 
 
@@ -485,6 +499,38 @@ namespace StudentManagementApplicationAPI.Services.Exam_Service
 
             // Check if there is any course registration for the specified course
             return courseRegistrations.Any(cr => cr.CourseId == courseId);
+        }
+
+        public async Task<IEnumerable<GradeReturnDTO>> GetTopStudentsByCourse(int courseId)
+        {
+            try
+            {
+                var couse = await _courseRepository.GetById(courseId);
+
+                var grades = (await GetCourseGrades(courseId)).OrderByDescending(g => g.Percentage).Take(5).ToList();
+
+                if(grades.Count == 0)
+                {
+                    throw new NoGradeRecordsExistsException();
+                }
+                return grades;
+
+            }
+            catch (NoGradeRecordsExistsException ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new NoGradeRecordsExistsException(ex.Message);
+            }
+            catch (NoSuchCourseExistException ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new NoSuchCourseExistException(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new Exception(ex.Message);
+            }
         }
 
         #endregion

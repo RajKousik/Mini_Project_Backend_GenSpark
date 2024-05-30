@@ -10,6 +10,7 @@ namespace StudentManagementApplicationAPI.Interfaces.Service
         public Task<GradeReturnDTO> UpdateGrade(int gradeId, GradeUpdateDTO gradeUpdateDTO);
         public Task<GradeReturnDTO> DeleteGrade(int gradeId);
         public Task<IEnumerable<GradeReturnDTO>> GetStudentGrades(int studentId);
+        public Task<IEnumerable<GradeReturnDTO>> GetTopStudentsByCourse(int courseId);
         public Task<IEnumerable<GradeReturnDTO>> GetCourseGrades(int courseId);
     }
 }
