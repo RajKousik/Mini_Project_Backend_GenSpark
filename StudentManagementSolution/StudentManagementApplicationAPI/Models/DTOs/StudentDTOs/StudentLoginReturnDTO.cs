@@ -12,5 +12,7 @@ namespace StudentManagementApplicationAPI.Models.DTOs.StudentDTOs
         public int StudentRollNo { get; set; }
 
         public string Token  { get; set; }
+
+        public string Role { get; set; }
     }
 }

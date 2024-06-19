@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StudentManagementApplicationAPI.Exceptions.DepartmentExceptions;
@@ -98,6 +99,51 @@ namespace StudentManagementApplicationAPI.Controllers
                 }
             }
             return BadRequest("Validation Error! Provide Valid details...");
+        }
+
+        [HttpPost("prof/register")]
+        [ProducesResponseType(typeof(FacultyRegisterReturnDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<FacultyRegisterReturnDTO>> ProfRegister(FacultyRegisterDTO facultyRegisterDTO)
+        {
+            try
+            {
+                var result = await _authRegisterService.Register(facultyRegisterDTO, RoleType.Proffesors);
+                return Ok(result);
+            }
+            catch (NoSuchDepartmentExistException ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return NotFound(new ErrorModel(404, ex.Message));
+            }
+            catch (DuplicateEmailException ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return Conflict(new ErrorModel(409, ex.Message));
+            }
+            catch (UnableToRegisterException ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return BadRequest(new ErrorModel(400, ex.Message));
+            }
+            catch (UnableToAddFacultyException ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, $"An unexpected error occurred : {ex.Message}"));
+            }
         }
 
         /// <summary>

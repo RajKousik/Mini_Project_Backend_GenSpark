@@ -170,7 +170,7 @@ namespace StudentManagementApplicationAPI.Services.Department_Service
         /// Retrieves all departments.
         /// </summary>
         /// <returns>The list of all department data transfer objects.</returns>
-        public async Task<IEnumerable<DepartmentDTO>> GetAllDepartments()
+        public async Task<IEnumerable<DepartmentReturnDTO>> GetAllDepartments()
         {
             try
             {
@@ -179,7 +179,7 @@ namespace StudentManagementApplicationAPI.Services.Department_Service
                 {
                     throw new NoDepartmentsExistsException();
                 }
-                return _mapper.Map<IEnumerable<DepartmentDTO>>(departments);
+                return _mapper.Map<IEnumerable<DepartmentReturnDTO>>(departments);
             }
             catch (NoDepartmentsExistsException ex)
             {

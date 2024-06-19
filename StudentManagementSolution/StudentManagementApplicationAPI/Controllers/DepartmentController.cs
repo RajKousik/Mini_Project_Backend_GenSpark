@@ -111,13 +111,13 @@ namespace StudentManagementApplicationAPI.Controllers
         /// </summary>
         /// <returns>The list of all department data transfer objects.</returns>
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<DepartmentDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<DepartmentReturnDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<DepartmentDTO>>> GetAllDepartments()
+        public async Task<ActionResult<IEnumerable<DepartmentReturnDTO>>> GetAllDepartments()
         {
             try
             {
-                var departments = await Task.WhenAll(_departmentService.GetAllDepartments());
+                var departments = (await _departmentService.GetAllDepartments()).ToList();
                 return Ok(departments);
             }
             catch (NoDepartmentsExistsException ex)

@@ -75,6 +75,11 @@ namespace StudentManagementApplicationAPI.Services.Faculty_Service
             {
                 var facultyInDB = await FindIfEmailAlreadyExists(dto.Email);
 
+                if(facultyInDB == null)
+                {
+                    throw new UnauthorizedUserException();
+                }
+
                 HMACSHA512 hMACSHA = new HMACSHA512(facultyInDB.PasswordHashKey);
                 var encryptedPass = hMACSHA.ComputeHash(Encoding.UTF8.GetBytes(dto.Password));
                 bool isPasswordSame = ComparePassword(encryptedPass, facultyInDB.HashedPassword);

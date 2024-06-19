@@ -101,6 +101,7 @@ namespace StudentManagementApplicationAPI.Services.Student_Service
                             Email = dto.Email,
                             StudentRollNo = studentInDB.StudentRollNo,
                             Token = _tokenService.GenerateStudentToken(studentInDB),
+                            Role = "Student"
                         };
                         return loginReturnDTO;
                     }

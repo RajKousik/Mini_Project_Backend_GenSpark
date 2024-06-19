@@ -146,6 +146,16 @@ namespace StudentManagementApplicationAPI
 
             #endregion
 
+            #region CORS
+            builder.Services.AddCors(opts =>
+            {
+                opts.AddPolicy("AllowAllCorsPolicy", options =>
+                {
+                    options.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+                });
+            });
+            #endregion
+
             #region WatchDog
 
             builder.Services.AddWatchDogServices(opt =>
@@ -158,10 +168,7 @@ namespace StudentManagementApplicationAPI
 
             var app = builder.Build();
 
-            #region Middleware Configurations
-            //app.UseMiddleware<TokenManagerMiddleware>();
-            #endregion
-
+            
             #region Swagger Configurations
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -170,7 +177,7 @@ namespace StudentManagementApplicationAPI
                 app.UseSwaggerUI();
             }
             #endregion
-
+            app.UseCors("AllowAllCorsPolicy");
             #region Pipeline Configurations
 
             app.UseAuthentication();
@@ -178,7 +185,6 @@ namespace StudentManagementApplicationAPI
             app.MapControllers();
 
             #endregion
-
 
             #region WatchDog Configurations
             app.UseWatchDogExceptionLogger();

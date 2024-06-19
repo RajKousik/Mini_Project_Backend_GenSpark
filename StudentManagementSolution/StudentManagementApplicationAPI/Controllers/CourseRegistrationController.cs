@@ -42,7 +42,7 @@ namespace StudentManagementApplicationAPI.Controllers
         /// <param name="courseRegistrationAddDTO">The data transfer object containing course registration details.</param>
         /// <returns>An ActionResult containing the added course registration details.</returns>
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(CourseRegistrationReturnDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
@@ -282,7 +282,7 @@ namespace StudentManagementApplicationAPI.Controllers
         /// </summary>
         /// <param name="studentId">The ID of the student.</param>
         /// <returns>An ActionResult containing a list of course registrations.</returns>
-        [Authorize(Roles = "Admin")]
+
         [HttpGet]
         [Route("student")]
         [ProducesResponseType(typeof(IEnumerable<CourseRegistrationReturnDTO>), StatusCodes.Status200OK)]
