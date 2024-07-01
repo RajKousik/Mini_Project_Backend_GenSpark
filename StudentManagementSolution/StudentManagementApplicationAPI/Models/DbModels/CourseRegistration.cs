@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using StudentManagementApplicationAPI.Models.Enums;
 
 namespace StudentManagementApplicationAPI.Models.Db_Models
 {
@@ -18,7 +19,9 @@ namespace StudentManagementApplicationAPI.Models.Db_Models
         [ForeignKey("CourseId")]
         public Course Course { get; set; }
 
-        public bool IsApproved { get; set; }
+        //public bool IsApproved { get; set; }
+
+        public ApprovalStatus ApprovalStatus { get; set; }
 
         public string Comments { get; set; }
     }

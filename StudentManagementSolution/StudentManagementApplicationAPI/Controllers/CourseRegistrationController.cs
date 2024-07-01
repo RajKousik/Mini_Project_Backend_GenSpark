@@ -7,6 +7,7 @@ using StudentManagementApplicationAPI.Exceptions.ExamExceptions;
 using StudentManagementApplicationAPI.Exceptions.StudentExceptions;
 using StudentManagementApplicationAPI.Interfaces.Service;
 using StudentManagementApplicationAPI.Models.DTOs.CourseRegistrationDTOs;
+using StudentManagementApplicationAPI.Models.DTOs.StudentDTOs;
 using StudentManagementApplicationAPI.Models.ErrorModels;
 using WatchDog;
 
@@ -175,7 +176,7 @@ namespace StudentManagementApplicationAPI.Controllers
         /// <param name="courseRegistrationId">The ID of the course registration to be updated.</param>
         /// <param name="courseRegistrationAddDTO">The data transfer object containing updated course registration details.</param>
         /// <returns>An ActionResult containing the updated course registration details.</returns>
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpPut]
         [Route("update")]
         [ProducesResponseType(typeof(CourseRegistrationReturnDTO), StatusCodes.Status200OK)]
@@ -242,7 +243,7 @@ namespace StudentManagementApplicationAPI.Controllers
         /// </summary>
         /// <param name="courseRegistrationId">The ID of the course registration to be deleted.</param>
         /// <returns>An ActionResult containing the deleted course registration details.</returns>
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpDelete]
         [ProducesResponseType(typeof(CourseRegistrationReturnDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
@@ -317,6 +318,40 @@ namespace StudentManagementApplicationAPI.Controllers
 
 
 
+        [HttpGet]
+        [Route("students")]
+        [ProducesResponseType(typeof(IEnumerable<CourseRegistrationReturnDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<CourseRegistrationReturnDTO>>> GetCoursesRegisteredByStudentAndStatus(int studentId, int status)
+        {
+            try
+            {
+                var result = await _courseRegistrationService.GetCoursesRegisteredByStudentAndStatus(studentId, status);
+                return Ok(result);
+            }
+            catch (NoSuchStudentExistException ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return NotFound(new ErrorModel(404, ex.Message));
+            }
+            catch (NoCourseRegistrationsExistsException ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return NotFound(new ErrorModel(404, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
+            }
+        }
+
+
+
 
         /// <summary>
         /// Retrieves the registered students for a course.
@@ -334,6 +369,40 @@ namespace StudentManagementApplicationAPI.Controllers
             try
             {
                 var result = await _courseRegistrationService.GetRegisteredStudentsForCourse(courseId);
+                return Ok(result);
+            }
+            catch (NoSuchCourseExistException ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return NotFound(new ErrorModel(404, ex.Message));
+            }
+            catch (NoCourseRegistrationsExistsException ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return NotFound(new ErrorModel(404, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
+            }
+        }
+
+
+
+        [HttpGet]
+        [Route("approved-students")]
+        [ProducesResponseType(typeof(IEnumerable<StudentReturnDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<StudentReturnDTO>>> GetApprovedStudentsByCourse(int courseId)
+        {
+            try
+            {
+                var result = await _courseRegistrationService.GetApprovedStudentsByCourse(courseId);
                 return Ok(result);
             }
             catch (NoSuchCourseExistException ex)
@@ -386,6 +455,60 @@ namespace StudentManagementApplicationAPI.Controllers
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (StudentAlreadyApprovedForCourseException ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return Conflict(new ErrorModel(409, ex.Message));
+            }
+            catch (UnableToApproveCourseRegistrationException ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return BadRequest(new ErrorModel(400, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
+            }
+        }
+
+
+
+        /// <summary>
+        /// Rejects a course registration by its ID.
+        /// </summary>
+        /// <param name="courseRegistrationId">The ID of the course registration to be rejected.</param>
+        /// <returns>An ActionResult containing the rejected course registration details.</returns>
+        [Authorize(Roles = "Admin")]
+        [HttpPut]
+        [Route("reject")]
+        [ProducesResponseType(typeof(CourseRegistrationReturnDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<CourseRegistrationReturnDTO>> RejectCourseRegistration(int courseRegistrationId)
+        {
+            try
+            {
+                var result = await _courseRegistrationService.RejectCourseRegistrations(courseRegistrationId);
+                return Ok(result);
+            }
+            catch (NoSuchCourseRegistrationExistException ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return NotFound(new ErrorModel(404, ex.Message));
+            }
+            catch (CourseRegistrationAlreadyRejectedException ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return Conflict(new ErrorModel(409, ex.Message));
+            }
+            catch (CourseRegistrationAlreadyApprovedException ex)
             {
                 WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);

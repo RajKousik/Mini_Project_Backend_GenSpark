@@ -56,7 +56,7 @@ namespace StudentManagementApplicationAPI.Services.Department_Service
 
                 if (isFacultyExist.Role == RoleType.Admin || isFacultyExist.Role == RoleType.Head_Of_Department)
                 {
-                    throw new UnableToAddDepartmentException("Unable to add department head");
+                    throw new UnableToAddDepartmentException("The Chosen faculty is not valid!");
                 }
 
 
@@ -145,14 +145,12 @@ namespace StudentManagementApplicationAPI.Services.Department_Service
         /// </summary>
         /// <param name="departmentId">The ID of the department.</param>
         /// <returns>The department data transfer object.</returns>
-        public async Task<DepartmentDTO> GetDepartmentById(int departmentId)
+        public async Task<DepartmentReturnDTO> GetDepartmentById(int departmentId)
         {
             try
             {
                 var department = await _departmentRepository.GetById(departmentId);
-
-
-                return _mapper.Map<DepartmentDTO>(department);
+                return _mapper.Map<DepartmentReturnDTO>(department);
             }
             catch (NoSuchDepartmentExistException ex)
             {

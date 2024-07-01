@@ -218,7 +218,7 @@ namespace StudentManagementApplicationAPI.Controllers
         }
 
 
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpPut("recharge")]
         [ProducesResponseType(typeof(StudentDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
@@ -229,6 +229,51 @@ namespace StudentManagementApplicationAPI.Controllers
             try
             {
                 var result = await _studentService.RechargeWallet(studentWalletDTO);
+                return Ok(result);
+            }
+            catch (NoSuchStudentExistException ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return NotFound(new ErrorModel(404, ex.Message));
+            }
+            catch (InvalidPasswordException ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return NotFound(new ErrorModel(400, ex.Message));
+            }
+            catch (InvalidRechargeAmount ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return StatusCode(StatusCodes.Status400BadRequest, new ErrorModel(400, ex.Message));
+            }
+            catch (UnableToUpdateStudentException ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, $"An unexpected error occurred : {ex.Message}"));
+            }
+        }
+
+        [HttpGet]
+        [Route("EWallet")]
+        [ProducesResponseType(typeof(double), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<double>> GetEWalletAmount(int studentRollNo)
+        {
+            try
+            {
+                var result = await _studentService.GetEWalletAmount(studentRollNo);
                 return Ok(result);
             }
             catch (NoSuchStudentExistException ex)
@@ -304,10 +349,10 @@ namespace StudentManagementApplicationAPI.Controllers
         #endregion
         [Authorize(Roles = "Admin,Assistant_Proffesors,Associate_Proffesors,Proffesors,Head_Of_Department")]
         [HttpGet("all")]
-        [ProducesResponseType(typeof(IEnumerable<StudentDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<StudentReturnDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<StudentDTO>>> GetAllStudents()
+        public async Task<ActionResult<IEnumerable<StudentReturnDTO>>> GetAllStudents()
         {
             try
             {
@@ -368,10 +413,10 @@ namespace StudentManagementApplicationAPI.Controllers
         /// <returns>An ActionResult containing the student details.</returns>
         #endregion
         [HttpGet("id")]
-        [ProducesResponseType(typeof(StudentDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(StudentReturnDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<StudentDTO>> GetStudentById(int studentRollNo)
+        public async Task<ActionResult<StudentReturnDTO>> GetStudentById(int studentRollNo)
         {
             try
             {
@@ -434,10 +479,10 @@ namespace StudentManagementApplicationAPI.Controllers
         #endregion
         [Authorize(Roles = "Admin,Assistant_Proffesors,Associate_Proffesors,Proffesors,Head_Of_Department")]
         [HttpGet("department/{departmentId}")]
-        [ProducesResponseType(typeof(IEnumerable<StudentDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<StudentReturnDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<StudentDTO>>> GetStudentsByDepartment(int departmentId)
+        public async Task<ActionResult<IEnumerable<StudentReturnDTO>>> GetStudentsByDepartment(int departmentId)
         {
             try
             {

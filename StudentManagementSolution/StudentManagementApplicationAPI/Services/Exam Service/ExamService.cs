@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
 using StudentManagementApplicationAPI.Exceptions.CourseExceptions;
 using StudentManagementApplicationAPI.Exceptions.ExamExceptions;
+using StudentManagementApplicationAPI.Exceptions.StudentExceptions;
 using StudentManagementApplicationAPI.Interfaces.Repository;
 using StudentManagementApplicationAPI.Interfaces.Service;
 using StudentManagementApplicationAPI.Models.Db_Models;
 using StudentManagementApplicationAPI.Models.DTOs.ExamDTOs;
+using StudentManagementApplicationAPI.Models.DTOs.StudentDTOs;
 using StudentManagementApplicationAPI.Models.Enums;
+using StudentManagementApplicationAPI.Repositories;
 
 namespace StudentManagementApplicationAPI.Services.Exam_Service
 {
@@ -14,7 +17,9 @@ namespace StudentManagementApplicationAPI.Services.Exam_Service
         #region Private Fields
 
         private readonly IRepository<int, Exam> _examRepository;
+        private readonly IRepository<int, Student> _studentRepository;
         private readonly IRepository<int, Course> _courseRepository;
+        private readonly IRepository<int, CourseRegistration> _courseRegistrationRepository;
         private readonly IMapper _mapper;
         private readonly ILogger<ExamService> _logger;
 
@@ -22,11 +27,14 @@ namespace StudentManagementApplicationAPI.Services.Exam_Service
 
         #region Constructor
 
-        public ExamService(IRepository<int, Exam> examRepository, IRepository<int, Course> courseRepository,
+        public ExamService(IRepository<int, Exam> examRepository, IRepository<int, Course> courseRepository, IRepository<int, Student> studentRepository,
+            IRepository<int, CourseRegistration> courseRegistrationRepository,
             IMapper mapper, ILogger<ExamService> logger)
         {
             _examRepository = examRepository;
+            _studentRepository = studentRepository;
             _courseRepository = courseRepository;
+            _courseRegistrationRepository = courseRegistrationRepository;
             _mapper = mapper;
             _logger = logger;
         }
@@ -93,6 +101,8 @@ namespace StudentManagementApplicationAPI.Services.Exam_Service
                 throw new UnableToAddExamException($"Unable to add exam: {ex.Message}");
             }
         }
+
+
 
         /// <summary>
         /// Mapper function that maps ExamDTO to Exam
@@ -200,6 +210,93 @@ namespace StudentManagementApplicationAPI.Services.Exam_Service
                     throw new NoExamsExistsException();
                 }
                 return _mapper.Map<IEnumerable<ExamReturnDTO>>(exams);
+            }
+            catch (NoExamsExistsException ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new NoExamsExistsException(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new Exception($"Unable to retrieve exams: {ex.Message}");
+            }
+        }
+
+
+        /// <summary>
+        /// Retrieves all exams for a student.
+        /// </summary>
+        /// <returns>The list of exam data transfer objects.</returns>
+        public async Task<IEnumerable<ExamReturnDTO>> GetExamsBySudentId(int studentRollNo)
+        {
+            try
+            {
+                var student = await _studentRepository.GetById(studentRollNo);
+                if (student == null)
+                {
+                    throw new NoSuchStudentExistException($"Student with roll number {studentRollNo} does not exist.");
+                }
+                var studentCourseRegistrations = (await _courseRegistrationRepository.GetAll()).Where(cr => (cr.StudentId == studentRollNo) && (cr.ApprovalStatus == ApprovalStatus.Approved)).ToList();
+
+                var exams = (await _examRepository.GetAll()).ToList();
+
+                var filteredExams = exams.Where(e => studentCourseRegistrations.Any(cr => cr.CourseId == e.CourseId)).ToList();
+                if (filteredExams.Count == 0)
+                {
+                    throw new NoExamsExistsException();
+                }
+                return _mapper.Map<IEnumerable<ExamReturnDTO>>(filteredExams);
+            }
+            catch (NoSuchStudentExistException ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new NoSuchStudentExistException(ex.Message);
+            }
+            catch (NoExamsExistsException ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new NoExamsExistsException(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new Exception($"Unable to retrieve exams: {ex.Message}");
+            }
+        }
+
+
+
+        /// <summary>
+        /// Retrieves all exams for a student.
+        /// </summary>
+        /// <returns>The list of exam data transfer objects.</returns>
+        public async Task<IEnumerable<StudentReturnDTO>> GetStudentsByExamId(int examId)
+        {
+            try
+            {
+                var exam = await _examRepository.GetById(examId);
+                if (exam == null)
+                {
+                    throw new NoSuchExamExistException($"Exam with id {examId} does not exist.");
+                }
+
+                var courseId = exam.CourseId;
+                var studentCourseRegistrations = (await _courseRegistrationRepository.GetAll()).Where(cr => (cr.CourseId == courseId) && (cr.ApprovalStatus == ApprovalStatus.Approved)).ToList();
+
+                var students = (await _studentRepository.GetAll()).ToList();
+
+                var filteredStduents = students.Where(s => studentCourseRegistrations.Any(cr => cr.StudentId == s.StudentRollNo)).ToList();
+                if (filteredStduents.Count == 0)
+                {
+                    throw new NoExamsExistsException();
+                }
+                return _mapper.Map<IEnumerable<StudentReturnDTO>>(filteredStduents);
+            }
+            catch (NoSuchStudentExistException ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new NoSuchStudentExistException(ex.Message);
             }
             catch (NoExamsExistsException ex)
             {
@@ -334,6 +431,11 @@ namespace StudentManagementApplicationAPI.Services.Exam_Service
             {
                 _logger.LogError(ex.Message);
                 throw new NoSuchExamExistException(ex.Message);
+            }
+            catch (CannotDeleteFinishedExamException ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new CannotDeleteFinishedExamException(ex.Message);
             }
             catch (Exception ex)
             {

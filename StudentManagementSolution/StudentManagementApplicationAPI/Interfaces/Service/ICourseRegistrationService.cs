@@ -1,4 +1,5 @@
 ﻿using StudentManagementApplicationAPI.Models.DTOs.CourseRegistrationDTOs;
+using StudentManagementApplicationAPI.Models.DTOs.StudentDTOs;
 
 namespace StudentManagementApplicationAPI.Interfaces.Service
 {
@@ -11,7 +12,14 @@ namespace StudentManagementApplicationAPI.Interfaces.Service
         public Task<CourseRegistrationReturnDTO> DeleteCourseRegistration(int courseRegistrationId);
         public Task<IEnumerable<CourseRegistrationReturnDTO>> GetCoursesRegisteredByStudent(int studentId);
         public Task<IEnumerable<CourseRegistrationReturnDTO>> GetRegisteredStudentsForCourse(int courseId);
+
+        public Task<IEnumerable<StudentReturnDTO>> GetApprovedStudentsByCourse(int courseId);
+
         public Task<CourseRegistrationReturnDTO> ApproveCourseRegistrations(int courseRegistrationId);
+
+        public Task<CourseRegistrationReturnDTO> RejectCourseRegistrations(int courseRegistrationId);
         public Task<IEnumerable<CourseRegistrationReturnDTO>> ApproveCourseRegistrationsForStudent(int studentId);
+
+        public Task<IEnumerable<CourseRegistrationReturnDTO>> GetCoursesRegisteredByStudentAndStatus(int studentId, int status);
     }
 }

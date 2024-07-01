@@ -5,7 +5,7 @@ namespace StudentManagementApplicationAPI.Interfaces.Service
 {
     public interface IFacultyService
     {
-        public Task<FacultyDTO> UpdateFaculty(FacultyDTO dto, string email);
+        public Task<FacultyDTO> UpdateFaculty(FacultyUpdateDTO dto, string email);
         public Task<FacultyDTO> DeleteFaculty(string email);
         public Task<FacultyDTO> GetFacultyById(int facultyId);
         public Task<FacultyDTO> GetFacultyByEmail(string email);

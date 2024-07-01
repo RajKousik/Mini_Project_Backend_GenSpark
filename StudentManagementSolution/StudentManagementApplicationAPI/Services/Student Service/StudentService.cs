@@ -6,6 +6,8 @@ using StudentManagementApplicationAPI.Interfaces.Repository;
 using StudentManagementApplicationAPI.Interfaces.Service;
 using StudentManagementApplicationAPI.Models.Db_Models;
 using StudentManagementApplicationAPI.Models.DTOs.StudentDTOs;
+using System.Security.Cryptography;
+using System.Text;
 
 
 
@@ -115,7 +117,7 @@ namespace StudentManagementApplicationAPI.Services.Student_Service
         /// </summary>
         /// <returns>A list of students.</returns>
         /// <exception cref="NoStudentsExistsException">Thrown when no students exist.</exception>
-        public async Task<IEnumerable<StudentDTO>> GetAllStudents()
+        public async Task<IEnumerable<StudentReturnDTO>> GetAllStudents()
         {
             try
             {
@@ -124,7 +126,7 @@ namespace StudentManagementApplicationAPI.Services.Student_Service
                 {
                     throw new NoStudentsExistsException();
                 }
-                return _mapper.Map<IEnumerable<StudentDTO>>(students);
+                return _mapper.Map<IEnumerable<StudentReturnDTO>>(students);
             }
             catch (NoStudentsExistsException ex)
             {
@@ -174,7 +176,7 @@ namespace StudentManagementApplicationAPI.Services.Student_Service
         /// <param name="studentRollNo">The roll number of the student.</param>
         /// <returns>The student.</returns>
         /// <exception cref="NoSuchStudentExistException">Thrown when the student does not exist.</exception>
-        public async Task<StudentDTO> GetStudentById(int studentRollNo)
+        public async Task<StudentReturnDTO> GetStudentById(int studentRollNo)
         {
             try
             {
@@ -184,7 +186,7 @@ namespace StudentManagementApplicationAPI.Services.Student_Service
                     throw new NoSuchStudentExistException($"Student with roll number {studentRollNo} does not exist.");
                 }
 
-                return _mapper.Map<StudentDTO>(student);
+                return _mapper.Map<StudentReturnDTO>(student);
             }
             catch (NoSuchStudentExistException ex)
             {
@@ -205,7 +207,7 @@ namespace StudentManagementApplicationAPI.Services.Student_Service
         /// <returns>A list of students.</returns>
         /// <exception cref="NoSuchDepartmentExistException">Thrown when the department does not exist.</exception>
         /// <exception cref="NoStudentsExistsException">Thrown when no students exist in the department.</exception>
-        public async Task<IEnumerable<StudentDTO>> GetStudentsByDepartment(int departmentId)
+        public async Task<IEnumerable<StudentReturnDTO>> GetStudentsByDepartment(int departmentId)
         {
             try
             {
@@ -220,7 +222,7 @@ namespace StudentManagementApplicationAPI.Services.Student_Service
                 {
                     throw new NoStudentsExistsException($"No students in the department {departmentId}");
                 }
-                return _mapper.Map<IEnumerable<StudentDTO>>(students);
+                return _mapper.Map<IEnumerable<StudentReturnDTO>>(students);
             }
             catch (NoStudentsExistsException ex)
             {
@@ -335,6 +337,15 @@ namespace StudentManagementApplicationAPI.Services.Student_Service
                     throw new InvalidRechargeAmount("Invalid Recharge Amount");
                 }
 
+                HMACSHA512 hMACSHA = new HMACSHA512(studentInDB.PasswordHashKey);
+                var encryptedPassword = hMACSHA.ComputeHash(Encoding.UTF8.GetBytes(studentWalletDTO.Password));
+                bool isPasswordSame = ComparePassword(encryptedPassword, studentInDB.HashedPassword);
+
+                if(!isPasswordSame)
+                {
+                    throw new InvalidPasswordException("Please enter correct password!");
+                }
+
                 studentInDB.EWallet += studentWalletDTO.RechargeAmount;
 
                 var updatedStudent = await _studentRepo.Update(studentInDB);
@@ -342,6 +353,58 @@ namespace StudentManagementApplicationAPI.Services.Student_Service
                 StudentWalletReturnDTO result = _mapper.Map<StudentWalletReturnDTO>(updatedStudent);
                 result.StudentId = studentWalletDTO.StudentId;
                 return result;
+
+            }
+            catch (InvalidRechargeAmount ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new InvalidRechargeAmount(ex.Message);
+            }
+            catch (InvalidPasswordException ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new InvalidPasswordException(ex.Message);
+            }
+            catch (NoSuchStudentExistException ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new NoSuchStudentExistException(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new Exception(ex.Message);
+            }
+        }
+
+        private bool ComparePassword(byte[] encryptedPassword, byte[] userPassword)
+        {
+            if (encryptedPassword.Length != userPassword.Length)
+            {
+                return false;
+            }
+            for (int i = 0; i < encryptedPassword.Length; i++)
+            {
+                if (encryptedPassword[i] != userPassword[i])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public async Task<double> GetEWalletAmount(int studentRollNo)
+        {
+            try
+            {
+                var studentInDB = await _studentRepo.GetById(studentRollNo);
+
+                if (studentInDB.EWallet <= 0)
+                {
+                    throw new InvalidRechargeAmount("Invalid Recharge Amount");
+                }
+
+                return studentInDB.EWallet;
 
             }
             catch (InvalidRechargeAmount ex)

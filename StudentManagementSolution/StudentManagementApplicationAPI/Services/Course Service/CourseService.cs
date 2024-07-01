@@ -231,6 +231,18 @@ namespace StudentManagementApplicationAPI.Services.Course_Service
                 }
                 course.FacultyId = courseDTO.FacultyId;
 
+                if(courseDTO.CourseFees <= 0 )
+                {
+                    throw new UnableToAddCourseException("Course Fees must be greater than 0");
+                }
+                course.CourseFees = courseDTO.CourseFees;
+
+                if (courseDTO.CourseVacancy <= 0)
+                {
+                    throw new UnableToAddCourseException("Course Vacancy must be greater than 0");
+                }
+                course.CourseVacancy = courseDTO.CourseVacancy;
+
                 // Update the course in the repository
                 await _courseRepository.Update(course);
 

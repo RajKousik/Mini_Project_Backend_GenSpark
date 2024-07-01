@@ -3,17 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace StudentManagementApplicationAPI.Models.DTOs.FacultyDTOs
 {
-    public class FacultyDTO
+    public class FacultyUpdateDTO
     {
-
-        public int FacultyId { get; set; }
-
-        public string Email { get; set; }
-
-        public RoleType Role { get; set; }
-        public ActivationStatus Status { get; set; }
-
-        public int? DepartmentId { get; set; }
         [Required(ErrorMessage = "Name is required")]
         public string Name { get; set; }
         [Required(ErrorMessage = "DOB is required")]

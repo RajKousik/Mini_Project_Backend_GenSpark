@@ -373,7 +373,9 @@ namespace StudentManagementApplicationAPI.Services.Student_Service
                     throw new NoSuchStudentExistException($"Student with ID {studentId} does not exist.");
                 }
 
-                var attendanceRecords = await GetStudentAttendanceRecords(studentId);
+                var result = await GetAttendanceRecordsByStudentId(studentId);
+                var attendanceRecords = _mapper.Map<IEnumerable<AttendanceReturnDTO>>(result);
+                //var attendanceRecords = await GetAttendanceRecordsByStudentId(studentId);
                 if (attendanceRecords.Count() == 0)
                 {
                     throw new NoStudentAttendancesExistsException($"No attendance records found for student with ID {studentId}.");
@@ -402,17 +404,17 @@ namespace StudentManagementApplicationAPI.Services.Student_Service
             catch (NoSuchStudentExistException ex)
             {
                 _logger.LogError(ex.Message);
-                throw new NoSuchStudentExistException($"Unable to retrieve attendance percentage: {ex.Message}");
+                throw new NoSuchStudentExistException(ex.Message);
             }
             catch (NoStudentAttendancesExistsException ex)
             {
                 _logger.LogError(ex.Message);
-                throw new NoStudentAttendancesExistsException($"Unable to retrieve attendance percentage: {ex.Message}");
+                throw new NoStudentAttendancesExistsException(ex.Message);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                throw new Exception($"An error occurred while retrieving attendance percentage for student with ID {studentId}: {ex.Message}");
+                throw new Exception(ex.Message);
             }
         }
 
@@ -500,7 +502,7 @@ namespace StudentManagementApplicationAPI.Services.Student_Service
         private async Task<bool> IsStudentOptedForCourse(int studentId, int courseId)
         {
             var courseRegistrations = (await _courseRegistrationRepository.GetAll())
-                .Where(cr => cr.StudentId == studentId && cr.CourseId == courseId && cr.IsApproved)
+                .Where(cr => cr.StudentId == studentId && cr.CourseId == courseId && cr.ApprovalStatus == ApprovalStatus.Approved)
                 .ToList();
 
             return courseRegistrations.Any();
@@ -513,8 +515,29 @@ namespace StudentManagementApplicationAPI.Services.Student_Service
         /// <returns>A Task representing the asynchronous operation, with a result of a list of attendance records.</returns>
         private async Task<IEnumerable<StudentAttendance>> GetAttendanceRecordsByStudentId(int studentId)
         {
-            var attendanceRecords = await _attendanceRepository.GetAll();
-            return attendanceRecords.Where(ar => ar.StudentRollNo == studentId).ToList();
+            try
+            {
+                var isStudentExists = await _studentRepository.GetById(studentId);
+
+                var attendanceRecords = (await _attendanceRepository.GetAll()).Where(ar => ar.StudentRollNo == studentId).ToList();
+                if (attendanceRecords.Count == 0)
+                {
+                    throw new NoStudentAttendancesExistsException();
+                }
+                return attendanceRecords;
+            }
+            catch (NoSuchStudentExistException ex)
+            {
+                throw new NoSuchStudentExistException(ex.Message);
+            }
+            catch (NoStudentAttendancesExistsException ex)
+            {
+                throw new NoStudentAttendancesExistsException(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         /// <summary>

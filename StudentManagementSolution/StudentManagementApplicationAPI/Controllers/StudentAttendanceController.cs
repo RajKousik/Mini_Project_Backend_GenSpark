@@ -52,7 +52,7 @@ namespace StudentManagementApplicationAPI.Controllers
         /// <param name="attendanceDTO">The data transfer object containing attendance details.</param>
         /// <returns>An ActionResult containing the marked attendance details.</returns>
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Assistant_Proffesors,Associate_Proffesors,Proffesors,Head_Of_Department")]
         [ProducesResponseType(typeof(AttendanceReturnDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
@@ -223,7 +223,7 @@ namespace StudentManagementApplicationAPI.Controllers
         /// </summary>
         /// <returns>An ActionResult containing a list of all attendance records.</returns>
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Assistant_Proffesors,Associate_Proffesors,Proffesors,Head_Of_Department")]
         [ProducesResponseType(typeof(IEnumerable<AttendanceReturnDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
@@ -273,6 +273,12 @@ namespace StudentManagementApplicationAPI.Controllers
                 return NotFound(new ErrorModel(404, ex.Message));
             }
             catch (NoSuchStudentAttendanceExistException ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return NotFound(new ErrorModel(404, ex.Message));
+            }
+            catch (NoStudentAttendancesExistsException ex)
             {
                 WatchLogger.Log(ex.Message);
                 _logger.LogError(ex.Message);

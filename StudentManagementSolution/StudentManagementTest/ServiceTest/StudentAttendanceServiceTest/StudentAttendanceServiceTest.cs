@@ -104,7 +104,7 @@ namespace StudentManagementTest.ServiceTest.StudentAttendanceServiceTest
             {
                 CourseId = 1,
                 StudentId = 1,
-                IsApproved = true,
+                ApprovalStatus = ApprovalStatus.Approved,
                 Comments = "Approved!"
             };
 

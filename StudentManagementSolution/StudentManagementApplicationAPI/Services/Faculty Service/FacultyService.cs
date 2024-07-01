@@ -42,7 +42,7 @@ namespace StudentManagementApplicationAPI.Services.Faculty_Service
         /// <param name="dto">The data transfer object containing updated faculty details.</param>
         /// <param name="email">The email of the faculty to update.</param>
         /// <returns>The updated faculty data transfer object.</returns>
-        public async Task<FacultyDTO> UpdateFaculty(FacultyDTO dto, string email)
+        public async Task<FacultyDTO> UpdateFaculty(FacultyUpdateDTO dto, string email)
         {
             try
             {

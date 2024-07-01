@@ -25,6 +25,9 @@ namespace StudentManagementApplicationAPI.Mappers
             CreateMap<Student, StudentWalletDTO>().ReverseMap();
             CreateMap<StudentWalletReturnDTO, StudentWalletDTO>().ReverseMap();
             CreateMap<StudentWalletReturnDTO, Student>().ReverseMap();
+            CreateMap<StudentReturnDTO, Student>().ReverseMap();
+            CreateMap<StudentReturnDTO, StudentDTO>().ReverseMap();
+            
             #endregion
 
             #region Faculty
@@ -34,6 +37,8 @@ namespace StudentManagementApplicationAPI.Mappers
             CreateMap<Faculty, FacultyRegisterReturnDTO>().ReverseMap();
             CreateMap<FacultyRegisterDTO, FacultyLoginDTO>().ReverseMap();
             CreateMap<Faculty, FacultyDTO>().ReverseMap();
+            CreateMap<FacultyUpdateDTO, FacultyDTO>().ReverseMap();
+            CreateMap<Faculty, FacultyUpdateDTO>().ReverseMap();
             #endregion
 
             #region Department

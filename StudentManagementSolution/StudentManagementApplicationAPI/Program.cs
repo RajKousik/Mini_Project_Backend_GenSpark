@@ -177,9 +177,8 @@ namespace StudentManagementApplicationAPI
                 app.UseSwaggerUI();
             }
             #endregion
-            app.UseCors("AllowAllCorsPolicy");
             #region Pipeline Configurations
-
+            app.UseCors("AllowAllCorsPolicy");
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();

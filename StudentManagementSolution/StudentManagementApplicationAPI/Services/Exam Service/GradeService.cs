@@ -16,7 +16,8 @@ namespace StudentManagementApplicationAPI.Services.Exam_Service
     public class GradeService : IGradeService
     {
         #region CONSTANT FIELDS - For Testing 
-        private readonly DateTime CURRENT_DATE_TIME = new DateTime(2025, 1, 1, 0, 0, 0);
+        //private readonly DateTime CURRENT_DATE_TIME = new DateTime(2025, 1, 1, 0, 0, 0);
+        private readonly DateTime CURRENT_DATE_TIME = DateTime.Now;
         #endregion
 
         #region Private Fields
@@ -472,7 +473,7 @@ namespace StudentManagementApplicationAPI.Services.Exam_Service
             var courseRegistrations = (await _courseRegistrationRepository
                 .GetAll())
                 .Where(cr => cr.StudentId == studentId)
-                .Where(cr => cr.IsApproved)
+                .Where(cr => cr.ApprovalStatus == ApprovalStatus.Approved)
                 .ToList();
 
             // Check if there is any course registration for the specified course

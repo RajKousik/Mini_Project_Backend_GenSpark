@@ -108,7 +108,7 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
             {
                 CourseId = 1,
                 StudentId = 1,
-                IsApproved = true,
+                ApprovalStatus = ApprovalStatus.Approved,
                 Comments = "Approved!"
             };
 
@@ -116,7 +116,7 @@ namespace StudentManagementTest.ServiceTest.GradeServiceTest
             {
                 CourseId = 2,
                 StudentId = 1,
-                IsApproved = true,
+                ApprovalStatus = ApprovalStatus.Approved,
                 Comments = "Approved!"
             };
 

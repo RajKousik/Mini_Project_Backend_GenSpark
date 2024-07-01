@@ -3,9 +3,12 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StudentManagementApplicationAPI.Exceptions.CourseExceptions;
+using StudentManagementApplicationAPI.Exceptions.CourseRegistrationExceptions;
 using StudentManagementApplicationAPI.Exceptions.ExamExceptions;
+using StudentManagementApplicationAPI.Exceptions.StudentExceptions;
 using StudentManagementApplicationAPI.Interfaces.Service;
 using StudentManagementApplicationAPI.Models.DTOs.ExamDTOs;
+using StudentManagementApplicationAPI.Models.DTOs.StudentDTOs;
 using StudentManagementApplicationAPI.Models.ErrorModels;
 using WatchDog;
 
@@ -144,6 +147,81 @@ namespace StudentManagementApplicationAPI.Controllers
             {
                 var exams = await _examService.GetAllExams();
                 return Ok(exams);
+            }
+            catch (NoExamsExistsException ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return StatusCode(StatusCodes.Status404NotFound, new ErrorModel(404, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
+            }
+        }
+
+        [HttpGet]
+        [Route("StudentRollNo")]
+        [ProducesResponseType(typeof(IEnumerable<ExamReturnDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<ExamReturnDTO>>> GetExamsbyStudentId(int studentRollNo)
+        {
+            try
+            {
+                var exams = await _examService.GetExamsBySudentId(studentRollNo);
+                return Ok(exams);
+            }
+            catch (NoCourseRegistrationsExistsException ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return StatusCode(StatusCodes.Status404NotFound, new ErrorModel(404, ex.Message));
+            }
+            catch (NoStudentsExistsException ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return StatusCode(StatusCodes.Status404NotFound, new ErrorModel(404, ex.Message));
+            }
+            catch (NoExamsExistsException ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return StatusCode(StatusCodes.Status404NotFound, new ErrorModel(404, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorModel(500, ex.Message));
+            }
+        }
+
+
+        [HttpGet]
+        [Route("examId")]
+        [ProducesResponseType(typeof(IEnumerable<StudentReturnDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<StudentReturnDTO>>> GetStudentsByExamId(int examId)
+        {
+            try
+            {
+                var students = await _examService.GetStudentsByExamId(examId);
+                return Ok(students);
+            }
+            catch (NoCourseRegistrationsExistsException ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return StatusCode(StatusCodes.Status404NotFound, new ErrorModel(404, ex.Message));
+            }
+            catch (NoStudentsExistsException ex)
+            {
+                WatchLogger.Log(ex.Message);
+                _logger.LogError(ex.Message);
+                return StatusCode(StatusCodes.Status404NotFound, new ErrorModel(404, ex.Message));
             }
             catch (NoExamsExistsException ex)
             {

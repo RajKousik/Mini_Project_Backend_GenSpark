@@ -7,6 +7,10 @@ using StudentManagementApplicationAPI.Interfaces.Repository;
 using StudentManagementApplicationAPI.Interfaces.Service;
 using StudentManagementApplicationAPI.Models.Db_Models;
 using StudentManagementApplicationAPI.Models.DTOs.CourseRegistrationDTOs;
+using StudentManagementApplicationAPI.Models.DTOs.ExamDTOs;
+using StudentManagementApplicationAPI.Models.DTOs.StudentDTOs;
+using StudentManagementApplicationAPI.Models.Enums;
+using StudentManagementApplicationAPI.Repositories;
 
 namespace StudentManagementApplicationAPI.Services.Course_Service
 {
@@ -84,7 +88,8 @@ namespace StudentManagementApplicationAPI.Services.Course_Service
 
                 var courseRegistration = _mapper.Map<CourseRegistration>(courseRegistrationAddDTO);
                 courseRegistration.Comments = "Registered! Yet to be Approved!";
-                courseRegistration.IsApproved = false;
+                //courseRegistration.IsApproved = false;
+                courseRegistration.ApprovalStatus = ApprovalStatus.Pending;
                 await _courseRegistrationRepository.Add(courseRegistration);
 
                 course.CourseVacancy--;
@@ -200,7 +205,7 @@ namespace StudentManagementApplicationAPI.Services.Course_Service
 
                 var course = await _courseRepository.GetById(courseId);
 
-                if (courseRegistration.IsApproved)
+                if (courseRegistration.ApprovalStatus == ApprovalStatus.Approved)
                 {
                     throw new StudentAlreadyApprovedForCourseException($"Previously registered course with id {courseRegistration.CourseId} already approved! Cannot be update once it is approved!");
                 }
@@ -215,7 +220,8 @@ namespace StudentManagementApplicationAPI.Services.Course_Service
 
                 // Mappings
                 courseRegistration.CourseId = courseId;
-                courseRegistration.IsApproved = false;
+                //courseRegistration.IsApproved = false;
+                courseRegistration.ApprovalStatus = ApprovalStatus.Pending;
                 courseRegistration.Comments = "Updated! Yet to be approved";
 
                 student.EWallet += OldCourse.CourseFees;
@@ -280,7 +286,7 @@ namespace StudentManagementApplicationAPI.Services.Course_Service
                 var courseRegistration = await _courseRegistrationRepository.GetById(courseRegistrationId);
 
 
-                if (courseRegistration.IsApproved)
+                if (courseRegistration.ApprovalStatus == ApprovalStatus.Approved)
                 {
                     throw new UnableToDeleteCourseRegistrationException("Once the registration is approved, the registration cannot be deleted");
                 }
@@ -307,6 +313,11 @@ namespace StudentManagementApplicationAPI.Services.Course_Service
                 _logger.LogError(ex.Message);
                 throw new NoSuchCourseRegistrationExistException(ex.Message);
             }
+            catch (UnableToDeleteCourseRegistrationException ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new UnableToDeleteCourseRegistrationException(ex.Message);
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
@@ -328,6 +339,41 @@ namespace StudentManagementApplicationAPI.Services.Course_Service
 
                 var courseRegistrations = (await _courseRegistrationRepository.GetAll())
                     .Where(cr => cr.StudentId == studentId)
+                    .ToList();
+
+                if (courseRegistrations.Count == 0)
+                {
+                    throw new NoCourseRegistrationsExistsException($"The Student with {studentId} has no course registrations"); ;
+                }
+
+                return _mapper.Map<IEnumerable<CourseRegistrationReturnDTO>>(courseRegistrations);
+            }
+            catch (NoCourseRegistrationsExistsException ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new NoCourseRegistrationsExistsException(ex.Message);
+            }
+            catch (NoSuchStudentExistException ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new NoSuchStudentExistException(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new Exception($"Unable to retrieve courses for student: {ex.Message}");
+            }
+        }
+
+        public async Task<IEnumerable<CourseRegistrationReturnDTO>> GetCoursesRegisteredByStudentAndStatus(int studentId, int status)
+        {
+            try
+            {
+                var studentExists = await _studentRepository.GetById(studentId);
+
+
+                var courseRegistrations = (await _courseRegistrationRepository.GetAll())
+                    .Where(cr => cr.StudentId == studentId).Where(cr => cr.ApprovalStatus == (ApprovalStatus)status)
                     .ToList();
 
                 if (courseRegistrations.Count == 0)
@@ -394,6 +440,51 @@ namespace StudentManagementApplicationAPI.Services.Course_Service
             }
         }
 
+
+        public async Task<IEnumerable<StudentReturnDTO>> GetApprovedStudentsByCourse(int courseId)
+        {
+            try
+            {
+                var courseExists = await _courseRepository.GetById(courseId);
+
+
+                var courseRegistrations = (await _courseRegistrationRepository.GetAll())
+                    .Where(cr => cr.CourseId == courseId).Where(cr => cr.ApprovalStatus == ApprovalStatus.Approved)
+                    .ToList();
+
+                if (courseRegistrations.Count == 0)
+                {
+                    throw new NoCourseRegistrationsExistsException($"No students has registered for the course with id {courseId}");
+                }
+
+                var students = (await _studentRepository.GetAll()).ToList();
+
+                var filteredStduents = students.Where(s => courseRegistrations.Any(cr => cr.StudentId == s.StudentRollNo)).ToList();
+                if (filteredStduents.Count == 0)
+                {
+                    throw new NoExamsExistsException();
+                }
+                return _mapper.Map<IEnumerable<StudentReturnDTO>>(filteredStduents);
+
+            }
+            catch (NoCourseRegistrationsExistsException ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new NoCourseRegistrationsExistsException(ex.Message);
+            }
+            catch (NoSuchCourseExistException ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new NoSuchCourseExistException(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new Exception($"Unable to retrieve students for course: {ex.Message}");
+            }
+        }
+
+
         /// <summary>
         /// Approves a course registration by its ID.
         /// </summary>
@@ -405,14 +496,61 @@ namespace StudentManagementApplicationAPI.Services.Course_Service
             {
                 var courseRegistration = await _courseRegistrationRepository.GetById(courseRegistrationId);
 
-                if (courseRegistration.IsApproved == true)
+                if (courseRegistration.ApprovalStatus == ApprovalStatus.Approved)
                 {
                     throw new CourseRegistrationAlreadyApprovedException($"The course registration with Id {courseRegistrationId} already approved");
                 }
-                courseRegistration.IsApproved = true;
+                courseRegistration.ApprovalStatus = ApprovalStatus.Approved;
                 courseRegistration.Comments = "Approved";
                 await _courseRegistrationRepository.Update(courseRegistration);
                 return _mapper.Map<CourseRegistrationReturnDTO>(courseRegistration);
+            }
+            catch (CourseRegistrationAlreadyApprovedException ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new CourseRegistrationAlreadyApprovedException(ex.Message);
+            }
+            catch (NoSuchCourseRegistrationExistException ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new NoSuchCourseRegistrationExistException(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new UnableToUpdateCourseRegistrationException($"Unable to approve course registration: {ex.Message}");
+            }
+        }
+
+
+        /// <summary>
+        /// Rejects a course registration by its ID.
+        /// </summary>
+        /// <param name="courseRegistrationId">The ID of the course registration.</param>
+        /// <returns>The rejected course registration data transfer object.</returns>
+        public async Task<CourseRegistrationReturnDTO> RejectCourseRegistrations(int courseRegistrationId)
+        {
+            try
+            {
+                var courseRegistration = await _courseRegistrationRepository.GetById(courseRegistrationId);
+
+                if (courseRegistration.ApprovalStatus == ApprovalStatus.Rejected)
+                {
+                    throw new CourseRegistrationAlreadyRejectedException($"The course registration with Id {courseRegistrationId} already rejected");
+                }
+                if (courseRegistration.ApprovalStatus == ApprovalStatus.Approved)
+                {
+                    throw new CourseRegistrationAlreadyApprovedException($"The course registration with Id {courseRegistrationId} already approved");
+                }
+                courseRegistration.ApprovalStatus = ApprovalStatus.Rejected;
+                courseRegistration.Comments = "Rejected by admin";
+                await _courseRegistrationRepository.Update(courseRegistration);
+                return _mapper.Map<CourseRegistrationReturnDTO>(courseRegistration);
+            }
+            catch (CourseRegistrationAlreadyRejectedException ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new CourseRegistrationAlreadyRejectedException(ex.Message);
             }
             catch (CourseRegistrationAlreadyApprovedException ex)
             {
@@ -444,7 +582,7 @@ namespace StudentManagementApplicationAPI.Services.Course_Service
 
 
                 var courseRegistrations = (await _courseRegistrationRepository.GetAll())
-                    .Where(cr => cr.StudentId == studentId && !cr.IsApproved)
+                    .Where(cr => cr.StudentId == studentId && cr.ApprovalStatus == ApprovalStatus.Pending)
                     .ToList();
 
                 if (courseRegistrations.Count == 0)
@@ -454,7 +592,7 @@ namespace StudentManagementApplicationAPI.Services.Course_Service
 
                 foreach (var registration in courseRegistrations)
                 {
-                    registration.IsApproved = true;
+                    registration.ApprovalStatus = ApprovalStatus.Approved;
                     registration.Comments = "Approved";
                     await _courseRegistrationRepository.Update(registration);
                 }

@@ -1,4 +1,5 @@
 ﻿using StudentManagementApplicationAPI.Models.DTOs.ExamDTOs;
+using StudentManagementApplicationAPI.Models.DTOs.StudentDTOs;
 
 namespace StudentManagementApplicationAPI.Interfaces.Service
 {
@@ -13,6 +14,10 @@ namespace StudentManagementApplicationAPI.Interfaces.Service
         public Task<IEnumerable<ExamReturnDTO>> GetUpcomingExams(int days);
         public Task<IEnumerable<ExamReturnDTO>> GetOfflineExams();
         public Task<IEnumerable<ExamReturnDTO>> GetOnlineExams();
+
+        public Task<IEnumerable<StudentReturnDTO>> GetStudentsByExamId(int examId);
+
+        public Task<IEnumerable<ExamReturnDTO>> GetExamsBySudentId(int studentRollNo);
 
     }
 }

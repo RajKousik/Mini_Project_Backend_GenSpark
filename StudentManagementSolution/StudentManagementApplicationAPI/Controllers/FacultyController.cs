@@ -359,7 +359,7 @@ namespace StudentManagementApplicationAPI.Controllers
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<FacultyDTO>> UpdateFaculty(FacultyDTO dto, string email)
+        public async Task<ActionResult<FacultyDTO>> UpdateFaculty(FacultyUpdateDTO dto, string email)
         {
             try
             {
@@ -520,7 +520,7 @@ namespace StudentManagementApplicationAPI.Controllers
         /// </summary>
         /// <returns>The list of all faculty data transfer objects.</returns>
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Assistant_Proffesors,Associate_Proffesors,Proffesors,Head_Of_Department")]
         [ProducesResponseType(typeof(IEnumerable<FacultyDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
@@ -670,7 +670,7 @@ namespace StudentManagementApplicationAPI.Controllers
         /// </summary>
         /// <param name="departmentId">The department ID.</param>
         /// <returns>The list of faculty data transfer objects in the specified department.</returns>
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Assistant_Proffesors,Associate_Proffesors,Proffesors,Head_Of_Department")]
         [HttpGet("department/{departmentId}")]
         [ProducesResponseType(typeof(IEnumerable<FacultyDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]

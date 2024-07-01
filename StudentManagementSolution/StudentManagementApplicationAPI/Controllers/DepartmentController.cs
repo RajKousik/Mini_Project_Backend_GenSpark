@@ -82,10 +82,10 @@ namespace StudentManagementApplicationAPI.Controllers
         /// <param name="departmentId">The ID of the department.</param>
         /// <returns>The department data transfer object.</returns>
         [HttpGet("{departmentId}")]
-        [ProducesResponseType(typeof(DepartmentDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(DepartmentReturnDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<DepartmentDTO>> GetDepartmentById(int departmentId)
+        public async Task<ActionResult<DepartmentReturnDTO>> GetDepartmentById(int departmentId)
         {
             try
             {
